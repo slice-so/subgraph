@@ -11,9 +11,9 @@ type Paused @entity {
 
 type ProductsPaid @entity {
   id: ID!
-  slicerAddresses: [Bytes]! # address[]
-  productIds: [BigInt]! # uint256[]
-  quantities: [BigInt]! # uint256[]
+  slicerAddresses: [Bytes!]! # address[]
+  productIds: [BigInt!]! # uint256[]
+  quantities: [BigInt!]! # uint256[]
   totalPaid: BigInt! # uint256
 }
 
@@ -21,8 +21,8 @@ type TokenSliced @entity {
   id: ID!
   slicerAddress: Bytes! # address
   tokenId: BigInt! # uint256
-  payees: [Bytes]! # address[]
-  shares: [BigInt]! # uint256[]
+  payees: [Bytes!]! # address[]
+  shares: [BigInt!]! # uint256[]
 }
 
 type TriggeredRelease @entity {
