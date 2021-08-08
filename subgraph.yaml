@@ -1,0 +1,38 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Slice
+    network: rinkeby
+    source:
+      address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d"
+      abi: Slice
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - OwnershipTransferred
+        - Paused
+        - ProductsPaid
+        - TokenSliced
+        - TriggeredRelease
+        - Unpaused
+      abis:
+        - name: Slice
+          file: ./abis/Slice.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Paused(address)
+          handler: handlePaused
+        - event: ProductsPaid(address[],uint256[],uint256[],uint256)
+          handler: handleProductsPaid
+        - event: TokenSliced(address,uint256,address[],uint256[])
+          handler: handleTokenSliced
+        - event: TriggeredRelease(address,uint256,uint8)
+          handler: handleTriggeredRelease
+        - event: Unpaused(address)
+          handler: handleUnpaused
+      file: ./src/mapping.ts
