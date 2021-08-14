@@ -14,26 +14,111 @@ dataSources:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - OwnershipTransferred
-        - Paused
-        - ProductsPaid
         - TokenSliced
         - TriggeredRelease
-        - Unpaused
+        - ProductsPaid
       abis:
         - name: Slice
           file: ./abis/Slice.json
       eventHandlers:
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Paused(address)
-          handler: handlePaused
-        - event: ProductsPaid(address[],uint256[],uint256[],uint256)
-          handler: handleProductsPaid
-        - event: TokenSliced(address,uint256,address[],uint256[])
+        - event: TokenSliced(address,uint256,indexed address[],uint256[],uint256)
           handler: handleTokenSliced
-        - event: TriggeredRelease(address,uint256,uint8)
+        - event: TriggeredRelease(indexed address,uint256,uint8)
           handler: handleTriggeredRelease
-        - event: Unpaused(address)
-          handler: handleUnpaused
-      file: ./src/mapping.ts
+        - event: ProductsPaid(indexed address[],indexed uint32[],uint16[],uint256)
+          handler: handleProductsPaid
+      file: ./src/mappings/slice.ts
+  - kind: ethereum/contract
+    name: SliceCore
+    network: rinkeby
+    source:
+      address: "0x9AaaC97a3E4868c443fc4b2F74c3861EBE2D8DB7"
+      abi: SliceCore
+      startBlock: 9038499
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - TransferSingle
+        - TransferBatch
+      abis:
+        - name: SliceCore
+          file: ./abis/SliceCore.json
+      eventHandlers:
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+      file: ./src/mappings/sliceCore.ts
+  - kind: ethereum/contract
+    name: SLC
+    network: rinkeby
+    source:
+      address: "0xAE38a794E839D045460839ABe288a8e5C28B0fc6"
+      abi: SLC
+      startBlock: 9038500
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MintedSLC
+        - MintTriggered
+      abis:
+        - name: SLC
+          file: ./abis/SLC.json
+      eventHandlers:
+        - event: MintedSLC(indexed address,uint256)
+          handler: handleMintedSLC
+        - event: MintTriggered(indexed address,uint256,indexed address,uint8)
+          handler: handleMintTriggered
+      file: ./src/mappings/slc.ts
+templates:
+  - kind: ethereum/contract
+    name: Slicer
+    network: rinkeby
+    source:
+      abi: Slicer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PaymentReceived
+        - TriggeredRelease
+        - SLCPaid
+        - AddedChildrenSlicer
+        - ProductAdded
+        - ProductInfoChanged
+        - ProductCurrencyChanged
+        - ProductCategoryChanged
+        - ProductRemoved
+        - ProductPaid
+      abis:
+        - name: Slicer
+          file: ./abis/Slicer.json
+        - name: SlicerProducts
+          file: ./abis/SlicerProducts.json
+      eventHandlers:
+        - event: PaymentReceived(indexed address,uint256)
+          handler: handlePaymentReceived
+        - event: TriggeredRelease(indexed address,uint256)
+          handler: handleTriggeredSlicerRelease
+        - event: SLCPaid(uint32[],uint16[],uint256)
+          handler: handleSLCPaid
+        - event: AddedChildrenSlicer(indexed uint256)
+          handler: handleAddedChildrenSlicer
+        - event: ProductAdded(indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes)
+          handler: handleProductAdded
+        - event: ProductInfoChanged(indexed uint32,bool,uint32,uint256)
+          handler: handleProductInfoChanged
+        - event: ProductCurrencyChanged(indexed uint32,uint256,bool)
+          handler: handleProductCurrencyChanged
+        - event: ProductCategoryChanged(indexed uint32,uint32)
+          handler: handleProductCategoryChanged
+        - event: ProductRemoved(indexed uint32)
+          handler: handleProductRemoved
+        - event: ProductPaid(indexed address,indexed uint32,uint16,uint256)
+          handler: handleProductPaid
+      file: ./src/mappings/slicer.ts

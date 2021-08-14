@@ -10,6 +10,46 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class AdminChanged extends ethereum.Event {
+  get params(): AdminChanged__Params {
+    return new AdminChanged__Params(this);
+  }
+}
+
+export class AdminChanged__Params {
+  _event: AdminChanged;
+
+  constructor(event: AdminChanged) {
+    this._event = event;
+  }
+
+  get previousAdmin(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newAdmin(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class BeaconUpgraded extends ethereum.Event {
+  get params(): BeaconUpgraded__Params {
+    return new BeaconUpgraded__Params(this);
+  }
+}
+
+export class BeaconUpgraded__Params {
+  _event: BeaconUpgraded;
+
+  constructor(event: BeaconUpgraded) {
+    this._event = event;
+  }
+
+  get beacon(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class OwnershipTransferred extends ethereum.Event {
   get params(): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);
@@ -63,16 +103,16 @@ export class ProductsPaid__Params {
     this._event = event;
   }
 
-  get slicerAddresses(): Array<Address> {
-    return this._event.parameters[0].value.toAddressArray();
+  get slicerAddresses(): Bytes {
+    return this._event.parameters[0].value.toBytes();
   }
 
-  get productIds(): Array<BigInt> {
-    return this._event.parameters[1].value.toBigIntArray();
+  get productIds(): Bytes {
+    return this._event.parameters[1].value.toBytes();
   }
 
-  get quantities(): Array<BigInt> {
-    return this._event.parameters[2].value.toBigIntArray();
+  get quantities(): Array<i32> {
+    return this._event.parameters[2].value.toI32Array();
   }
 
   get totalPaid(): BigInt {
@@ -101,12 +141,16 @@ export class TokenSliced__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get payees(): Array<Address> {
-    return this._event.parameters[2].value.toAddressArray();
+  get payees(): Bytes {
+    return this._event.parameters[2].value.toBytes();
   }
 
   get shares(): Array<BigInt> {
     return this._event.parameters[3].value.toBigIntArray();
+  }
+
+  get minimumShares(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -154,26 +198,53 @@ export class Unpaused__Params {
   }
 }
 
+export class Upgraded extends ethereum.Event {
+  get params(): Upgraded__Params {
+    return new Upgraded__Params(this);
+  }
+}
+
+export class Upgraded__Params {
+  _event: Upgraded;
+
+  constructor(event: Upgraded) {
+    this._event = event;
+  }
+
+  get implementation(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class Slice extends ethereum.SmartContract {
   static bind(address: Address): Slice {
     return new Slice("Slice", address);
   }
 
-  _pendingSlicer(id: BigInt): Address {
+  _createSlicer(id: BigInt, minimumShares: BigInt): Address {
     let result = super.call(
-      "_pendingSlicer",
-      "_pendingSlicer(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      "_createSlicer",
+      "_createSlicer(uint256,uint256):(address)",
+      [
+        ethereum.Value.fromUnsignedBigInt(id),
+        ethereum.Value.fromUnsignedBigInt(minimumShares)
+      ]
     );
 
     return result[0].toAddress();
   }
 
-  try__pendingSlicer(id: BigInt): ethereum.CallResult<Address> {
+  try__createSlicer(
+    id: BigInt,
+    minimumShares: BigInt
+  ): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "_pendingSlicer",
-      "_pendingSlicer(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      "_createSlicer",
+      "_createSlicer(uint256,uint256):(address)",
+      [
+        ethereum.Value.fromUnsignedBigInt(id),
+        ethereum.Value.fromUnsignedBigInt(minimumShares)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -262,70 +333,6 @@ export class Slice extends ethereum.SmartContract {
   }
 }
 
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
-  }
-
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
-  }
-}
-
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-
-  get SLCAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get sliceCoreAddress(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-}
-
-export class _activatePendingSlicerCall extends ethereum.Call {
-  get inputs(): _activatePendingSlicerCall__Inputs {
-    return new _activatePendingSlicerCall__Inputs(this);
-  }
-
-  get outputs(): _activatePendingSlicerCall__Outputs {
-    return new _activatePendingSlicerCall__Outputs(this);
-  }
-}
-
-export class _activatePendingSlicerCall__Inputs {
-  _call: _activatePendingSlicerCall;
-
-  constructor(call: _activatePendingSlicerCall) {
-    this._call = call;
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class _activatePendingSlicerCall__Outputs {
-  _call: _activatePendingSlicerCall;
-
-  constructor(call: _activatePendingSlicerCall) {
-    this._call = call;
-  }
-}
-
 export class _addToSliceCategoryCall extends ethereum.Call {
   get inputs(): _addToSliceCategoryCall__Inputs {
     return new _addToSliceCategoryCall__Inputs(this);
@@ -398,32 +405,138 @@ export class _beforeTransferCall__Outputs {
   }
 }
 
-export class _setNewSliceAddressCall extends ethereum.Call {
-  get inputs(): _setNewSliceAddressCall__Inputs {
-    return new _setNewSliceAddressCall__Inputs(this);
+export class _createSlicerCall extends ethereum.Call {
+  get inputs(): _createSlicerCall__Inputs {
+    return new _createSlicerCall__Inputs(this);
   }
 
-  get outputs(): _setNewSliceAddressCall__Outputs {
-    return new _setNewSliceAddressCall__Outputs(this);
+  get outputs(): _createSlicerCall__Outputs {
+    return new _createSlicerCall__Outputs(this);
   }
 }
 
-export class _setNewSliceAddressCall__Inputs {
-  _call: _setNewSliceAddressCall;
+export class _createSlicerCall__Inputs {
+  _call: _createSlicerCall;
 
-  constructor(call: _setNewSliceAddressCall) {
+  constructor(call: _createSlicerCall) {
     this._call = call;
   }
 
-  get newSliceAddress(): Address {
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get minimumShares(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class _createSlicerCall__Outputs {
+  _call: _createSlicerCall;
+
+  constructor(call: _createSlicerCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
+export class _setMaximumBatchCall extends ethereum.Call {
+  get inputs(): _setMaximumBatchCall__Inputs {
+    return new _setMaximumBatchCall__Inputs(this);
+  }
+
+  get outputs(): _setMaximumBatchCall__Outputs {
+    return new _setMaximumBatchCall__Outputs(this);
+  }
+}
+
+export class _setMaximumBatchCall__Inputs {
+  _call: _setMaximumBatchCall;
+
+  constructor(call: _setMaximumBatchCall) {
+    this._call = call;
+  }
+
+  get newValueSlice(): i32 {
+    return this._call.inputValues[0].value.toI32();
+  }
+
+  get newValueRelease(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+}
+
+export class _setMaximumBatchCall__Outputs {
+  _call: _setMaximumBatchCall;
+
+  constructor(call: _setMaximumBatchCall) {
+    this._call = call;
+  }
+}
+
+export class _upgradeSlicersCall extends ethereum.Call {
+  get inputs(): _upgradeSlicersCall__Inputs {
+    return new _upgradeSlicersCall__Inputs(this);
+  }
+
+  get outputs(): _upgradeSlicersCall__Outputs {
+    return new _upgradeSlicersCall__Outputs(this);
+  }
+}
+
+export class _upgradeSlicersCall__Inputs {
+  _call: _upgradeSlicersCall;
+
+  constructor(call: _upgradeSlicersCall) {
+    this._call = call;
+  }
+
+  get newLogicImpl(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
 
-export class _setNewSliceAddressCall__Outputs {
-  _call: _setNewSliceAddressCall;
+export class _upgradeSlicersCall__Outputs {
+  _call: _upgradeSlicersCall;
 
-  constructor(call: _setNewSliceAddressCall) {
+  constructor(call: _upgradeSlicersCall) {
+    this._call = call;
+  }
+}
+
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get SLCAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get sliceCoreAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 }
@@ -453,8 +566,8 @@ export class PayProductsCall__Inputs {
     return this._call.inputValues[1].value.toBigIntArray();
   }
 
-  get quantities(): Array<BigInt> {
-    return this._call.inputValues[2].value.toBigIntArray();
+  get quantities(): Array<i32> {
+    return this._call.inputValues[2].value.toI32Array();
   }
 }
 
@@ -620,6 +733,70 @@ export class TriggerReleaseCall__Outputs {
   _call: TriggerReleaseCall;
 
   constructor(call: TriggerReleaseCall) {
+    this._call = call;
+  }
+}
+
+export class UpgradeToCall extends ethereum.Call {
+  get inputs(): UpgradeToCall__Inputs {
+    return new UpgradeToCall__Inputs(this);
+  }
+
+  get outputs(): UpgradeToCall__Outputs {
+    return new UpgradeToCall__Outputs(this);
+  }
+}
+
+export class UpgradeToCall__Inputs {
+  _call: UpgradeToCall;
+
+  constructor(call: UpgradeToCall) {
+    this._call = call;
+  }
+
+  get newImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpgradeToCall__Outputs {
+  _call: UpgradeToCall;
+
+  constructor(call: UpgradeToCall) {
+    this._call = call;
+  }
+}
+
+export class UpgradeToAndCallCall extends ethereum.Call {
+  get inputs(): UpgradeToAndCallCall__Inputs {
+    return new UpgradeToAndCallCall__Inputs(this);
+  }
+
+  get outputs(): UpgradeToAndCallCall__Outputs {
+    return new UpgradeToAndCallCall__Outputs(this);
+  }
+}
+
+export class UpgradeToAndCallCall__Inputs {
+  _call: UpgradeToAndCallCall;
+
+  constructor(call: UpgradeToAndCallCall) {
+    this._call = call;
+  }
+
+  get newImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get data(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
+}
+
+export class UpgradeToAndCallCall__Outputs {
+  _call: UpgradeToAndCallCall;
+
+  constructor(call: UpgradeToAndCallCall) {
     this._call = call;
   }
 }
