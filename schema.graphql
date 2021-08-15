@@ -1,38 +1,54 @@
-type OwnershipTransferred @entity {
+type Slicer @entity {
   id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
+  address: Bytes!
+  slices: BigInt!
+  minimumSlices: BigInt!
+  totalReceived: BigInt!
+  creator: Payee!
+  payees: [PayeeSlicer]! @derivedFrom(field: "slicer")
+  products: [Product]! @derivedFrom(field: "slicer")
+  childrenSlicers: [Slicer]! # TBD!
+  createdAtTimestamp: BigInt!
+  # contentURI: String!
+  # metadataURI: String!
 }
 
-type Paused @entity {
+type Payee @entity {
   id: ID!
-  account: Bytes! # address
+  slc: BigInt
+  slicers: [PayeeSlicer]! @derivedFrom(field: "payee")
+  created: [Slicer]! @derivedFrom(field: "creator")
 }
 
-type ProductsPaid @entity {
+type PayeeSlicer @entity {
   id: ID!
-  slicerAddresses: [Bytes!]! # address[]
-  productIds: [BigInt!]! # uint256[]
-  quantities: [BigInt!]! # uint256[]
-  totalPaid: BigInt! # uint256
+  payee: Payee!
+  slicer: Slicer!
+  slices: BigInt!
+  released: BigInt
+  purchases: [ProductPurchase]! @derivedFrom(field: "buyer") # TBD!
 }
 
-type TokenSliced @entity {
+type Product @entity {
   id: ID!
-  slicerAddress: Bytes! # address
-  tokenId: BigInt! # uint256
-  payees: [Bytes!]! # address[]
-  shares: [BigInt!]! # uint256[]
+  slicer: Slicer!
+  categoryIndex: BigInt!
+  price: BigInt!
+  isUSD: Boolean!
+  isInfinite: Boolean!
+  isMultiple: Boolean!
+  availableUnits: BigInt!
+  creator: Bytes!
+  data: Bytes!
 }
 
-type TriggeredRelease @entity {
+# TBD!
+type ProductPurchase @entity {
   id: ID!
-  account: Bytes! # address
-  totalReleased: BigInt! # uint256
-  slicerPercentage: Int! # uint8
+  buyer: PayeeSlicer!
+  quantity: BigInt!
 }
 
-type Unpaused @entity {
-  id: ID!
-  account: Bytes! # address
-}
+# TODO
+# retrieve IDs of the slicers a Payee has purchased from
+# retrieve IDs of the products a Payee has purchased from a slicer
