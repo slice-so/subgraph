@@ -6,25 +6,23 @@ dataSources:
     name: Slice
     network: rinkeby
     source:
-      address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d"
+      address: "0xC7e7B60EE5b54d3C41CA4e556Ba410d88A66Fa9D"
       abi: Slice
-      startBlock: 9038501
+      startBlock: 9114205
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - TokenSliced
-        - TriggeredRelease
-        - ProductsPaid
+        - Slicer
+        - Payee
+        - PayeeSlicer
       abis:
         - name: Slice
           file: ./abis/Slice.json
       eventHandlers:
         - event: TokenSliced(address,uint256,indexed address[],uint256[],uint256)
           handler: handleTokenSliced
-        - event: TriggeredRelease(indexed address,uint256,uint8)
-          handler: handleTriggeredRelease
         - event: ProductsPaid(indexed address[],indexed uint32[],uint16[],uint256)
           handler: handleProductsPaid
       file: ./src/mappings/slice.ts
@@ -32,16 +30,16 @@ dataSources:
     name: SliceCore
     network: rinkeby
     source:
-      address: "0x9AaaC97a3E4868c443fc4b2F74c3861EBE2D8DB7"
+      address: "0x9F64d99F1365C7565C406D40B693f9b9bF3E0343"
       abi: SliceCore
-      startBlock: 9038499
+      startBlock: 9114200
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - TransferSingle
-        - TransferBatch
+        - Payee
+        - PayeeSlicer
       abis:
         - name: SliceCore
           file: ./abis/SliceCore.json
@@ -55,16 +53,15 @@ dataSources:
     name: SLC
     network: rinkeby
     source:
-      address: "0xAE38a794E839D045460839ABe288a8e5C28B0fc6"
+      address: "0x0827D84FE2bcAFb9286103157c090E47fa4e3F78"
       abi: SLC
-      startBlock: 9038500
+      startBlock: 9114202
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - MintedSLC
-        - MintTriggered
+        - Payee
       abis:
         - name: SLC
           file: ./abis/SLC.json
@@ -73,6 +70,8 @@ dataSources:
           handler: handleMintedSLC
         - event: MintTriggered(indexed address,uint256,indexed address,uint8)
           handler: handleMintTriggered
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
       file: ./src/mappings/slc.ts
 templates:
   - kind: ethereum/contract
@@ -98,8 +97,6 @@ templates:
       abis:
         - name: Slicer
           file: ./abis/Slicer.json
-        - name: SlicerProducts
-          file: ./abis/SlicerProducts.json
       eventHandlers:
         - event: PaymentReceived(indexed address,uint256)
           handler: handlePaymentReceived
@@ -109,7 +106,7 @@ templates:
           handler: handleSLCPaid
         - event: AddedChildrenSlicer(indexed uint256)
           handler: handleAddedChildrenSlicer
-        - event: ProductAdded(indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes)
+        - event: ProductAdded(indexed uint32,indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes)
           handler: handleProductAdded
         - event: ProductInfoChanged(indexed uint32,bool,uint32,uint256)
           handler: handleProductInfoChanged
