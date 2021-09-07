@@ -103,12 +103,12 @@ export class ProductsPaid__Params {
     this._event = event;
   }
 
-  get slicerAddresses(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get slicerAddresses(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
   }
 
-  get productIds(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get productIds(): Array<BigInt> {
+    return this._event.parameters[1].value.toBigIntArray();
   }
 
   get quantities(): Array<i32> {
@@ -141,8 +141,8 @@ export class TokenSliced__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get payees(): Bytes {
-    return this._event.parameters[2].value.toBytes();
+  get payees(): Array<Address> {
+    return this._event.parameters[2].value.toAddressArray();
   }
 
   get shares(): Array<BigInt> {
@@ -151,6 +151,10 @@ export class TokenSliced__Params {
 
   get minimumShares(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get isCollectible(): boolean {
+    return this._event.parameters[5].value.toBoolean();
   }
 }
 
@@ -221,13 +225,18 @@ export class Slice extends ethereum.SmartContract {
     return new Slice("Slice", address);
   }
 
-  _createSlicer(id: BigInt, minimumShares: BigInt): Address {
+  _createSlicer(
+    id: BigInt,
+    minimumShares: BigInt,
+    isCollectible: boolean
+  ): Address {
     let result = super.call(
       "_createSlicer",
-      "_createSlicer(uint256,uint256):(address)",
+      "_createSlicer(uint256,uint256,bool):(address)",
       [
         ethereum.Value.fromUnsignedBigInt(id),
-        ethereum.Value.fromUnsignedBigInt(minimumShares)
+        ethereum.Value.fromUnsignedBigInt(minimumShares),
+        ethereum.Value.fromBoolean(isCollectible)
       ]
     );
 
@@ -236,15 +245,40 @@ export class Slice extends ethereum.SmartContract {
 
   try__createSlicer(
     id: BigInt,
-    minimumShares: BigInt
+    minimumShares: BigInt,
+    isCollectible: boolean
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "_createSlicer",
-      "_createSlicer(uint256,uint256):(address)",
+      "_createSlicer(uint256,uint256,bool):(address)",
       [
         ethereum.Value.fromUnsignedBigInt(id),
-        ethereum.Value.fromUnsignedBigInt(minimumShares)
+        ethereum.Value.fromUnsignedBigInt(minimumShares),
+        ethereum.Value.fromBoolean(isCollectible)
       ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  _implementation(): Address {
+    let result = super.call(
+      "_implementation",
+      "_implementation():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try__implementation(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "_implementation",
+      "_implementation():(address)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -330,6 +364,41 @@ export class Slice extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  unreleasedBatch(
+    account: Address,
+    slicerAddresses: Array<Address>
+  ): Array<BigInt> {
+    let result = super.call(
+      "unreleasedBatch",
+      "unreleasedBatch(address,address[]):(uint256[])",
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromAddressArray(slicerAddresses)
+      ]
+    );
+
+    return result[0].toBigIntArray();
+  }
+
+  try_unreleasedBatch(
+    account: Address,
+    slicerAddresses: Array<Address>
+  ): ethereum.CallResult<Array<BigInt>> {
+    let result = super.tryCall(
+      "unreleasedBatch",
+      "unreleasedBatch(address,address[]):(uint256[])",
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromAddressArray(slicerAddresses)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
   }
 }
 
@@ -429,6 +498,10 @@ export class _createSlicerCall__Inputs {
   get minimumShares(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
+
+  get isCollectible(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
 }
 
 export class _createSlicerCall__Outputs {
@@ -473,6 +546,32 @@ export class _setMaximumBatchCall__Outputs {
   _call: _setMaximumBatchCall;
 
   constructor(call: _setMaximumBatchCall) {
+    this._call = call;
+  }
+}
+
+export class _togglePauseCall extends ethereum.Call {
+  get inputs(): _togglePauseCall__Inputs {
+    return new _togglePauseCall__Inputs(this);
+  }
+
+  get outputs(): _togglePauseCall__Outputs {
+    return new _togglePauseCall__Outputs(this);
+  }
+}
+
+export class _togglePauseCall__Inputs {
+  _call: _togglePauseCall;
+
+  constructor(call: _togglePauseCall) {
+    this._call = call;
+  }
+}
+
+export class _togglePauseCall__Outputs {
+  _call: _togglePauseCall;
+
+  constructor(call: _togglePauseCall) {
     this._call = call;
   }
 }
@@ -633,38 +732,16 @@ export class SliceCall__Inputs {
   get minimumShares(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
+
+  get isCollectible(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
+  }
 }
 
 export class SliceCall__Outputs {
   _call: SliceCall;
 
   constructor(call: SliceCall) {
-    this._call = call;
-  }
-}
-
-export class TogglePauseCall extends ethereum.Call {
-  get inputs(): TogglePauseCall__Inputs {
-    return new TogglePauseCall__Inputs(this);
-  }
-
-  get outputs(): TogglePauseCall__Outputs {
-    return new TogglePauseCall__Outputs(this);
-  }
-}
-
-export class TogglePauseCall__Inputs {
-  _call: TogglePauseCall;
-
-  constructor(call: TogglePauseCall) {
-    this._call = call;
-  }
-}
-
-export class TogglePauseCall__Outputs {
-  _call: TogglePauseCall;
-
-  constructor(call: TogglePauseCall) {
     this._call = call;
   }
 }

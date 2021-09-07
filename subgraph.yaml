@@ -6,9 +6,9 @@ dataSources:
     name: Slice
     network: rinkeby
     source:
-      address: "0xC7e7B60EE5b54d3C41CA4e556Ba410d88A66Fa9D"
+      address: "0xeb46e6D1F0620fE7Bb255b83EFf9b844edc97841"
       abi: Slice
-      startBlock: 9114205
+      startBlock: 9167662
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -21,18 +21,20 @@ dataSources:
         - name: Slice
           file: ./abis/Slice.json
       eventHandlers:
-        - event: TokenSliced(address,uint256,indexed address[],uint256[],uint256)
+        - event: TokenSliced(address,uint256,address[],uint256[],uint256,bool)
           handler: handleTokenSliced
-        - event: ProductsPaid(indexed address[],indexed uint32[],uint16[],uint256)
+        - event: ProductsPaid(address[],uint32[],uint16[],uint256)
           handler: handleProductsPaid
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
       file: ./src/mappings/slice.ts
   - kind: ethereum/contract
     name: SliceCore
     network: rinkeby
     source:
-      address: "0x9F64d99F1365C7565C406D40B693f9b9bF3E0343"
+      address: "0xFB57bf285f041b4d24B5dFA53c090B334029A64a"
       abi: SliceCore
-      startBlock: 9114200
+      startBlock: 9167658
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -53,9 +55,9 @@ dataSources:
     name: SLC
     network: rinkeby
     source:
-      address: "0x0827D84FE2bcAFb9286103157c090E47fa4e3F78"
+      address: "0xB9187815bAffaC73ddCCEb9866ace8e5137a21E5"
       abi: SLC
-      startBlock: 9114202
+      startBlock: 9167659
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -84,16 +86,10 @@ templates:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - PaymentReceived
-        - TriggeredRelease
-        - SLCPaid
-        - AddedChildrenSlicer
-        - ProductAdded
-        - ProductInfoChanged
-        - ProductCurrencyChanged
-        - ProductCategoryChanged
-        - ProductRemoved
-        - ProductPaid
+        - Slicer
+        - PayeeSlicer
+        - Product
+        - ProductPurchase
       abis:
         - name: Slicer
           file: ./abis/Slicer.json
@@ -106,7 +102,7 @@ templates:
           handler: handleSLCPaid
         - event: AddedChildrenSlicer(indexed uint256)
           handler: handleAddedChildrenSlicer
-        - event: ProductAdded(indexed uint32,indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes)
+        - event: ProductAdded(indexed uint32,indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes,uint256[],uint32[])
           handler: handleProductAdded
         - event: ProductInfoChanged(indexed uint32,bool,uint32,uint256)
           handler: handleProductInfoChanged

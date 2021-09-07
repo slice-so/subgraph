@@ -1,7 +1,12 @@
 import {
+  Slicer as SlicerEntity,
+  PayeeSlicer,
+  Product,
+  ProductPurchase,
+} from "../../generated/schema"
+import {
   PaymentReceived as PaymentReceivedEvent,
   TriggeredRelease as TriggeredSlicerReleaseEvent,
-  SLCPaid as SLCPaidEvent,
   AddedChildrenSlicer as AddedChildrenSlicerEvent,
   ProductAdded as ProductAddedEvent,
   ProductInfoChanged as ProductInfoChangedEvent,
@@ -10,12 +15,6 @@ import {
   ProductRemoved as ProductRemovedEvent,
   ProductPaid as ProductPaidEvent,
 } from "../../generated/templates/Slicer/Slicer"
-import {
-  Slicer as SlicerEntity,
-  Payee,
-  PayeeSlicer,
-  Product,
-} from "../../generated/schema"
 import { BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
 
 export function handlePaymentReceived(event: PaymentReceivedEvent): void {
@@ -24,7 +23,6 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   let slicer = SlicerEntity.load(slicerId)
   slicer.totalReceived = slicer.totalReceived.plus(event.params.amount)
   slicer.save()
-  // Todo: Also register event.params.from ?
 }
 
 export function handleTriggeredSlicerRelease(
@@ -50,22 +48,30 @@ export function handleAddedChildrenSlicer(
 export function handleProductAdded(event: ProductAddedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let product = new Product(event.params.productId.toString())
-  // To Check
+  let product = new Product(slicerId + "-" + event.params.productId.toString())
+  let subSlicers = event.params.subSlicersId
+  let subProducts = event.params.subProducts
   product.slicer = slicerId
-  product.availableUnits = event.params.availableUnits
   product.categoryIndex = event.params.categoryIndex
-  product.creator = event.params.creator
-  product.data = event.params.data
+  product.price = event.params.price
+  product.isUSD = event.params.isUSD
   product.isInfinite = event.params.isInfinite
   product.isMultiple = event.params.isMultiple
-  product.isUSD = event.params.isUSD
-  product.price = event.params.price
+  product.availableUnits = event.params.availableUnits
+  product.creator = event.params.creator
+  product.data = event.params.data
+  for (let i = 0; i < subSlicers.length; i++) {
+    product.subProducts.push(
+      subSlicers[i].toString() + "-" + subProducts[i].toString()
+    )
+  }
   product.save()
 }
 
 export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
-  let product = Product.load(event.params.productId.toString())
+  let context = dataSource.context()
+  let slicerId = context.getString("slicerId")
+  let product = Product.load(slicerId + "-" + event.params.productId.toString())
   product.isInfinite = event.params.isInfinite
   product.availableUnits = event.params.units
   product.price = event.params.productPrice
@@ -75,7 +81,9 @@ export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
 export function handleProductCurrencyChanged(
   event: ProductCurrencyChangedEvent
 ): void {
-  let product = Product.load(event.params.productId.toString())
+  let context = dataSource.context()
+  let slicerId = context.getString("slicerId")
+  let product = Product.load(slicerId + "-" + event.params.productId.toString())
   product.isUSD = event.params.isUSD
   product.price = event.params.productPrice
   product.save()
@@ -84,16 +92,20 @@ export function handleProductCurrencyChanged(
 export function handleProductCategoryChanged(
   event: ProductCategoryChangedEvent
 ): void {
-  let product = Product.load(event.params.productId.toString())
+  let context = dataSource.context()
+  let slicerId = context.getString("slicerId")
+  let product = Product.load(slicerId + "-" + event.params.productId.toString())
   product.categoryIndex = event.params.categoryIndex
   product.save()
 }
 
 export function handleProductRemoved(event: ProductRemovedEvent): void {
-  let product = Product.load(event.params.productId.toString())
+  let context = dataSource.context()
+  let slicerId = context.getString("slicerId")
+  let product = Product.load(slicerId + "-" + event.params.productId.toString())
   product.availableUnits = BigInt.fromI32(0)
   product.categoryIndex = BigInt.fromI32(0)
-  // product.data = Bytes.fromHexString("0x")
+  product.data = new Bytes(0)
   product.isInfinite = false
   product.isMultiple = false
   product.isUSD = false
@@ -101,16 +113,23 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
   product.save()
 }
 
-// export function handleProductPaid(event: ProductPaidEvent): void {
-//   let entity = new ProductPaid(
-//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-//   )
-//   entity.from = event.params.from
-//   entity.productId = event.params.productId
-//   entity.quantity = event.params.quantity
-//   entity.productPrice = event.params.productPrice
-//   entity.save()
-// }
+export function handleProductPaid(event: ProductPaidEvent): void {
+  let context = dataSource.context()
+  let slicerId = context.getString("slicerId")
+  let productId = slicerId + "-" + event.params.productId.toString()
+  let buyerAddress = event.params.from.toHexString()
+  let quantity = BigInt.fromI32(event.params.quantity)
+
+  let pp = ProductPurchase.load(slicerId + "-" + productId + "-" + buyerAddress)
+  if (!pp) {
+    pp = new ProductPurchase(slicerId + "-" + productId + "-" + buyerAddress)
+    pp.product = productId
+    pp.buyer = buyerAddress
+  }
+  pp.hash.push(event.transaction.hash)
+  pp.quantity = pp.quantity.plus(quantity)
+  pp.save()
+}
 
 // export function handleSLCPaid(event: SLCPaidEvent): void {
 //   let entity = new SLCPaid(
@@ -121,3 +140,5 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
 //   entity.amount = event.params.amount
 //   entity.save()
 // }
+
+// Todo: Remove slicer from payees when slicer owned = 0?

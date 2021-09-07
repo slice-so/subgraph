@@ -1,8 +1,8 @@
+import { Payee, PayeeSlicer } from "../../generated/schema"
 import {
   TransferSingle as TransferSingleEvent,
   TransferBatch as TransferBatchEvent,
 } from "../../generated/SliceCore/SliceCore"
-import { Payee, PayeeSlicer } from "../../generated/schema"
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 
 export function handleTransferSingle(event: TransferSingleEvent): void {
@@ -18,15 +18,15 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
     let toSlicer = PayeeSlicer.load(slicerId + "-" + toAddress)
     if (!to) {
       to = new Payee(toAddress)
-      // to.slc = BigInt.fromI32(0)
       to.save()
     }
     if (!toSlicer) {
       toSlicer = new PayeeSlicer(slicerId + "-" + toAddress)
       toSlicer.payee = toAddress
       toSlicer.slicer = slicerId
-      toSlicer.slices = toSlicer.slices.plus(value)
+      toSlicer.slices = BigInt.fromI32(0)
     }
+    toSlicer.slices = toSlicer.slices.plus(value)
     fromSlicer.slices = fromSlicer.slices.minus(value)
     fromSlicer.save()
     toSlicer.save()
@@ -41,13 +41,12 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
     let to = Payee.load(toAddress)
     if (!to) {
       to = new Payee(toAddress)
-      // to.slc = BigInt.fromI32(0)
       to.save()
     }
-    let ids = event.params.ids.toString()
+    let ids = event.params.ids
     let values = event.params.values
     for (let i = 0; i < ids.length; i++) {
-      let slicerId = ids[i]
+      let slicerId = ids[i].toString()
       let value = values[i]
 
       let fromSlicer = PayeeSlicer.load(slicerId + "-" + fromAddress)
@@ -56,10 +55,9 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
         toSlicer = new PayeeSlicer(slicerId + "-" + toAddress)
         toSlicer.payee = toAddress
         toSlicer.slicer = slicerId
-        toSlicer.slices = value
-      } else {
-        toSlicer.slices = toSlicer.slices.plus(value)
+        toSlicer.slices = BigInt.fromI32(0)
       }
+      toSlicer.slices = toSlicer.slices.plus(value)
       fromSlicer.slices = fromSlicer.slices.minus(value)
       fromSlicer.save()
       toSlicer.save()

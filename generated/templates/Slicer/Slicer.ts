@@ -28,6 +28,92 @@ export class AddedChildrenSlicer__Params {
   }
 }
 
+export class ERC1155BatchReceived extends ethereum.Event {
+  get params(): ERC1155BatchReceived__Params {
+    return new ERC1155BatchReceived__Params(this);
+  }
+}
+
+export class ERC1155BatchReceived__Params {
+  _event: ERC1155BatchReceived;
+
+  constructor(event: ERC1155BatchReceived) {
+    this._event = event;
+  }
+
+  get contractAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get from(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get tokenIds(): Array<BigInt> {
+    return this._event.parameters[2].value.toBigIntArray();
+  }
+
+  get amounts(): Array<BigInt> {
+    return this._event.parameters[3].value.toBigIntArray();
+  }
+}
+
+export class ERC1155Received extends ethereum.Event {
+  get params(): ERC1155Received__Params {
+    return new ERC1155Received__Params(this);
+  }
+}
+
+export class ERC1155Received__Params {
+  _event: ERC1155Received;
+
+  constructor(event: ERC1155Received) {
+    this._event = event;
+  }
+
+  get contractAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get from(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class ERC721Received extends ethereum.Event {
+  get params(): ERC721Received__Params {
+    return new ERC721Received__Params(this);
+  }
+}
+
+export class ERC721Received__Params {
+  _event: ERC721Received;
+
+  constructor(event: ERC721Received) {
+    this._event = event;
+  }
+
+  get contractAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get from(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
 export class Paused extends ethereum.Event {
   get params(): Paused__Params {
     return new Paused__Params(this);
@@ -81,36 +167,48 @@ export class ProductAdded__Params {
     this._event = event;
   }
 
-  get categoryIndex(): BigInt {
+  get productId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get price(): BigInt {
+  get categoryIndex(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get isUSD(): boolean {
-    return this._event.parameters[2].value.toBoolean();
+  get price(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 
-  get isMultiple(): boolean {
+  get isUSD(): boolean {
     return this._event.parameters[3].value.toBoolean();
   }
 
-  get isInfinite(): boolean {
+  get isMultiple(): boolean {
     return this._event.parameters[4].value.toBoolean();
   }
 
+  get isInfinite(): boolean {
+    return this._event.parameters[5].value.toBoolean();
+  }
+
   get availableUnits(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
+    return this._event.parameters[6].value.toBigInt();
   }
 
   get creator(): Address {
-    return this._event.parameters[6].value.toAddress();
+    return this._event.parameters[7].value.toAddress();
   }
 
   get data(): Bytes {
-    return this._event.parameters[7].value.toBytes();
+    return this._event.parameters[8].value.toBytes();
+  }
+
+  get subSlicersId(): Array<BigInt> {
+    return this._event.parameters[9].value.toBigIntArray();
+  }
+
+  get subProducts(): Array<BigInt> {
+    return this._event.parameters[10].value.toBigIntArray();
   }
 }
 
@@ -306,23 +404,6 @@ export class Unpaused__Params {
   }
 }
 
-export class Slicer__productPriceResult {
-  value0: BigInt;
-  value1: boolean;
-
-  constructor(value0: BigInt, value1: boolean) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromBoolean(this.value1));
-    return map;
-  }
-}
-
 export class Slicer__slicerInfoResult {
   value0: BigInt;
   value1: i32;
@@ -396,9 +477,9 @@ export class Slicer extends ethereum.SmartContract {
 
   onERC1155BatchReceived(
     param0: Address,
-    param1: Address,
+    from: Address,
     ids: Array<BigInt>,
-    param3: Array<BigInt>,
+    amounts: Array<BigInt>,
     param4: Bytes
   ): Bytes {
     let result = super.call(
@@ -406,9 +487,9 @@ export class Slicer extends ethereum.SmartContract {
       "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes):(bytes4)",
       [
         ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromAddress(param1),
+        ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigIntArray(ids),
-        ethereum.Value.fromUnsignedBigIntArray(param3),
+        ethereum.Value.fromUnsignedBigIntArray(amounts),
         ethereum.Value.fromBytes(param4)
       ]
     );
@@ -418,9 +499,9 @@ export class Slicer extends ethereum.SmartContract {
 
   try_onERC1155BatchReceived(
     param0: Address,
-    param1: Address,
+    from: Address,
     ids: Array<BigInt>,
-    param3: Array<BigInt>,
+    amounts: Array<BigInt>,
     param4: Bytes
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
@@ -428,9 +509,9 @@ export class Slicer extends ethereum.SmartContract {
       "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes):(bytes4)",
       [
         ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromAddress(param1),
+        ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigIntArray(ids),
-        ethereum.Value.fromUnsignedBigIntArray(param3),
+        ethereum.Value.fromUnsignedBigIntArray(amounts),
         ethereum.Value.fromBytes(param4)
       ]
     );
@@ -443,9 +524,9 @@ export class Slicer extends ethereum.SmartContract {
 
   onERC1155Received(
     param0: Address,
-    param1: Address,
+    from: Address,
     id: BigInt,
-    param3: BigInt,
+    amount: BigInt,
     param4: Bytes
   ): Bytes {
     let result = super.call(
@@ -453,9 +534,9 @@ export class Slicer extends ethereum.SmartContract {
       "onERC1155Received(address,address,uint256,uint256,bytes):(bytes4)",
       [
         ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromAddress(param1),
+        ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigInt(id),
-        ethereum.Value.fromUnsignedBigInt(param3),
+        ethereum.Value.fromUnsignedBigInt(amount),
         ethereum.Value.fromBytes(param4)
       ]
     );
@@ -465,9 +546,9 @@ export class Slicer extends ethereum.SmartContract {
 
   try_onERC1155Received(
     param0: Address,
-    param1: Address,
+    from: Address,
     id: BigInt,
-    param3: BigInt,
+    amount: BigInt,
     param4: Bytes
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
@@ -475,10 +556,53 @@ export class Slicer extends ethereum.SmartContract {
       "onERC1155Received(address,address,uint256,uint256,bytes):(bytes4)",
       [
         ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromAddress(param1),
+        ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigInt(id),
-        ethereum.Value.fromUnsignedBigInt(param3),
+        ethereum.Value.fromUnsignedBigInt(amount),
         ethereum.Value.fromBytes(param4)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  onERC721Received(
+    param0: Address,
+    from: Address,
+    tokenId: BigInt,
+    param3: Bytes
+  ): Bytes {
+    let result = super.call(
+      "onERC721Received",
+      "onERC721Received(address,address,uint256,bytes):(bytes4)",
+      [
+        ethereum.Value.fromAddress(param0),
+        ethereum.Value.fromAddress(from),
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromBytes(param3)
+      ]
+    );
+
+    return result[0].toBytes();
+  }
+
+  try_onERC721Received(
+    param0: Address,
+    from: Address,
+    tokenId: BigInt,
+    param3: Bytes
+  ): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "onERC721Received",
+      "onERC721Received(address,address,uint256,bytes):(bytes4)",
+      [
+        ethereum.Value.fromAddress(param0),
+        ethereum.Value.fromAddress(from),
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromBytes(param3)
       ]
     );
     if (result.reverted) {
@@ -503,34 +627,25 @@ export class Slicer extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  productPrice(productId: BigInt): Slicer__productPriceResult {
-    let result = super.call(
-      "productPrice",
-      "productPrice(uint32):(uint256,bool)",
-      [ethereum.Value.fromUnsignedBigInt(productId)]
-    );
+  productPrice(productId: BigInt): BigInt {
+    let result = super.call("productPrice", "productPrice(uint32):(uint256)", [
+      ethereum.Value.fromUnsignedBigInt(productId)
+    ]);
 
-    return new Slicer__productPriceResult(
-      result[0].toBigInt(),
-      result[1].toBoolean()
-    );
+    return result[0].toBigInt();
   }
 
-  try_productPrice(
-    productId: BigInt
-  ): ethereum.CallResult<Slicer__productPriceResult> {
+  try_productPrice(productId: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "productPrice",
-      "productPrice(uint32):(uint256,bool)",
+      "productPrice(uint32):(uint256)",
       [ethereum.Value.fromUnsignedBigInt(productId)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new Slicer__productPriceResult(value[0].toBigInt(), value[1].toBoolean())
-    );
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   release(account: Address): BigInt {
@@ -793,6 +908,10 @@ export class _initializeCall__Inputs {
   get minimumShares_(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
+
+  get isCollectible_(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
+  }
 }
 
 export class _initializeCall__Outputs {
@@ -803,20 +922,20 @@ export class _initializeCall__Outputs {
   }
 }
 
-export class _payProductCall extends ethereum.Call {
-  get inputs(): _payProductCall__Inputs {
-    return new _payProductCall__Inputs(this);
+export class _payProductFromSliceCall extends ethereum.Call {
+  get inputs(): _payProductFromSliceCall__Inputs {
+    return new _payProductFromSliceCall__Inputs(this);
   }
 
-  get outputs(): _payProductCall__Outputs {
-    return new _payProductCall__Outputs(this);
+  get outputs(): _payProductFromSliceCall__Outputs {
+    return new _payProductFromSliceCall__Outputs(this);
   }
 }
 
-export class _payProductCall__Inputs {
-  _call: _payProductCall;
+export class _payProductFromSliceCall__Inputs {
+  _call: _payProductFromSliceCall;
 
-  constructor(call: _payProductCall) {
+  constructor(call: _payProductFromSliceCall) {
     this._call = call;
   }
 
@@ -833,10 +952,52 @@ export class _payProductCall__Inputs {
   }
 }
 
-export class _payProductCall__Outputs {
-  _call: _payProductCall;
+export class _payProductFromSliceCall__Outputs {
+  _call: _payProductFromSliceCall;
 
-  constructor(call: _payProductCall) {
+  constructor(call: _payProductFromSliceCall) {
+    this._call = call;
+  }
+}
+
+export class _payProductFromSlicerCall extends ethereum.Call {
+  get inputs(): _payProductFromSlicerCall__Inputs {
+    return new _payProductFromSlicerCall__Inputs(this);
+  }
+
+  get outputs(): _payProductFromSlicerCall__Outputs {
+    return new _payProductFromSlicerCall__Outputs(this);
+  }
+}
+
+export class _payProductFromSlicerCall__Inputs {
+  _call: _payProductFromSlicerCall;
+
+  constructor(call: _payProductFromSlicerCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get account(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get productId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get quantity(): i32 {
+    return this._call.inputValues[3].value.toI32();
+  }
+}
+
+export class _payProductFromSlicerCall__Outputs {
+  _call: _payProductFromSlicerCall;
+
+  constructor(call: _payProductFromSlicerCall) {
     this._call = call;
   }
 }
@@ -927,6 +1088,14 @@ export class AddProductCall__Inputs {
   get purchaseData(): Bytes {
     return this._call.inputValues[7].value.toBytes();
   }
+
+  get subSlicersId_(): Array<BigInt> {
+    return this._call.inputValues[8].value.toBigIntArray();
+  }
+
+  get subProducts_(): Array<BigInt> {
+    return this._call.inputValues[9].value.toBigIntArray();
+  }
 }
 
 export class AddProductCall__Outputs {
@@ -958,7 +1127,7 @@ export class OnERC1155BatchReceivedCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get value1(): Address {
+  get from(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
@@ -966,7 +1135,7 @@ export class OnERC1155BatchReceivedCall__Inputs {
     return this._call.inputValues[2].value.toBigIntArray();
   }
 
-  get value3(): Array<BigInt> {
+  get amounts(): Array<BigInt> {
     return this._call.inputValues[3].value.toBigIntArray();
   }
 
@@ -1008,7 +1177,7 @@ export class OnERC1155ReceivedCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get value1(): Address {
+  get from(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
@@ -1016,7 +1185,7 @@ export class OnERC1155ReceivedCall__Inputs {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get value3(): BigInt {
+  get amount(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
 
@@ -1029,6 +1198,52 @@ export class OnERC1155ReceivedCall__Outputs {
   _call: OnERC1155ReceivedCall;
 
   constructor(call: OnERC1155ReceivedCall) {
+    this._call = call;
+  }
+
+  get value0(): Bytes {
+    return this._call.outputValues[0].value.toBytes();
+  }
+}
+
+export class OnERC721ReceivedCall extends ethereum.Call {
+  get inputs(): OnERC721ReceivedCall__Inputs {
+    return new OnERC721ReceivedCall__Inputs(this);
+  }
+
+  get outputs(): OnERC721ReceivedCall__Outputs {
+    return new OnERC721ReceivedCall__Outputs(this);
+  }
+}
+
+export class OnERC721ReceivedCall__Inputs {
+  _call: OnERC721ReceivedCall;
+
+  constructor(call: OnERC721ReceivedCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get from(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get value3(): Bytes {
+    return this._call.inputValues[3].value.toBytes();
+  }
+}
+
+export class OnERC721ReceivedCall__Outputs {
+  _call: OnERC721ReceivedCall;
+
+  constructor(call: OnERC721ReceivedCall) {
     this._call = call;
   }
 

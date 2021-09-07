@@ -4,10 +4,11 @@ type Slicer @entity {
   slices: BigInt!
   minimumSlices: BigInt!
   totalReceived: BigInt!
+  isCollectible: Boolean!
   creator: Payee!
   payees: [PayeeSlicer]! @derivedFrom(field: "slicer")
   products: [Product]! @derivedFrom(field: "slicer")
-  childrenSlicers: [Slicer]! # TBD!
+  childrenSlicers: [Slicer!] # Check!
   createdAtTimestamp: BigInt!
   # contentURI: String!
   # metadataURI: String!
@@ -26,7 +27,7 @@ type PayeeSlicer @entity {
   slicer: Slicer!
   slices: BigInt!
   released: BigInt
-  purchases: [ProductPurchase]! @derivedFrom(field: "buyer") # TBD!
+  purchases: [ProductPurchase]! @derivedFrom(field: "buyer")
 }
 
 type Product @entity {
@@ -40,15 +41,14 @@ type Product @entity {
   availableUnits: BigInt!
   creator: Bytes!
   data: Bytes!
+  subProducts: [Product]!
+  purchases: [ProductPurchase]! @derivedFrom(field: "product")
 }
 
-# TBD!
 type ProductPurchase @entity {
   id: ID!
+  product: Product!
   buyer: PayeeSlicer!
+  hash: [Bytes!]!
   quantity: BigInt!
 }
-
-# TODO
-# retrieve IDs of the slicers a Payee has purchased from
-# retrieve IDs of the products a Payee has purchased from a slicer
