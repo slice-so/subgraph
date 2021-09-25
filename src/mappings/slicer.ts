@@ -60,6 +60,9 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   product.availableUnits = event.params.availableUnits
   product.creator = event.params.creator
   product.data = event.params.data
+  product.totalPurchases = BigInt.fromI32(0)
+  product.createdAtTimestamp = event.block.timestamp
+  product.subProducts = []
   for (let i = 0; i < subSlicers.length; i++) {
     product.subProducts.push(
       subSlicers[i].toString() + "-" + subProducts[i].toString()
@@ -120,13 +123,19 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   let buyerAddress = event.params.from.toHexString()
   let quantity = BigInt.fromI32(event.params.quantity)
 
-  let pp = ProductPurchase.load(slicerId + "-" + productId + "-" + buyerAddress)
+  let product = Product.load(productId)
+  product.totalPurchases = product.totalPurchases.plus(quantity)
+  product.save()
+
+  let pp = ProductPurchase.load(productId + "-" + buyerAddress)
   if (!pp) {
-    pp = new ProductPurchase(slicerId + "-" + productId + "-" + buyerAddress)
+    pp = new ProductPurchase(productId + "-" + buyerAddress)
     pp.product = productId
-    pp.buyer = buyerAddress
+    pp.buyer = slicerId + "-" + buyerAddress
+    // pp.hash = []
+    pp.quantity = BigInt.fromI32(0)
   }
-  pp.hash.push(event.transaction.hash)
+  // pp.hash.push(event.transaction.hash)
   pp.quantity = pp.quantity.plus(quantity)
   pp.save()
 }

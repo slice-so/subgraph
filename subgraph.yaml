@@ -23,10 +23,10 @@ dataSources:
       eventHandlers:
         - event: TokenSliced(address,uint256,address[],uint256[],uint256,bool)
           handler: handleTokenSliced
-        - event: ProductsPaid(address[],uint32[],uint16[],uint256)
-          handler: handleProductsPaid
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
+        # - event: ProductsPaid(address[],uint32[],uint16[],uint256)
+        #   handler: handleProductsPaid
+        # - event: Upgraded(indexed address)
+        #   handler: handleUpgraded
       file: ./src/mappings/slice.ts
   - kind: ethereum/contract
     name: SliceCore
@@ -98,20 +98,20 @@ templates:
           handler: handlePaymentReceived
         - event: TriggeredRelease(indexed address,uint256)
           handler: handleTriggeredSlicerRelease
-        - event: SLCPaid(uint32[],uint16[],uint256)
-          handler: handleSLCPaid
+        # - event: SLCPaid(uint32[],uint16[],uint256)
+        #   handler: handleSLCPaid
         - event: AddedChildrenSlicer(indexed uint256)
           handler: handleAddedChildrenSlicer
         - event: ProductAdded(indexed uint32,indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes,uint256[],uint32[])
           handler: handleProductAdded
-        - event: ProductInfoChanged(indexed uint32,bool,uint32,uint256)
-          handler: handleProductInfoChanged
-        - event: ProductCurrencyChanged(indexed uint32,uint256,bool)
-          handler: handleProductCurrencyChanged
-        - event: ProductCategoryChanged(indexed uint32,uint32)
-          handler: handleProductCategoryChanged
-        - event: ProductRemoved(indexed uint32)
-          handler: handleProductRemoved
+        # - event: ProductInfoChanged(indexed uint32,bool,uint32,uint256)
+        #   handler: handleProductInfoChanged
+        # - event: ProductCurrencyChanged(indexed uint32,uint256,bool)
+        #   handler: handleProductCurrencyChanged
+        # - event: ProductCategoryChanged(indexed uint32,uint32)
+        #   handler: handleProductCategoryChanged
+        # - event: ProductRemoved(indexed uint32)
+        #   handler: handleProductRemoved
         - event: ProductPaid(indexed address,indexed uint32,uint16,uint256)
           handler: handleProductPaid
       file: ./src/mappings/slicer.ts

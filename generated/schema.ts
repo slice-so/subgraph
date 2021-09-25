@@ -96,21 +96,21 @@ export class Slicer extends Entity {
     this.set("creator", Value.fromString(value));
   }
 
-  get payees(): Array<string | null> {
+  get payees(): Array<string> {
     let value = this.get("payees");
     return value.toStringArray();
   }
 
-  set payees(value: Array<string | null>) {
+  set payees(value: Array<string>) {
     this.set("payees", Value.fromStringArray(value));
   }
 
-  get products(): Array<string | null> {
+  get products(): Array<string> {
     let value = this.get("products");
     return value.toStringArray();
   }
 
-  set products(value: Array<string | null>) {
+  set products(value: Array<string>) {
     this.set("products", Value.fromStringArray(value));
   }
 
@@ -191,21 +191,21 @@ export class Payee extends Entity {
     }
   }
 
-  get slicers(): Array<string | null> {
+  get slicers(): Array<string> {
     let value = this.get("slicers");
     return value.toStringArray();
   }
 
-  set slicers(value: Array<string | null>) {
+  set slicers(value: Array<string>) {
     this.set("slicers", Value.fromStringArray(value));
   }
 
-  get created(): Array<string | null> {
+  get created(): Array<string> {
     let value = this.get("created");
     return value.toStringArray();
   }
 
-  set created(value: Array<string | null>) {
+  set created(value: Array<string>) {
     this.set("created", Value.fromStringArray(value));
   }
 }
@@ -284,12 +284,12 @@ export class PayeeSlicer extends Entity {
     }
   }
 
-  get purchases(): Array<string | null> {
+  get purchases(): Array<string> {
     let value = this.get("purchases");
     return value.toStringArray();
   }
 
-  set purchases(value: Array<string | null>) {
+  set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
   }
 }
@@ -405,22 +405,40 @@ export class Product extends Entity {
     this.set("data", Value.fromBytes(value));
   }
 
-  get subProducts(): Array<string | null> {
+  get totalPurchases(): BigInt {
+    let value = this.get("totalPurchases");
+    return value.toBigInt();
+  }
+
+  set totalPurchases(value: BigInt) {
+    this.set("totalPurchases", Value.fromBigInt(value));
+  }
+
+  get subProducts(): Array<string> {
     let value = this.get("subProducts");
     return value.toStringArray();
   }
 
-  set subProducts(value: Array<string | null>) {
+  set subProducts(value: Array<string>) {
     this.set("subProducts", Value.fromStringArray(value));
   }
 
-  get purchases(): Array<string | null> {
+  get purchases(): Array<string> {
     let value = this.get("purchases");
     return value.toStringArray();
   }
 
-  set purchases(value: Array<string | null>) {
+  set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
+  }
+
+  get createdAtTimestamp(): BigInt {
+    let value = this.get("createdAtTimestamp");
+    return value.toBigInt();
+  }
+
+  set createdAtTimestamp(value: BigInt) {
+    this.set("createdAtTimestamp", Value.fromBigInt(value));
   }
 }
 
@@ -470,15 +488,6 @@ export class ProductPurchase extends Entity {
 
   set buyer(value: string) {
     this.set("buyer", Value.fromString(value));
-  }
-
-  get hash(): Array<Bytes> {
-    let value = this.get("hash");
-    return value.toBytesArray();
-  }
-
-  set hash(value: Array<Bytes>) {
-    this.set("hash", Value.fromBytesArray(value));
   }
 
   get quantity(): BigInt {

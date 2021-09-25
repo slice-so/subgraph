@@ -6,6 +6,7 @@ import {
 import {
   TokenSliced as TokenSlicedEvent,
   Upgraded as UpgradedEvent,
+  ProductsPaid as ProductsPaidEvent,
 } from "../../generated/Slice/Slice"
 import { BigInt, DataSourceContext } from "@graphprotocol/graph-ts"
 import { Slicer } from "../../generated/templates"
@@ -52,4 +53,6 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   Slicer.createWithContext(event.params.slicerAddress, context)
 }
 
-export function handleUpgraded(event: UpgradedEvent): void {}
+// export function handleProductsPaid(event: ProductsPaidEvent): void {}
+
+// export function handleUpgraded(event: UpgradedEvent): void {}
