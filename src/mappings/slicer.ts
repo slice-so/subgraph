@@ -21,8 +21,19 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
   let slicer = SlicerEntity.load(slicerId)
+  let buyerAddress = event.params.from.toHexString()
+
+  let payeeSlicer = PayeeSlicer.load(slicerId + "-" + buyerAddress)
+  if (!payeeSlicer) {
+    payeeSlicer = new PayeeSlicer(slicerId + "-" + buyerAddress)
+    payeeSlicer.payee = buyerAddress
+    payeeSlicer.slicer = slicerId
+    payeeSlicer.slices = BigInt.fromI32(0)
+  }
   slicer.totalReceived = slicer.totalReceived.plus(event.params.amount)
+  payeeSlicer.totalPaid = payeeSlicer.totalPaid.plus(event.params.amount)
   slicer.save()
+  payeeSlicer.save()
 }
 
 export function handleTriggeredSlicerRelease(
@@ -131,13 +142,28 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   if (!pp) {
     pp = new ProductPurchase(productId + "-" + buyerAddress)
     pp.product = productId
-    pp.buyer = slicerId + "-" + buyerAddress
+    pp.buyerSlicer = slicerId + "-" + buyerAddress
+    pp.buyer = buyerAddress
     // pp.hash = []
     pp.quantity = BigInt.fromI32(0)
   }
+
+  let payeeSlicer = PayeeSlicer.load(slicerId + "-" + buyerAddress)
+  if (!payeeSlicer) {
+    payeeSlicer = new PayeeSlicer(slicerId + "-" + buyerAddress)
+    payeeSlicer.payee = buyerAddress
+    payeeSlicer.slicer = slicerId
+    payeeSlicer.slices = BigInt.fromI32(0)
+  }
+  payeeSlicer.totalPaidProducts = payeeSlicer.totalPaidProducts.plus(
+    event.params.productPrice
+  )
   // pp.hash.push(event.transaction.hash)
   pp.quantity = pp.quantity.plus(quantity)
+  pp.quantity = pp.quantity.plus(quantity)
+  pp.lastPurchasedAtTimestamp = event.block.timestamp
   pp.save()
+  payeeSlicer.save()
 }
 
 // export function handleSLCPaid(event: SLCPaidEvent): void {

@@ -208,6 +208,15 @@ export class Payee extends Entity {
   set created(value: Array<string>) {
     this.set("created", Value.fromStringArray(value));
   }
+
+  get purchases(): Array<string> {
+    let value = this.get("purchases");
+    return value.toStringArray();
+  }
+
+  set purchases(value: Array<string>) {
+    this.set("purchases", Value.fromStringArray(value));
+  }
 }
 
 export class PayeeSlicer extends Entity {
@@ -281,6 +290,40 @@ export class PayeeSlicer extends Entity {
       this.unset("released");
     } else {
       this.set("released", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get totalPaid(): BigInt | null {
+    let value = this.get("totalPaid");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalPaid(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalPaid");
+    } else {
+      this.set("totalPaid", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get totalPaidProducts(): BigInt | null {
+    let value = this.get("totalPaidProducts");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalPaidProducts(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalPaidProducts");
+    } else {
+      this.set("totalPaidProducts", Value.fromBigInt(value as BigInt));
     }
   }
 
@@ -481,6 +524,15 @@ export class ProductPurchase extends Entity {
     this.set("product", Value.fromString(value));
   }
 
+  get buyerSlicer(): string {
+    let value = this.get("buyerSlicer");
+    return value.toString();
+  }
+
+  set buyerSlicer(value: string) {
+    this.set("buyerSlicer", Value.fromString(value));
+  }
+
   get buyer(): string {
     let value = this.get("buyer");
     return value.toString();
@@ -497,5 +549,14 @@ export class ProductPurchase extends Entity {
 
   set quantity(value: BigInt) {
     this.set("quantity", Value.fromBigInt(value));
+  }
+
+  get lastPurchasedAtTimestamp(): BigInt {
+    let value = this.get("lastPurchasedAtTimestamp");
+    return value.toBigInt();
+  }
+
+  set lastPurchasedAtTimestamp(value: BigInt) {
+    this.set("lastPurchasedAtTimestamp", Value.fromBigInt(value));
   }
 }

@@ -19,6 +19,7 @@ type Payee @entity {
   slc: BigInt
   slicers: [PayeeSlicer!]! @derivedFrom(field: "payee")
   created: [Slicer!]! @derivedFrom(field: "creator")
+  purchases: [ProductPurchase!]! @derivedFrom(field: "buyer")
 }
 
 type PayeeSlicer @entity {
@@ -27,7 +28,9 @@ type PayeeSlicer @entity {
   slicer: Slicer!
   slices: BigInt!
   released: BigInt
-  purchases: [ProductPurchase!]! @derivedFrom(field: "buyer")
+  totalPaid: BigInt
+  totalPaidProducts: BigInt
+  purchases: [ProductPurchase!]! @derivedFrom(field: "buyerSlicer")
 }
 
 type Product @entity {
@@ -50,7 +53,9 @@ type Product @entity {
 type ProductPurchase @entity {
   id: ID!
   product: Product!
-  buyer: PayeeSlicer!
+  buyerSlicer: PayeeSlicer!
+  buyer: Payee!
   # hash: [Bytes!]!
   quantity: BigInt!
+  lastPurchasedAtTimestamp: BigInt!
 }
