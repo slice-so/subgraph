@@ -160,7 +160,6 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   )
   // pp.hash.push(event.transaction.hash)
   pp.quantity = pp.quantity.plus(quantity)
-  pp.quantity = pp.quantity.plus(quantity)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
   pp.save()
   payeeSlicer.save()
