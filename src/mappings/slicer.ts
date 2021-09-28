@@ -3,6 +3,7 @@ import {
   PayeeSlicer,
   Product,
   ProductPurchase,
+  Payee,
 } from "../../generated/schema"
 import {
   PaymentReceived as PaymentReceivedEvent,
@@ -22,6 +23,12 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   let slicerId = context.getString("slicerId")
   let slicer = SlicerEntity.load(slicerId)
   let buyerAddress = event.params.from.toHexString()
+
+  let payee = Payee.load(buyerAddress)
+  if (!payee) {
+    payee = new Payee(buyerAddress)
+    payee.save()
+  }
 
   let payeeSlicer = PayeeSlicer.load(slicerId + "-" + buyerAddress)
   if (!payeeSlicer) {
@@ -138,6 +145,11 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   product.totalPurchases = product.totalPurchases.plus(quantity)
   product.save()
 
+  let payee = Payee.load(buyerAddress)
+  if (!payee) {
+    payee = new Payee(buyerAddress)
+    payee.save()
+  }
   let pp = ProductPurchase.load(productId + "-" + buyerAddress)
   if (!pp) {
     pp = new ProductPurchase(productId + "-" + buyerAddress)

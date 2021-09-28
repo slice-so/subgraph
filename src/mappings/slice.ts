@@ -19,12 +19,13 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   let payees = event.params.payees
   let shares = event.params.shares
   let sharesLength = shares.length
+  let creator = event.transaction.from.toHexString()
 
   slicer.address = event.params.slicerAddress
   slicer.minimumSlices = event.params.minimumShares
   slicer.isCollectible = event.params.isCollectible
   slicer.totalReceived = BigInt.fromI32(0)
-  slicer.creator = event.transaction.from.toHexString()
+  slicer.creator = creator
   slicer.createdAtTimestamp = event.block.timestamp
 
   for (let i = 0; i < sharesLength; i++) {
@@ -45,6 +46,13 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
 
     totalSlices = totalSlices.plus(share)
   }
+
+  let creatorPayee = Payee.load(creator)
+  if (!creatorPayee) {
+    creatorPayee = new Payee(creator)
+    creatorPayee.save()
+  }
+
   slicer.slices = totalSlices
   slicer.save()
 
