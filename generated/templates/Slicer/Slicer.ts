@@ -478,7 +478,7 @@ export class Slicer extends ethereum.SmartContract {
   onERC1155BatchReceived(
     param0: Address,
     from: Address,
-    ids: Array<BigInt>,
+    tokenIds: Array<BigInt>,
     amounts: Array<BigInt>,
     param4: Bytes
   ): Bytes {
@@ -488,7 +488,7 @@ export class Slicer extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(from),
-        ethereum.Value.fromUnsignedBigIntArray(ids),
+        ethereum.Value.fromUnsignedBigIntArray(tokenIds),
         ethereum.Value.fromUnsignedBigIntArray(amounts),
         ethereum.Value.fromBytes(param4)
       ]
@@ -500,7 +500,7 @@ export class Slicer extends ethereum.SmartContract {
   try_onERC1155BatchReceived(
     param0: Address,
     from: Address,
-    ids: Array<BigInt>,
+    tokenIds: Array<BigInt>,
     amounts: Array<BigInt>,
     param4: Bytes
   ): ethereum.CallResult<Bytes> {
@@ -510,7 +510,7 @@ export class Slicer extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(from),
-        ethereum.Value.fromUnsignedBigIntArray(ids),
+        ethereum.Value.fromUnsignedBigIntArray(tokenIds),
         ethereum.Value.fromUnsignedBigIntArray(amounts),
         ethereum.Value.fromBytes(param4)
       ]
@@ -525,7 +525,7 @@ export class Slicer extends ethereum.SmartContract {
   onERC1155Received(
     param0: Address,
     from: Address,
-    id: BigInt,
+    tokenId: BigInt,
     amount: BigInt,
     param4: Bytes
   ): Bytes {
@@ -535,7 +535,7 @@ export class Slicer extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(from),
-        ethereum.Value.fromUnsignedBigInt(id),
+        ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromUnsignedBigInt(amount),
         ethereum.Value.fromBytes(param4)
       ]
@@ -547,7 +547,7 @@ export class Slicer extends ethereum.SmartContract {
   try_onERC1155Received(
     param0: Address,
     from: Address,
-    id: BigInt,
+    tokenId: BigInt,
     amount: BigInt,
     param4: Bytes
   ): ethereum.CallResult<Bytes> {
@@ -557,7 +557,7 @@ export class Slicer extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(from),
-        ethereum.Value.fromUnsignedBigInt(id),
+        ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromUnsignedBigInt(amount),
         ethereum.Value.fromBytes(param4)
       ]
@@ -1131,7 +1131,7 @@ export class OnERC1155BatchReceivedCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get ids(): Array<BigInt> {
+  get tokenIds(): Array<BigInt> {
     return this._call.inputValues[2].value.toBigIntArray();
   }
 
@@ -1181,7 +1181,7 @@ export class OnERC1155ReceivedCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get id(): BigInt {
+  get tokenId(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 

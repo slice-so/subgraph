@@ -94,16 +94,24 @@ templates:
         - name: Slicer
           file: ./abis/Slicer.json
       eventHandlers:
-        - event: PaymentReceived(indexed address,uint256)
-          handler: handlePaymentReceived
         - event: TriggeredRelease(indexed address,uint256)
           handler: handleTriggeredSlicerRelease
-        # - event: SLCPaid(uint32[],uint16[],uint256)
-        #   handler: handleSLCPaid
         - event: AddedChildrenSlicer(indexed uint256)
           handler: handleAddedChildrenSlicer
         - event: ProductAdded(indexed uint32,indexed uint32,uint256,bool,bool,bool,uint32,indexed address,bytes,uint256[],uint32[])
           handler: handleProductAdded
+        - event: ProductPaid(indexed address,indexed uint32,uint16,uint256)
+          handler: handleProductPaid
+        - event: PaymentReceived(indexed address,uint256)
+          handler: handlePaymentReceived
+        - event: ERC721Received(indexed address,indexed address,uint256)
+          handler: handleERC721Received
+        - event: ERC1155Received(indexed address,indexed address,uint256,uint256)
+          handler: handleERC1155Received
+        - event: ERC1155BatchReceived(indexed address,indexed address,uint256[],uint256[])
+          handler: handleERC1155BatchReceived
+        # - event: SLCPaid(uint32[],uint16[],uint256)
+        #   handler: handleSLCPaid
         # - event: ProductInfoChanged(indexed uint32,bool,uint32,uint256)
         #   handler: handleProductInfoChanged
         # - event: ProductCurrencyChanged(indexed uint32,uint256,bool)
@@ -112,6 +120,4 @@ templates:
         #   handler: handleProductCategoryChanged
         # - event: ProductRemoved(indexed uint32)
         #   handler: handleProductRemoved
-        - event: ProductPaid(indexed address,indexed uint32,uint16,uint256)
-          handler: handleProductPaid
       file: ./src/mappings/slicer.ts

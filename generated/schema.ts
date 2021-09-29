@@ -142,6 +142,23 @@ export class Slicer extends Entity {
   set createdAtTimestamp(value: BigInt) {
     this.set("createdAtTimestamp", Value.fromBigInt(value));
   }
+
+  get TokensReceived(): Array<string> | null {
+    let value = this.get("TokensReceived");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set TokensReceived(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("TokensReceived");
+    } else {
+      this.set("TokensReceived", Value.fromStringArray(value as Array<string>));
+    }
+  }
 }
 
 export class Payee extends Entity {
@@ -558,5 +575,90 @@ export class ProductPurchase extends Entity {
 
   set lastPurchasedAtTimestamp(value: BigInt) {
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(value));
+  }
+}
+
+export class TokenReceived extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save TokenReceived entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save TokenReceived entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("TokenReceived", id.toString(), this);
+  }
+
+  static load(id: string): TokenReceived | null {
+    return store.get("TokenReceived", id) as TokenReceived | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get contract(): Bytes {
+    let value = this.get("contract");
+    return value.toBytes();
+  }
+
+  set contract(value: Bytes) {
+    this.set("contract", Value.fromBytes(value));
+  }
+
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    return value.toBigInt();
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get quantity(): BigInt {
+    let value = this.get("quantity");
+    return value.toBigInt();
+  }
+
+  set quantity(value: BigInt) {
+    this.set("quantity", Value.fromBigInt(value));
+  }
+
+  get isERC721(): boolean {
+    let value = this.get("isERC721");
+    return value.toBoolean();
+  }
+
+  set isERC721(value: boolean) {
+    this.set("isERC721", Value.fromBoolean(value));
+  }
+
+  get lastReceivedAtTimestamp(): BigInt {
+    let value = this.get("lastReceivedAtTimestamp");
+    return value.toBigInt();
+  }
+
+  set lastReceivedAtTimestamp(value: BigInt) {
+    this.set("lastReceivedAtTimestamp", Value.fromBigInt(value));
   }
 }

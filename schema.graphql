@@ -10,6 +10,7 @@ type Slicer @entity {
   products: [Product!]! @derivedFrom(field: "slicer")
   childrenSlicers: [Slicer!] # Check!
   createdAtTimestamp: BigInt!
+  TokensReceived: [TokenReceived!] @derivedFrom(field: "slicer")
   # contentURI: String!
   # metadataURI: String!
 }
@@ -58,4 +59,14 @@ type ProductPurchase @entity {
   # hash: [Bytes!]!
   quantity: BigInt!
   lastPurchasedAtTimestamp: BigInt!
+}
+
+type TokenReceived @entity {
+  id: ID!
+  slicer: Slicer!
+  contract: Bytes!
+  tokenId: BigInt!
+  quantity: BigInt!
+  isERC721: Boolean!
+  lastReceivedAtTimestamp: BigInt!
 }
