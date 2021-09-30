@@ -58,6 +58,7 @@ export function handleTriggeredSlicerRelease(
   ps.save()
 }
 
+// Todo: fix
 export function handleAddedChildrenSlicer(
   event: AddedChildrenSlicerEvent
 ): void {
@@ -65,6 +66,7 @@ export function handleAddedChildrenSlicer(
   let slicerId = context.getString("slicerId")
   let slicer = SlicerEntity.load(slicerId)
   slicer.childrenSlicers.push(event.params.slicerId.toString())
+  slicer.save()
 }
 
 export function handleProductAdded(event: ProductAddedEvent): void {
@@ -199,6 +201,7 @@ export function handleERC721Received(event: ERC721ReceivedEvent): void {
     tokenReceived.isERC721 = true
   }
   tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
+  tokenReceived.save()
 }
 
 export function handleERC1155Received(event: ERC1155ReceivedEvent): void {
@@ -222,6 +225,7 @@ export function handleERC1155Received(event: ERC1155ReceivedEvent): void {
     tokenReceived.quantity = tokenReceived.quantity.plus(amount)
   }
   tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
+  tokenReceived.save()
 }
 export function handleERC1155BatchReceived(
   event: ERC1155BatchReceivedEvent
@@ -252,6 +256,7 @@ export function handleERC1155BatchReceived(
       tokenReceived.quantity = tokenReceived.quantity.plus(amount)
     }
     tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
+    tokenReceived.save()
   }
 }
 
