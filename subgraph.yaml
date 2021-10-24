@@ -4,11 +4,14 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Slice
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      address: "0xeb46e6D1F0620fE7Bb255b83EFf9b844edc97841"
+      address: "0xcA6b9D59849EC880e82210e9cb8237E1d0cAA69e" # Mainnet
+      startBlock: 13479416 # Mainnet
+      # address: "0xA0554206d329e5800C8364B0dBbE9124759358c4" # Rinkeby
+      # startBlock: 9499461 # Rinkeby
       abi: Slice
-      startBlock: 9167662
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -30,11 +33,14 @@ dataSources:
       file: ./src/mappings/slice.ts
   - kind: ethereum/contract
     name: SliceCore
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      address: "0xFB57bf285f041b4d24B5dFA53c090B334029A64a"
+      address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d" # Mainnet
+      startBlock: 13346238 # Mainnet
+      # address: "0x1e001ceC39cdA5C327427560f0D260741BdB38Fb" # Rinkeby
+      # startBlock: 9499451 # Rinkeby
       abi: SliceCore
-      startBlock: 9167658
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -53,11 +59,14 @@ dataSources:
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
     name: SLC
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      address: "0xB9187815bAffaC73ddCCEb9866ace8e5137a21E5"
+      address: "0x61bCd1ED11fC03C958A847A6687b1875f5eAcaaf" # Mainnet
+      startBlock: 13475460 # Mainnet
+      # address: "0x67DB6cd1877c66Ce7CE1588E86926b837A21D4Da" # Rinkeby
+      # startBlock: 9499453 # Rinkeby
       abi: SLC
-      startBlock: 9167659
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -78,7 +87,8 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Slicer
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
       abi: Slicer
     mapping:
