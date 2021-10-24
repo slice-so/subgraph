@@ -43,8 +43,8 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   }
   slicer.totalReceived = slicer.totalReceived.plus(event.params.amount)
   payeeSlicer.totalPaid = payeeSlicer.totalPaid.plus(event.params.amount)
-  slicer.save()
   payeeSlicer.save()
+  slicer.save()
 }
 
 export function handleTriggeredSlicerRelease(
@@ -149,7 +149,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
 
   let product = Product.load(productId)
   product.totalPurchases = product.totalPurchases.plus(quantity)
-  product.save()
+  product.availableUnits = product.availableUnits.minus(quantity)
 
   let payee = Payee.load(buyerAddress)
   if (!payee) {
@@ -179,6 +179,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   // pp.hash.push(event.transaction.hash)
   pp.quantity = pp.quantity.plus(quantity)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
+  product.save()
   pp.save()
   payeeSlicer.save()
 }
