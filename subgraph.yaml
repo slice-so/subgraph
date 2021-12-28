@@ -11,6 +11,8 @@ dataSources:
       startBlock: 13479416 # Mainnet
       # address: "0xA0554206d329e5800C8364B0dBbE9124759358c4" # Rinkeby
       # startBlock: 9499461 # Rinkeby
+      # address: "0x1879E6110065f7C489623D65C3C0d8C7f14EBa87" # Rinkeby (dev)
+      # startBlock: 9894702 # Rinkeby (dev)
       abi: Slice
     mapping:
       kind: ethereum/events
@@ -40,6 +42,8 @@ dataSources:
       startBlock: 13346238 # Mainnet
       # address: "0x1e001ceC39cdA5C327427560f0D260741BdB38Fb" # Rinkeby
       # startBlock: 9499451 # Rinkeby
+      # address: "0xDd8bc1bDce4548f11dB2D748156Eda0e904b5Aeb" # Rinkeby (dev)
+      # startBlock: 9894702 # Rinkeby (dev)
       abi: SliceCore
     mapping:
       kind: ethereum/events
@@ -66,6 +70,8 @@ dataSources:
       startBlock: 13475460 # Mainnet
       # address: "0x67DB6cd1877c66Ce7CE1588E86926b837A21D4Da" # Rinkeby
       # startBlock: 9499453 # Rinkeby
+      # address: "0x8D1e6C6a381d33456710277bDa06f259333Cad90" # Rinkeby (dev)
+      # startBlock: 9894702 # Rinkeby (dev)
       abi: SLC
     mapping:
       kind: ethereum/events
