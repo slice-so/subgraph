@@ -270,5 +270,3 @@ export function handleERC1155BatchReceived(
 //   entity.amount = event.params.amount
 //   entity.save()
 // }
-
-// Todo: Remove slicer from payees when slicer owned = 0?
