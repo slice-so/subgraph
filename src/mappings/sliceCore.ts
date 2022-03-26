@@ -1,7 +1,7 @@
 import { Payee, PayeeSlicer } from "../../generated/schema"
 import {
   TransferSingle as TransferSingleEvent,
-  TransferBatch as TransferBatchEvent,
+  TransferBatch as TransferBatchEvent
 } from "../../generated/SliceCore/SliceCore"
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 
@@ -14,7 +14,7 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
     let value = event.params.value
 
     let to = Payee.load(toAddress)
-    let fromSlicer = PayeeSlicer.load(slicerId + "-" + fromAddress)
+    let fromSlicer = PayeeSlicer.load(slicerId + "-" + fromAddress)!
     let toSlicer = PayeeSlicer.load(slicerId + "-" + toAddress)
     if (!to) {
       to = new Payee(toAddress)
@@ -26,6 +26,7 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
       toSlicer.slicer = slicerId
       toSlicer.slices = BigInt.fromI32(0)
     }
+    // TODO: Add check when sender and receiver are the same person
     toSlicer.slices = toSlicer.slices.plus(value)
     fromSlicer.slices = fromSlicer.slices.minus(value)
     fromSlicer.save()
@@ -49,7 +50,7 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
       let slicerId = ids[i].toString()
       let value = values[i]
 
-      let fromSlicer = PayeeSlicer.load(slicerId + "-" + fromAddress)
+      let fromSlicer = PayeeSlicer.load(slicerId + "-" + fromAddress)!
       let toSlicer = PayeeSlicer.load(slicerId + "-" + toAddress)
       if (!toSlicer) {
         toSlicer = new PayeeSlicer(slicerId + "-" + toAddress)

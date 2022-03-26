@@ -4,7 +4,7 @@ import {
   Product,
   ProductPurchase,
   Payee,
-  TokenReceived,
+  TokenReceived
 } from "../../generated/schema"
 import {
   PaymentReceived as PaymentReceivedEvent,
@@ -18,14 +18,14 @@ import {
   ProductPaid as ProductPaidEvent,
   ERC721Received as ERC721ReceivedEvent,
   ERC1155Received as ERC1155ReceivedEvent,
-  ERC1155BatchReceived as ERC1155BatchReceivedEvent,
+  ERC1155BatchReceived as ERC1155BatchReceivedEvent
 } from "../../generated/templates/Slicer/Slicer"
 import { BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
 
 export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let slicer = SlicerEntity.load(slicerId)
+  let slicer = SlicerEntity.load(slicerId)!
   let buyerAddress = event.params.from.toHexString()
 
   let payee = Payee.load(buyerAddress)
@@ -42,7 +42,7 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
     payeeSlicer.slices = BigInt.fromI32(0)
   }
   slicer.totalReceived = slicer.totalReceived.plus(event.params.amount)
-  payeeSlicer.totalPaid = payeeSlicer.totalPaid.plus(event.params.amount)
+  payeeSlicer.totalPaid = payeeSlicer.totalPaid!.plus(event.params.amount)
   payeeSlicer.save()
   slicer.save()
 }
@@ -53,8 +53,8 @@ export function handleTriggeredSlicerRelease(
   let payeeAddress = event.params.payee.toHexString()
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let ps = PayeeSlicer.load(slicerId + "-" + payeeAddress)
-  ps.released = ps.released.plus(event.params.released)
+  let ps = PayeeSlicer.load(slicerId + "-" + payeeAddress)!
+  ps.released = ps.released!.plus(event.params.released)
   ps.save()
 }
 
@@ -64,8 +64,8 @@ export function handleAddedChildrenSlicer(
 ): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let slicer = SlicerEntity.load(slicerId)
-  slicer.childrenSlicers.push(event.params.slicerId.toString())
+  let slicer = SlicerEntity.load(slicerId)!
+  slicer.childrenSlicers!.push(event.params.slicerId.toString())
   slicer.save()
 }
 
@@ -98,7 +98,9 @@ export function handleProductAdded(event: ProductAddedEvent): void {
 export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let product = Product.load(slicerId + "-" + event.params.productId.toString())
+  let product = Product.load(
+    slicerId + "-" + event.params.productId.toString()
+  )!
   product.isInfinite = event.params.isInfinite
   product.availableUnits = event.params.units
   product.price = event.params.productPrice
@@ -110,7 +112,9 @@ export function handleProductCurrencyChanged(
 ): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let product = Product.load(slicerId + "-" + event.params.productId.toString())
+  let product = Product.load(
+    slicerId + "-" + event.params.productId.toString()
+  )!
   product.isUSD = event.params.isUSD
   product.price = event.params.productPrice
   product.save()
@@ -121,7 +125,9 @@ export function handleProductCategoryChanged(
 ): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let product = Product.load(slicerId + "-" + event.params.productId.toString())
+  let product = Product.load(
+    slicerId + "-" + event.params.productId.toString()
+  )!
   product.categoryIndex = event.params.categoryIndex
   product.save()
 }
@@ -129,7 +135,9 @@ export function handleProductCategoryChanged(
 export function handleProductRemoved(event: ProductRemovedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let product = Product.load(slicerId + "-" + event.params.productId.toString())
+  let product = Product.load(
+    slicerId + "-" + event.params.productId.toString()
+  )!
   product.availableUnits = BigInt.fromI32(0)
   product.categoryIndex = BigInt.fromI32(0)
   product.data = new Bytes(0)
@@ -147,7 +155,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   let buyerAddress = event.params.from.toHexString()
   let quantity = BigInt.fromI32(event.params.quantity)
 
-  let product = Product.load(productId)
+  let product = Product.load(productId)!
   product.totalPurchases = product.totalPurchases.plus(quantity)
   product.availableUnits = product.availableUnits.minus(quantity)
 
@@ -173,7 +181,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = BigInt.fromI32(0)
   }
-  payeeSlicer.totalPaidProducts = payeeSlicer.totalPaidProducts.plus(
+  payeeSlicer.totalPaidProducts = payeeSlicer.totalPaidProducts!.plus(
     event.params.productPrice
   )
   // pp.hash.push(event.transaction.hash)
