@@ -20,16 +20,18 @@ export class Slicer extends Entity {
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("slices", Value.fromBigInt(BigInt.zero()));
     this.set("minimumSlices", Value.fromBigInt(BigInt.zero()));
-    this.set("ethReceived", Value.fromBigInt(BigInt.zero()));
     this.set("createdAtTimestamp", Value.fromBigInt(BigInt.zero()));
     this.set("releaseTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("transferableTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("isImmutable", Value.fromBoolean(false));
-    this.set("customRoyaltyActive", Value.fromBoolean(false));
-    this.set("royaltyAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("protocolFee", Value.fromBigInt(BigInt.zero()));
+    this.set("royaltyPercentage", Value.fromBigInt(BigInt.zero()));
     this.set("royaltyReceiver", Value.fromString(""));
     this.set("creator", Value.fromString(""));
     this.set("controller", Value.fromString(""));
+    this.set("ethReceived", Value.fromBigInt(BigInt.zero()));
+    this.set("productsModuleBalance", Value.fromBigInt(BigInt.zero()));
+    this.set("productsModuleReleased", Value.fromBigInt(BigInt.zero()));
     this.set("childrenSlicers", Value.fromStringArray(new Array(0)));
   }
 
@@ -95,15 +97,6 @@ export class Slicer extends Entity {
     this.set("minimumSlices", Value.fromBigInt(value));
   }
 
-  get ethReceived(): BigInt {
-    let value = this.get("ethReceived");
-    return value!.toBigInt();
-  }
-
-  set ethReceived(value: BigInt) {
-    this.set("ethReceived", Value.fromBigInt(value));
-  }
-
   get createdAtTimestamp(): BigInt {
     let value = this.get("createdAtTimestamp");
     return value!.toBigInt();
@@ -140,22 +133,22 @@ export class Slicer extends Entity {
     this.set("isImmutable", Value.fromBoolean(value));
   }
 
-  get customRoyaltyActive(): boolean {
-    let value = this.get("customRoyaltyActive");
-    return value!.toBoolean();
-  }
-
-  set customRoyaltyActive(value: boolean) {
-    this.set("customRoyaltyActive", Value.fromBoolean(value));
-  }
-
-  get royaltyAmount(): BigInt {
-    let value = this.get("royaltyAmount");
+  get protocolFee(): BigInt {
+    let value = this.get("protocolFee");
     return value!.toBigInt();
   }
 
-  set royaltyAmount(value: BigInt) {
-    this.set("royaltyAmount", Value.fromBigInt(value));
+  set protocolFee(value: BigInt) {
+    this.set("protocolFee", Value.fromBigInt(value));
+  }
+
+  get royaltyPercentage(): BigInt {
+    let value = this.get("royaltyPercentage");
+    return value!.toBigInt();
+  }
+
+  set royaltyPercentage(value: BigInt) {
+    this.set("royaltyPercentage", Value.fromBigInt(value));
   }
 
   get royaltyReceiver(): string {
@@ -183,6 +176,33 @@ export class Slicer extends Entity {
 
   set controller(value: string) {
     this.set("controller", Value.fromString(value));
+  }
+
+  get ethReceived(): BigInt {
+    let value = this.get("ethReceived");
+    return value!.toBigInt();
+  }
+
+  set ethReceived(value: BigInt) {
+    this.set("ethReceived", Value.fromBigInt(value));
+  }
+
+  get productsModuleBalance(): BigInt {
+    let value = this.get("productsModuleBalance");
+    return value!.toBigInt();
+  }
+
+  set productsModuleBalance(value: BigInt) {
+    this.set("productsModuleBalance", Value.fromBigInt(value));
+  }
+
+  get productsModuleReleased(): BigInt {
+    let value = this.get("productsModuleReleased");
+    return value!.toBigInt();
+  }
+
+  set productsModuleReleased(value: BigInt) {
+    this.set("productsModuleReleased", Value.fromBigInt(value));
   }
 
   get childrenSlicers(): Array<string> {
@@ -219,6 +239,15 @@ export class Slicer extends Entity {
 
   set products(value: Array<string>) {
     this.set("products", Value.fromStringArray(value));
+  }
+
+  get TokenListings(): Array<string> {
+    let value = this.get("TokenListings");
+    return value!.toStringArray();
+  }
+
+  set TokenListings(value: Array<string>) {
+    this.set("TokenListings", Value.fromStringArray(value));
   }
 
   get TokensReceived(): Array<string> {
@@ -391,13 +420,13 @@ export class Product extends Entity {
     this.set("availableUnits", Value.fromBigInt(BigInt.zero()));
     this.set("creator", Value.fromBytes(Bytes.empty()));
     this.set("data", Value.fromBytes(Bytes.empty()));
-    this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
+    this.set("createdAtTimestamp", Value.fromBigInt(BigInt.zero()));
     this.set("extAddress", Value.fromBytes(Bytes.empty()));
     this.set("extValue", Value.fromBigInt(BigInt.zero()));
     this.set("extCheckSig", Value.fromBytes(Bytes.empty()));
     this.set("extExecSig", Value.fromBytes(Bytes.empty()));
     this.set("extData", Value.fromBytes(Bytes.empty()));
-    this.set("createdAtTimestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
     this.set("subProducts", Value.fromStringArray(new Array(0)));
   }
 
@@ -499,13 +528,13 @@ export class Product extends Entity {
     this.set("data", Value.fromBytes(value));
   }
 
-  get totalPurchases(): BigInt {
-    let value = this.get("totalPurchases");
+  get createdAtTimestamp(): BigInt {
+    let value = this.get("createdAtTimestamp");
     return value!.toBigInt();
   }
 
-  set totalPurchases(value: BigInt) {
-    this.set("totalPurchases", Value.fromBigInt(value));
+  set createdAtTimestamp(value: BigInt) {
+    this.set("createdAtTimestamp", Value.fromBigInt(value));
   }
 
   get extAddress(): Bytes {
@@ -553,13 +582,13 @@ export class Product extends Entity {
     this.set("extData", Value.fromBytes(value));
   }
 
-  get createdAtTimestamp(): BigInt {
-    let value = this.get("createdAtTimestamp");
+  get totalPurchases(): BigInt {
+    let value = this.get("totalPurchases");
     return value!.toBigInt();
   }
 
-  set createdAtTimestamp(value: BigInt) {
-    this.set("createdAtTimestamp", Value.fromBigInt(value));
+  set totalPurchases(value: BigInt) {
+    this.set("totalPurchases", Value.fromBigInt(value));
   }
 
   get subProducts(): Array<string> {
@@ -598,6 +627,7 @@ export class PayeeSlicer extends Entity {
     this.set("payee", Value.fromString(""));
     this.set("slicer", Value.fromString(""));
     this.set("slices", Value.fromBigInt(BigInt.zero()));
+    this.set("ethSent", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -653,6 +683,15 @@ export class PayeeSlicer extends Entity {
     this.set("slices", Value.fromBigInt(value));
   }
 
+  get ethSent(): BigInt {
+    let value = this.get("ethSent");
+    return value!.toBigInt();
+  }
+
+  set ethSent(value: BigInt) {
+    this.set("ethSent", Value.fromBigInt(value));
+  }
+
   get currencyPayments(): Array<string> {
     let value = this.get("currencyPayments");
     return value!.toStringArray();
@@ -679,8 +718,9 @@ export class PayeeCurrency extends Entity {
 
     this.set("payee", Value.fromString(""));
     this.set("currency", Value.fromString(""));
-    this.set("withdrawn", Value.fromBigInt(BigInt.zero()));
     this.set("toWithdraw", Value.fromBigInt(BigInt.zero()));
+    this.set("toPayToProtocol", Value.fromBigInt(BigInt.zero()));
+    this.set("withdrawn", Value.fromBigInt(BigInt.zero()));
     this.set("paidToProtocol", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -728,15 +768,6 @@ export class PayeeCurrency extends Entity {
     this.set("currency", Value.fromString(value));
   }
 
-  get withdrawn(): BigInt {
-    let value = this.get("withdrawn");
-    return value!.toBigInt();
-  }
-
-  set withdrawn(value: BigInt) {
-    this.set("withdrawn", Value.fromBigInt(value));
-  }
-
   get toWithdraw(): BigInt {
     let value = this.get("toWithdraw");
     return value!.toBigInt();
@@ -744,6 +775,24 @@ export class PayeeCurrency extends Entity {
 
   set toWithdraw(value: BigInt) {
     this.set("toWithdraw", Value.fromBigInt(value));
+  }
+
+  get toPayToProtocol(): BigInt {
+    let value = this.get("toPayToProtocol");
+    return value!.toBigInt();
+  }
+
+  set toPayToProtocol(value: BigInt) {
+    this.set("toPayToProtocol", Value.fromBigInt(value));
+  }
+
+  get withdrawn(): BigInt {
+    let value = this.get("withdrawn");
+    return value!.toBigInt();
+  }
+
+  set withdrawn(value: BigInt) {
+    this.set("withdrawn", Value.fromBigInt(value));
   }
 
   get paidToProtocol(): BigInt {
@@ -773,8 +822,7 @@ export class CurrencySlicer extends Entity {
     this.set("currency", Value.fromString(""));
     this.set("slicer", Value.fromString(""));
     this.set("released", Value.fromBigInt(BigInt.zero()));
-    this.set("paidToProtocol", Value.fromBigInt(BigInt.zero()));
-    this.set("toReleaseForProducts", Value.fromBigInt(BigInt.zero()));
+    this.set("releasedToProtocol", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -830,22 +878,13 @@ export class CurrencySlicer extends Entity {
     this.set("released", Value.fromBigInt(value));
   }
 
-  get paidToProtocol(): BigInt {
-    let value = this.get("paidToProtocol");
+  get releasedToProtocol(): BigInt {
+    let value = this.get("releasedToProtocol");
     return value!.toBigInt();
   }
 
-  set paidToProtocol(value: BigInt) {
-    this.set("paidToProtocol", Value.fromBigInt(value));
-  }
-
-  get toReleaseForProducts(): BigInt {
-    let value = this.get("toReleaseForProducts");
-    return value!.toBigInt();
-  }
-
-  set toReleaseForProducts(value: BigInt) {
-    this.set("toReleaseForProducts", Value.fromBigInt(value));
+  set releasedToProtocol(value: BigInt) {
+    this.set("releasedToProtocol", Value.fromBigInt(value));
   }
 
   get payeePayments(): Array<string> {
@@ -943,7 +982,7 @@ export class PayeeSlicerCurrency extends Entity {
   }
 }
 
-export class ProductCurrency extends Entity {
+export class ProductPrices extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -956,19 +995,19 @@ export class ProductCurrency extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ProductCurrency entity without an ID");
+    assert(id != null, "Cannot save ProductPrices entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save ProductCurrency entity with non-string ID. " +
+        "Cannot save ProductPrices entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("ProductCurrency", id.toString(), this);
+      store.set("ProductPrices", id.toString(), this);
     }
   }
 
-  static load(id: string): ProductCurrency | null {
-    return changetype<ProductCurrency | null>(store.get("ProductCurrency", id));
+  static load(id: string): ProductPrices | null {
+    return changetype<ProductPrices | null>(store.get("ProductPrices", id));
   }
 
   get id(): string {
@@ -1222,5 +1261,99 @@ export class TokenReceived extends Entity {
 
   set lastReceivedAtTimestamp(value: BigInt) {
     this.set("lastReceivedAtTimestamp", Value.fromBigInt(value));
+  }
+}
+
+export class TokenListing extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("slicer", Value.fromString(""));
+    this.set("contract", Value.fromBytes(Bytes.empty()));
+    this.set("tokenId", Value.fromBigInt(BigInt.zero()));
+    this.set("isERC721", Value.fromBoolean(false));
+    this.set("quantity", Value.fromBigInt(BigInt.zero()));
+    this.set("lastEditedAtTimestamp", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save TokenListing entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save TokenListing entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("TokenListing", id.toString(), this);
+    }
+  }
+
+  static load(id: string): TokenListing | null {
+    return changetype<TokenListing | null>(store.get("TokenListing", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get contract(): Bytes {
+    let value = this.get("contract");
+    return value!.toBytes();
+  }
+
+  set contract(value: Bytes) {
+    this.set("contract", Value.fromBytes(value));
+  }
+
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    return value!.toBigInt();
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get isERC721(): boolean {
+    let value = this.get("isERC721");
+    return value!.toBoolean();
+  }
+
+  set isERC721(value: boolean) {
+    this.set("isERC721", Value.fromBoolean(value));
+  }
+
+  get quantity(): BigInt {
+    let value = this.get("quantity");
+    return value!.toBigInt();
+  }
+
+  set quantity(value: BigInt) {
+    this.set("quantity", Value.fromBigInt(value));
+  }
+
+  get lastEditedAtTimestamp(): BigInt {
+    let value = this.get("lastEditedAtTimestamp");
+    return value!.toBigInt();
+  }
+
+  set lastEditedAtTimestamp(value: BigInt) {
+    this.set("lastEditedAtTimestamp", Value.fromBigInt(value));
   }
 }

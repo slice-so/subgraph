@@ -4,20 +4,23 @@ type Slicer @entity {
   address: Bytes!
   slices: BigInt!
   minimumSlices: BigInt!
-  ethReceived: BigInt!
   createdAtTimestamp: BigInt!
   releaseTimelock: BigInt!
   transferableTimelock: BigInt!
   isImmutable: Boolean!
-  customRoyaltyActive: Boolean!
-  royaltyAmount: BigInt!
+  protocolFee: BigInt!
+  royaltyPercentage: BigInt!
   royaltyReceiver: Payee!
   creator: Payee!
   controller: Payee!
+  ethReceived: BigInt!
+  productsModuleBalance: BigInt!
+  productsModuleReleased: BigInt!
   childrenSlicers: [Slicer!]!
   currencies: [CurrencySlicer!]! @derivedFrom(field: "slicer")
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
   products: [Product!]! @derivedFrom(field: "slicer")
+  TokenListings: [TokenListing!]! @derivedFrom(field: "slicer")
   TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
@@ -35,7 +38,7 @@ type Currency @entity {
   id: ID!
   slicers: [CurrencySlicer!]! @derivedFrom(field: "currency")
   payees: [PayeeCurrency!]! @derivedFrom(field: "currency")
-  products: [ProductCurrency!]! @derivedFrom(field: "currency")
+  products: [ProductPrices!]! @derivedFrom(field: "currency")
 }
 
 type Product @entity {
@@ -48,15 +51,15 @@ type Product @entity {
   availableUnits: BigInt!
   creator: Bytes!
   data: Bytes!
-  totalPurchases: BigInt!
+  createdAtTimestamp: BigInt!
   extAddress: Bytes!
   extValue: BigInt!
   extCheckSig: Bytes!
   extExecSig: Bytes!
   extData: Bytes!
-  createdAtTimestamp: BigInt!
+  totalPurchases: BigInt!
   subProducts: [Product!]!
-  prices: [ProductCurrency!]! @derivedFrom(field: "product")
+  prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
 }
 
@@ -65,6 +68,7 @@ type PayeeSlicer @entity {
   payee: Payee!
   slicer: Slicer!
   slices: BigInt!
+  ethSent: BigInt!
   currencyPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeSlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyerSlicer")
 }
@@ -73,8 +77,9 @@ type PayeeCurrency @entity {
   id: ID!
   payee: Payee!
   currency: Currency!
-  withdrawn: BigInt!
   toWithdraw: BigInt!
+  toPayToProtocol: BigInt!
+  withdrawn: BigInt!
   paidToProtocol: BigInt!
   slicerPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeCurrency")
 }
@@ -84,8 +89,7 @@ type CurrencySlicer @entity {
   currency: Currency!
   slicer: Slicer!
   released: BigInt!
-  paidToProtocol: BigInt!
-  toReleaseForProducts: BigInt!
+  releasedToProtocol: BigInt!
   payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")
 }
@@ -98,7 +102,7 @@ type PayeeSlicerCurrency @entity {
   paidForProducts: BigInt!
 }
 
-type ProductCurrency @entity {
+type ProductPrices @entity {
   id: ID!
   product: Product!
   currency: Currency!
@@ -126,4 +130,14 @@ type TokenReceived @entity {
   quantity: BigInt!
   isERC721: Boolean!
   lastReceivedAtTimestamp: BigInt!
+}
+
+type TokenListing @entity {
+  id: ID!
+  slicer: Slicer!
+  contract: Bytes!
+  tokenId: BigInt!
+  isERC721: Boolean!
+  quantity: BigInt!
+  lastEditedAtTimestamp: BigInt!
 }

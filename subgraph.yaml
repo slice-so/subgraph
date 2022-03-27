@@ -23,7 +23,9 @@ dataSources:
       entities:
         - Slicer
         - Payee
+        - Currency
         - PayeeSlicer
+        - CurrencySlicer
       abis:
         - name: SliceCore
           file: ./abis/SliceCore.json
@@ -60,9 +62,12 @@ dataSources:
       entities:
         - Slicer
         - Payee
-        - PayeeSlicer
         - Product
+        - PayeeSlicer
         - ProductPurchase
+        - ProductPrices
+        - PayeeSlicerCurrency
+        - TokenListing
       abis:
         - name: ProductsModule
           file: ./abis/ProductsModule.json
@@ -99,11 +104,8 @@ dataSources:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Slicer
         - Payee
-        - PayeeSlicer
-        - Product
-        - ProductPurchase
+        - PayeeCurrency
       abis:
         - name: FundsModule
           file: ./abis/FundsModule.json
@@ -126,7 +128,10 @@ templates:
       language: wasm/assemblyscript
       entities:
         - Slicer
+        - Payee
         - PayeeSlicer
+        - CurrencySlicer
+        - TokenReceived
       abis:
         - name: Slicer
           file: ./abis/Slicer.json
