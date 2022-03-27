@@ -1,26 +1,63 @@
 type Slicer @entity {
   id: ID!
+  slicerVersion: BigInt!
   address: Bytes!
   slices: BigInt!
   minimumSlices: BigInt!
-  totalReceived: BigInt!
-  isCollectible: Boolean!
+  ethReceived: BigInt!
+  createdAtTimestamp: BigInt!
+  releaseTimelock: BigInt!
+  transferableTimelock: BigInt!
+  isImmutable: Boolean!
+  customRoyaltyActive: Boolean!
+  royaltyAmount: BigInt!
+  royaltyReceiver: Payee!
   creator: Payee!
+  controller: Payee!
+  childrenSlicers: [Slicer!]!
+  currencies: [CurrencySlicer!]! @derivedFrom(field: "slicer")
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
   products: [Product!]! @derivedFrom(field: "slicer")
-  childrenSlicers: [Slicer!] # Check!
-  createdAtTimestamp: BigInt!
-  TokensReceived: [TokenReceived!] @derivedFrom(field: "slicer")
-  # contentURI: String!
-  # metadataURI: String!
+  TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
 type Payee @entity {
   id: ID!
-  slc: BigInt
-  slicers: [PayeeSlicer!]! @derivedFrom(field: "payee")
   created: [Slicer!]! @derivedFrom(field: "creator")
+  controlled: [Slicer!]! @derivedFrom(field: "controller")
+  royaltyReceived: [Slicer!]! @derivedFrom(field: "royaltyReceiver")
+  slicers: [PayeeSlicer!]! @derivedFrom(field: "payee")
+  currencies: [PayeeCurrency!]! @derivedFrom(field: "payee")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyer")
+}
+
+type Currency @entity {
+  id: ID!
+  slicers: [CurrencySlicer!]! @derivedFrom(field: "currency")
+  payees: [PayeeCurrency!]! @derivedFrom(field: "currency")
+  products: [ProductCurrency!]! @derivedFrom(field: "currency")
+}
+
+type Product @entity {
+  id: ID!
+  slicer: Slicer!
+  categoryIndex: BigInt!
+  isFree: Boolean!
+  isMultiple: Boolean!
+  isInfinite: Boolean!
+  availableUnits: BigInt!
+  creator: Bytes!
+  data: Bytes!
+  totalPurchases: BigInt!
+  extAddress: Bytes!
+  extValue: BigInt!
+  extCheckSig: Bytes!
+  extExecSig: Bytes!
+  extData: Bytes!
+  createdAtTimestamp: BigInt!
+  subProducts: [Product!]!
+  prices: [ProductCurrency!]! @derivedFrom(field: "product")
+  purchases: [ProductPurchase!]! @derivedFrom(field: "product")
 }
 
 type PayeeSlicer @entity {
@@ -28,36 +65,56 @@ type PayeeSlicer @entity {
   payee: Payee!
   slicer: Slicer!
   slices: BigInt!
-  released: BigInt
-  totalPaid: BigInt
-  totalPaidProducts: BigInt
+  currencyPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeSlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyerSlicer")
 }
 
-type Product @entity {
+type PayeeCurrency @entity {
   id: ID!
+  payee: Payee!
+  currency: Currency!
+  withdrawn: BigInt!
+  toWithdraw: BigInt!
+  paidToProtocol: BigInt!
+  slicerPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeCurrency")
+}
+
+type CurrencySlicer @entity {
+  id: ID!
+  currency: Currency!
   slicer: Slicer!
-  categoryIndex: BigInt!
+  released: BigInt!
+  paidToProtocol: BigInt!
+  toReleaseForProducts: BigInt!
+  payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
+  purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")
+}
+
+type PayeeSlicerCurrency @entity {
+  id: ID!
+  payeeSlicer: PayeeSlicer!
+  payeeCurrency: PayeeCurrency!
+  currencySlicer: CurrencySlicer!
+  paidForProducts: BigInt!
+}
+
+type ProductCurrency @entity {
+  id: ID!
+  product: Product!
+  currency: Currency!
   price: BigInt!
-  isUSD: Boolean!
-  isInfinite: Boolean!
-  isMultiple: Boolean!
-  availableUnits: BigInt!
-  creator: Bytes!
-  data: Bytes!
-  totalPurchases: BigInt!
-  subProducts: [Product!]!
-  purchases: [ProductPurchase!]! @derivedFrom(field: "product")
-  createdAtTimestamp: BigInt!
+  dynamicPricing: Boolean!
 }
 
 type ProductPurchase @entity {
   id: ID!
   product: Product!
   buyerSlicer: PayeeSlicer!
+  currencySlicer: CurrencySlicer!
   buyer: Payee!
-  # hash: [Bytes!]!
   quantity: BigInt!
+  paymentEth: BigInt!
+  paymentCurrency: BigInt!
   lastPurchasedAtTimestamp: BigInt!
 }
 
