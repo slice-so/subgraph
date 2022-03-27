@@ -10,21 +10,65 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class AddedChildrenSlicer extends ethereum.Event {
-  get params(): AddedChildrenSlicer__Params {
-    return new AddedChildrenSlicer__Params(this);
+export class ChildSlicerSet extends ethereum.Event {
+  get params(): ChildSlicerSet__Params {
+    return new ChildSlicerSet__Params(this);
   }
 }
 
-export class AddedChildrenSlicer__Params {
-  _event: AddedChildrenSlicer;
+export class ChildSlicerSet__Params {
+  _event: ChildSlicerSet;
 
-  constructor(event: AddedChildrenSlicer) {
+  constructor(event: ChildSlicerSet) {
     this._event = event;
   }
 
   get slicerId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
+  }
+
+  get addChildSlicerMode(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+}
+
+export class CurrenciesAdded extends ethereum.Event {
+  get params(): CurrenciesAdded__Params {
+    return new CurrenciesAdded__Params(this);
+  }
+}
+
+export class CurrenciesAdded__Params {
+  _event: CurrenciesAdded;
+
+  constructor(event: CurrenciesAdded) {
+    this._event = event;
+  }
+
+  get currencies(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
+  }
+}
+
+export class CustomFeeSet extends ethereum.Event {
+  get params(): CustomFeeSet__Params {
+    return new CustomFeeSet__Params(this);
+  }
+}
+
+export class CustomFeeSet__Params {
+  _event: CustomFeeSet;
+
+  constructor(event: CustomFeeSet) {
+    this._event = event;
+  }
+
+  get customFeeActive(): boolean {
+    return this._event.parameters[0].value.toBoolean();
+  }
+
+  get customFee(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -114,24 +158,6 @@ export class ERC721Received__Params {
   }
 }
 
-export class Paused extends ethereum.Event {
-  get params(): Paused__Params {
-    return new Paused__Params(this);
-  }
-}
-
-export class Paused__Params {
-  _event: Paused;
-
-  constructor(event: Paused) {
-    this._event = event;
-  }
-
-  get account(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-}
-
 export class PaymentReceived extends ethereum.Event {
   get params(): PaymentReceived__Params {
     return new PaymentReceived__Params(this);
@@ -154,226 +180,16 @@ export class PaymentReceived__Params {
   }
 }
 
-export class ProductAdded extends ethereum.Event {
-  get params(): ProductAdded__Params {
-    return new ProductAdded__Params(this);
+export class Released extends ethereum.Event {
+  get params(): Released__Params {
+    return new Released__Params(this);
   }
 }
 
-export class ProductAdded__Params {
-  _event: ProductAdded;
+export class Released__Params {
+  _event: Released;
 
-  constructor(event: ProductAdded) {
-    this._event = event;
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get categoryIndex(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get price(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get isUSD(): boolean {
-    return this._event.parameters[3].value.toBoolean();
-  }
-
-  get isMultiple(): boolean {
-    return this._event.parameters[4].value.toBoolean();
-  }
-
-  get isInfinite(): boolean {
-    return this._event.parameters[5].value.toBoolean();
-  }
-
-  get availableUnits(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
-  }
-
-  get creator(): Address {
-    return this._event.parameters[7].value.toAddress();
-  }
-
-  get data(): Bytes {
-    return this._event.parameters[8].value.toBytes();
-  }
-
-  get subSlicersId(): Array<BigInt> {
-    return this._event.parameters[9].value.toBigIntArray();
-  }
-
-  get subProducts(): Array<BigInt> {
-    return this._event.parameters[10].value.toBigIntArray();
-  }
-}
-
-export class ProductCategoryChanged extends ethereum.Event {
-  get params(): ProductCategoryChanged__Params {
-    return new ProductCategoryChanged__Params(this);
-  }
-}
-
-export class ProductCategoryChanged__Params {
-  _event: ProductCategoryChanged;
-
-  constructor(event: ProductCategoryChanged) {
-    this._event = event;
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get categoryIndex(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-}
-
-export class ProductCurrencyChanged extends ethereum.Event {
-  get params(): ProductCurrencyChanged__Params {
-    return new ProductCurrencyChanged__Params(this);
-  }
-}
-
-export class ProductCurrencyChanged__Params {
-  _event: ProductCurrencyChanged;
-
-  constructor(event: ProductCurrencyChanged) {
-    this._event = event;
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get productPrice(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get isUSD(): boolean {
-    return this._event.parameters[2].value.toBoolean();
-  }
-}
-
-export class ProductInfoChanged extends ethereum.Event {
-  get params(): ProductInfoChanged__Params {
-    return new ProductInfoChanged__Params(this);
-  }
-}
-
-export class ProductInfoChanged__Params {
-  _event: ProductInfoChanged;
-
-  constructor(event: ProductInfoChanged) {
-    this._event = event;
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get isInfinite(): boolean {
-    return this._event.parameters[1].value.toBoolean();
-  }
-
-  get units(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get productPrice(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
-  }
-}
-
-export class ProductPaid extends ethereum.Event {
-  get params(): ProductPaid__Params {
-    return new ProductPaid__Params(this);
-  }
-}
-
-export class ProductPaid__Params {
-  _event: ProductPaid;
-
-  constructor(event: ProductPaid) {
-    this._event = event;
-  }
-
-  get from(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get quantity(): i32 {
-    return this._event.parameters[2].value.toI32();
-  }
-
-  get productPrice(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
-  }
-}
-
-export class ProductRemoved extends ethereum.Event {
-  get params(): ProductRemoved__Params {
-    return new ProductRemoved__Params(this);
-  }
-}
-
-export class ProductRemoved__Params {
-  _event: ProductRemoved;
-
-  constructor(event: ProductRemoved) {
-    this._event = event;
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-}
-
-export class SLCPaid extends ethereum.Event {
-  get params(): SLCPaid__Params {
-    return new SLCPaid__Params(this);
-  }
-}
-
-export class SLCPaid__Params {
-  _event: SLCPaid;
-
-  constructor(event: SLCPaid) {
-    this._event = event;
-  }
-
-  get serviceIds(): Array<BigInt> {
-    return this._event.parameters[0].value.toBigIntArray();
-  }
-
-  get quantities(): Array<i32> {
-    return this._event.parameters[1].value.toI32Array();
-  }
-
-  get amount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-}
-
-export class TriggeredRelease extends ethereum.Event {
-  get params(): TriggeredRelease__Params {
-    return new TriggeredRelease__Params(this);
-  }
-}
-
-export class TriggeredRelease__Params {
-  _event: TriggeredRelease;
-
-  constructor(event: TriggeredRelease) {
+  constructor(event: Released) {
     this._event = event;
   }
 
@@ -381,68 +197,68 @@ export class TriggeredRelease__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get released(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+  get currency(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get amountReleased(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get protocolPayment(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 }
 
-export class Unpaused extends ethereum.Event {
-  get params(): Unpaused__Params {
-    return new Unpaused__Params(this);
-  }
-}
+export class Slicer___releaseFromFundsModuleResult {
+  value0: BigInt;
+  value1: BigInt;
 
-export class Unpaused__Params {
-  _event: Unpaused;
-
-  constructor(event: Unpaused) {
-    this._event = event;
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
   }
 
-  get account(): Address {
-    return this._event.parameters[0].value.toAddress();
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
   }
 }
 
 export class Slicer__slicerInfoResult {
   value0: BigInt;
-  value1: i32;
+  value1: BigInt;
   value2: Address;
-  value3: BigInt;
+  value3: boolean;
+  value4: boolean;
+  value5: Array<Address>;
 
-  constructor(value0: BigInt, value1: i32, value2: Address, value3: BigInt) {
+  constructor(
+    value0: BigInt,
+    value1: BigInt,
+    value2: Address,
+    value3: boolean,
+    value4: boolean,
+    value5: Array<Address>
+  ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
+    this.value4 = value4;
+    this.value5 = value5;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set(
-      "value1",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1))
-    );
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromAddress(this.value2));
-    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    return map;
-  }
-}
-
-export class Slicer__validatePurchaseResult {
-  value0: BigInt;
-  value1: Bytes;
-
-  constructor(value0: BigInt, value1: Bytes) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromBytes(this.value1));
+    map.set("value3", ethereum.Value.fromBoolean(this.value3));
+    map.set("value4", ethereum.Value.fromBoolean(this.value4));
+    map.set("value5", ethereum.Value.fromAddressArray(this.value5));
     return map;
   }
 }
@@ -450,6 +266,87 @@ export class Slicer__validatePurchaseResult {
 export class Slicer extends ethereum.SmartContract {
   static bind(address: Address): Slicer {
     return new Slicer("Slicer", address);
+  }
+
+  _releaseFromFundsModule(
+    account: Address,
+    currency: Address
+  ): Slicer___releaseFromFundsModuleResult {
+    let result = super.call(
+      "_releaseFromFundsModule",
+      "_releaseFromFundsModule(address,address):(uint256,uint256)",
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromAddress(currency)
+      ]
+    );
+
+    return new Slicer___releaseFromFundsModuleResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
+  }
+
+  try__releaseFromFundsModule(
+    account: Address,
+    currency: Address
+  ): ethereum.CallResult<Slicer___releaseFromFundsModuleResult> {
+    let result = super.tryCall(
+      "_releaseFromFundsModule",
+      "_releaseFromFundsModule(address,address):(uint256,uint256)",
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromAddress(currency)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Slicer___releaseFromFundsModuleResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
+  acceptsCurrency(currency: Address): boolean {
+    let result = super.call(
+      "acceptsCurrency",
+      "acceptsCurrency(address):(bool)",
+      [ethereum.Value.fromAddress(currency)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_acceptsCurrency(currency: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "acceptsCurrency",
+      "acceptsCurrency(address):(bool)",
+      [ethereum.Value.fromAddress(currency)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  getFee(): BigInt {
+    let result = super.call("getFee", "getFee():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_getFee(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("getFee", "getFee():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   isPayeeAllowed(payee: Address): boolean {
@@ -612,99 +509,27 @@ export class Slicer extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  paused(): boolean {
-    let result = super.call("paused", "paused():(bool)", []);
-
-    return result[0].toBoolean();
-  }
-
-  try_paused(): ethereum.CallResult<boolean> {
-    let result = super.tryCall("paused", "paused():(bool)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  productPrice(productId: BigInt): BigInt {
-    let result = super.call("productPrice", "productPrice(uint32):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(productId)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_productPrice(productId: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "productPrice",
-      "productPrice(uint32):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(productId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  release(account: Address): BigInt {
-    let result = super.call("release", "release(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_release(account: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("release", "release(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  released(account: Address): BigInt {
-    let result = super.call("released", "released(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_released(account: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("released", "released(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   slicerInfo(): Slicer__slicerInfoResult {
     let result = super.call(
       "slicerInfo",
-      "slicerInfo():(uint256,uint8,address,uint256)",
+      "slicerInfo():(uint256,uint256,address,bool,bool,address[])",
       []
     );
 
     return new Slicer__slicerInfoResult(
       result[0].toBigInt(),
-      result[1].toI32(),
+      result[1].toBigInt(),
       result[2].toAddress(),
-      result[3].toBigInt()
+      result[3].toBoolean(),
+      result[4].toBoolean(),
+      result[5].toAddressArray()
     );
   }
 
   try_slicerInfo(): ethereum.CallResult<Slicer__slicerInfoResult> {
     let result = super.tryCall(
       "slicerInfo",
-      "slicerInfo():(uint256,uint8,address,uint256)",
+      "slicerInfo():(uint256,uint256,address,bool,bool,address[])",
       []
     );
     if (result.reverted) {
@@ -714,9 +539,11 @@ export class Slicer extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new Slicer__slicerInfoResult(
         value[0].toBigInt(),
-        value[1].toI32(),
+        value[1].toBigInt(),
         value[2].toAddress(),
-        value[3].toBigInt()
+        value[3].toBoolean(),
+        value[4].toBoolean(),
+        value[5].toAddressArray()
       )
     );
   }
@@ -744,138 +571,145 @@ export class Slicer extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  totalReceived(): BigInt {
-    let result = super.call("totalReceived", "totalReceived():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_totalReceived(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "totalReceived",
-      "totalReceived():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  unreleased(account: Address): BigInt {
-    let result = super.call("unreleased", "unreleased(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_unreleased(account: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("unreleased", "unreleased(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  validatePurchase(productId: BigInt): Slicer__validatePurchaseResult {
+  unreleased(account: Address, currency: Address): BigInt {
     let result = super.call(
-      "validatePurchase",
-      "validatePurchase(uint32):(uint256,bytes)",
-      [ethereum.Value.fromUnsignedBigInt(productId)]
+      "unreleased",
+      "unreleased(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromAddress(currency)
+      ]
     );
 
-    return new Slicer__validatePurchaseResult(
-      result[0].toBigInt(),
-      result[1].toBytes()
-    );
+    return result[0].toBigInt();
   }
 
-  try_validatePurchase(
-    productId: BigInt
-  ): ethereum.CallResult<Slicer__validatePurchaseResult> {
+  try_unreleased(
+    account: Address,
+    currency: Address
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "validatePurchase",
-      "validatePurchase(uint32):(uint256,bytes)",
-      [ethereum.Value.fromUnsignedBigInt(productId)]
+      "unreleased",
+      "unreleased(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromAddress(currency)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new Slicer__validatePurchaseResult(
-        value[0].toBigInt(),
-        value[1].toBytes()
-      )
-    );
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 }
 
-export class _addChildrenSlicerCall extends ethereum.Call {
-  get inputs(): _addChildrenSlicerCall__Inputs {
-    return new _addChildrenSlicerCall__Inputs(this);
+export class _addCurrenciesCall extends ethereum.Call {
+  get inputs(): _addCurrenciesCall__Inputs {
+    return new _addCurrenciesCall__Inputs(this);
   }
 
-  get outputs(): _addChildrenSlicerCall__Outputs {
-    return new _addChildrenSlicerCall__Outputs(this);
+  get outputs(): _addCurrenciesCall__Outputs {
+    return new _addCurrenciesCall__Outputs(this);
   }
 }
 
-export class _addChildrenSlicerCall__Inputs {
-  _call: _addChildrenSlicerCall;
+export class _addCurrenciesCall__Inputs {
+  _call: _addCurrenciesCall;
 
-  constructor(call: _addChildrenSlicerCall) {
+  constructor(call: _addCurrenciesCall) {
     this._call = call;
   }
 
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class _addChildrenSlicerCall__Outputs {
-  _call: _addChildrenSlicerCall;
-
-  constructor(call: _addChildrenSlicerCall) {
-    this._call = call;
-  }
-}
-
-export class _addPayeesCall extends ethereum.Call {
-  get inputs(): _addPayeesCall__Inputs {
-    return new _addPayeesCall__Inputs(this);
-  }
-
-  get outputs(): _addPayeesCall__Outputs {
-    return new _addPayeesCall__Outputs(this);
-  }
-}
-
-export class _addPayeesCall__Inputs {
-  _call: _addPayeesCall;
-
-  constructor(call: _addPayeesCall) {
-    this._call = call;
-  }
-
-  get accounts(): Array<Address> {
+  get currencies(): Array<Address> {
     return this._call.inputValues[0].value.toAddressArray();
   }
+}
 
-  get shares_(): Array<BigInt> {
-    return this._call.inputValues[1].value.toBigIntArray();
+export class _addCurrenciesCall__Outputs {
+  _call: _addCurrenciesCall;
+
+  constructor(call: _addCurrenciesCall) {
+    this._call = call;
   }
 }
 
-export class _addPayeesCall__Outputs {
-  _call: _addPayeesCall;
+export class _handle1155PurchaseCall extends ethereum.Call {
+  get inputs(): _handle1155PurchaseCall__Inputs {
+    return new _handle1155PurchaseCall__Inputs(this);
+  }
 
-  constructor(call: _addPayeesCall) {
+  get outputs(): _handle1155PurchaseCall__Outputs {
+    return new _handle1155PurchaseCall__Outputs(this);
+  }
+}
+
+export class _handle1155PurchaseCall__Inputs {
+  _call: _handle1155PurchaseCall;
+
+  constructor(call: _handle1155PurchaseCall) {
+    this._call = call;
+  }
+
+  get buyer(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get contractAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get quantity(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class _handle1155PurchaseCall__Outputs {
+  _call: _handle1155PurchaseCall;
+
+  constructor(call: _handle1155PurchaseCall) {
+    this._call = call;
+  }
+}
+
+export class _handle721PurchaseCall extends ethereum.Call {
+  get inputs(): _handle721PurchaseCall__Inputs {
+    return new _handle721PurchaseCall__Inputs(this);
+  }
+
+  get outputs(): _handle721PurchaseCall__Outputs {
+    return new _handle721PurchaseCall__Outputs(this);
+  }
+}
+
+export class _handle721PurchaseCall__Inputs {
+  _call: _handle721PurchaseCall;
+
+  constructor(call: _handle721PurchaseCall) {
+    this._call = call;
+  }
+
+  get buyer(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get contractAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class _handle721PurchaseCall__Outputs {
+  _call: _handle721PurchaseCall;
+
+  constructor(call: _handle721PurchaseCall) {
     this._call = call;
   }
 }
@@ -901,16 +735,28 @@ export class _initializeCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
+  get isImmutable_(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+
+  get isControlled_(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+
   get slicerCreator_(): Address {
-    return this._call.inputValues[1].value.toAddress();
+    return this._call.inputValues[3].value.toAddress();
   }
 
   get minimumShares_(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+    return this._call.inputValues[4].value.toBigInt();
   }
 
-  get isCollectible_(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
+  get releaseTimelock_(): BigInt {
+    return this._call.inputValues[5].value.toBigInt();
+  }
+
+  get currencies_(): Array<Address> {
+    return this._call.inputValues[6].value.toAddressArray();
   }
 }
 
@@ -922,20 +768,20 @@ export class _initializeCall__Outputs {
   }
 }
 
-export class _payProductFromSliceCall extends ethereum.Call {
-  get inputs(): _payProductFromSliceCall__Inputs {
-    return new _payProductFromSliceCall__Inputs(this);
+export class _releaseFromFundsModuleCall extends ethereum.Call {
+  get inputs(): _releaseFromFundsModuleCall__Inputs {
+    return new _releaseFromFundsModuleCall__Inputs(this);
   }
 
-  get outputs(): _payProductFromSliceCall__Outputs {
-    return new _payProductFromSliceCall__Outputs(this);
+  get outputs(): _releaseFromFundsModuleCall__Outputs {
+    return new _releaseFromFundsModuleCall__Outputs(this);
   }
 }
 
-export class _payProductFromSliceCall__Inputs {
-  _call: _payProductFromSliceCall;
+export class _releaseFromFundsModuleCall__Inputs {
+  _call: _releaseFromFundsModuleCall;
 
-  constructor(call: _payProductFromSliceCall) {
+  constructor(call: _releaseFromFundsModuleCall) {
     this._call = call;
   }
 
@@ -943,61 +789,159 @@ export class _payProductFromSliceCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get productId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get quantity(): i32 {
-    return this._call.inputValues[2].value.toI32();
+  get currency(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
-export class _payProductFromSliceCall__Outputs {
-  _call: _payProductFromSliceCall;
+export class _releaseFromFundsModuleCall__Outputs {
+  _call: _releaseFromFundsModuleCall;
 
-  constructor(call: _payProductFromSliceCall) {
-    this._call = call;
-  }
-}
-
-export class _payProductFromSlicerCall extends ethereum.Call {
-  get inputs(): _payProductFromSlicerCall__Inputs {
-    return new _payProductFromSlicerCall__Inputs(this);
-  }
-
-  get outputs(): _payProductFromSlicerCall__Outputs {
-    return new _payProductFromSlicerCall__Outputs(this);
-  }
-}
-
-export class _payProductFromSlicerCall__Inputs {
-  _call: _payProductFromSlicerCall;
-
-  constructor(call: _payProductFromSlicerCall) {
+  constructor(call: _releaseFromFundsModuleCall) {
     this._call = call;
   }
 
-  get tokenId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get amount(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+
+  get protocolPayment(): BigInt {
+    return this._call.outputValues[1].value.toBigInt();
+  }
+}
+
+export class _releaseFromSliceCoreCall extends ethereum.Call {
+  get inputs(): _releaseFromSliceCoreCall__Inputs {
+    return new _releaseFromSliceCoreCall__Inputs(this);
+  }
+
+  get outputs(): _releaseFromSliceCoreCall__Outputs {
+    return new _releaseFromSliceCoreCall__Outputs(this);
+  }
+}
+
+export class _releaseFromSliceCoreCall__Inputs {
+  _call: _releaseFromSliceCoreCall;
+
+  constructor(call: _releaseFromSliceCoreCall) {
+    this._call = call;
   }
 
   get account(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get currency(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get productId(): BigInt {
+  get accountSlices(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get quantity(): i32 {
-    return this._call.inputValues[3].value.toI32();
   }
 }
 
-export class _payProductFromSlicerCall__Outputs {
-  _call: _payProductFromSlicerCall;
+export class _releaseFromSliceCoreCall__Outputs {
+  _call: _releaseFromSliceCoreCall;
 
-  constructor(call: _payProductFromSlicerCall) {
+  constructor(call: _releaseFromSliceCoreCall) {
+    this._call = call;
+  }
+}
+
+export class _setChildSlicerCall extends ethereum.Call {
+  get inputs(): _setChildSlicerCall__Inputs {
+    return new _setChildSlicerCall__Inputs(this);
+  }
+
+  get outputs(): _setChildSlicerCall__Outputs {
+    return new _setChildSlicerCall__Outputs(this);
+  }
+}
+
+export class _setChildSlicerCall__Inputs {
+  _call: _setChildSlicerCall;
+
+  constructor(call: _setChildSlicerCall) {
+    this._call = call;
+  }
+
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get isAdded(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class _setChildSlicerCall__Outputs {
+  _call: _setChildSlicerCall;
+
+  constructor(call: _setChildSlicerCall) {
+    this._call = call;
+  }
+}
+
+export class _setCustomFeeCall extends ethereum.Call {
+  get inputs(): _setCustomFeeCall__Inputs {
+    return new _setCustomFeeCall__Inputs(this);
+  }
+
+  get outputs(): _setCustomFeeCall__Outputs {
+    return new _setCustomFeeCall__Outputs(this);
+  }
+}
+
+export class _setCustomFeeCall__Inputs {
+  _call: _setCustomFeeCall;
+
+  constructor(call: _setCustomFeeCall) {
+    this._call = call;
+  }
+
+  get customFeeActive(): boolean {
+    return this._call.inputValues[0].value.toBoolean();
+  }
+
+  get customFee(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class _setCustomFeeCall__Outputs {
+  _call: _setCustomFeeCall;
+
+  constructor(call: _setCustomFeeCall) {
+    this._call = call;
+  }
+}
+
+export class _setTotalSharesCall extends ethereum.Call {
+  get inputs(): _setTotalSharesCall__Inputs {
+    return new _setTotalSharesCall__Inputs(this);
+  }
+
+  get outputs(): _setTotalSharesCall__Outputs {
+    return new _setTotalSharesCall__Outputs(this);
+  }
+}
+
+export class _setTotalSharesCall__Inputs {
+  _call: _setTotalSharesCall;
+
+  constructor(call: _setTotalSharesCall) {
+    this._call = call;
+  }
+
+  get totalShares(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class _setTotalSharesCall__Outputs {
+  _call: _setTotalSharesCall;
+
+  constructor(call: _setTotalSharesCall) {
     this._call = call;
   }
 }
@@ -1019,16 +963,24 @@ export class _updatePayeesCall__Inputs {
     this._call = call;
   }
 
-  get accountFrom(): Address {
+  get sender(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get accountTo(): Address {
+  get receiver(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
+  get toRelease(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+
+  get senderShares(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
   get transferredShares(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+    return this._call.inputValues[4].value.toBigInt();
   }
 }
 
@@ -1040,68 +992,78 @@ export class _updatePayeesCall__Outputs {
   }
 }
 
-export class AddProductCall extends ethereum.Call {
-  get inputs(): AddProductCall__Inputs {
-    return new AddProductCall__Inputs(this);
+export class _updatePayeesResliceCall extends ethereum.Call {
+  get inputs(): _updatePayeesResliceCall__Inputs {
+    return new _updatePayeesResliceCall__Inputs(this);
   }
 
-  get outputs(): AddProductCall__Outputs {
-    return new AddProductCall__Outputs(this);
+  get outputs(): _updatePayeesResliceCall__Outputs {
+    return new _updatePayeesResliceCall__Outputs(this);
   }
 }
 
-export class AddProductCall__Inputs {
-  _call: AddProductCall;
+export class _updatePayeesResliceCall__Inputs {
+  _call: _updatePayeesResliceCall;
 
-  constructor(call: AddProductCall) {
+  constructor(call: _updatePayeesResliceCall) {
     this._call = call;
   }
 
-  get categoryIndex(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get accounts(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
-  get price(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get tokensDiffs(): Array<i32> {
+    return this._call.inputValues[1].value.toI32Array();
   }
 
-  get isUSD(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
-  }
-
-  get isMultiple(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
-  }
-
-  get isInfinite(): boolean {
-    return this._call.inputValues[4].value.toBoolean();
-  }
-
-  get units(): BigInt {
-    return this._call.inputValues[5].value.toBigInt();
-  }
-
-  get data(): Bytes {
-    return this._call.inputValues[6].value.toBytes();
-  }
-
-  get purchaseData(): Bytes {
-    return this._call.inputValues[7].value.toBytes();
-  }
-
-  get subSlicersId_(): Array<BigInt> {
-    return this._call.inputValues[8].value.toBigIntArray();
-  }
-
-  get subProducts_(): Array<BigInt> {
-    return this._call.inputValues[9].value.toBigIntArray();
+  get totalSupply(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
-export class AddProductCall__Outputs {
-  _call: AddProductCall;
+export class _updatePayeesResliceCall__Outputs {
+  _call: _updatePayeesResliceCall;
 
-  constructor(call: AddProductCall) {
+  constructor(call: _updatePayeesResliceCall) {
+    this._call = call;
+  }
+}
+
+export class BatchReleaseAccountsCall extends ethereum.Call {
+  get inputs(): BatchReleaseAccountsCall__Inputs {
+    return new BatchReleaseAccountsCall__Inputs(this);
+  }
+
+  get outputs(): BatchReleaseAccountsCall__Outputs {
+    return new BatchReleaseAccountsCall__Outputs(this);
+  }
+}
+
+export class BatchReleaseAccountsCall__Inputs {
+  _call: BatchReleaseAccountsCall;
+
+  constructor(call: BatchReleaseAccountsCall) {
+    this._call = call;
+  }
+
+  get accounts(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
+  }
+
+  get currency(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get withdraw(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+}
+
+export class BatchReleaseAccountsCall__Outputs {
+  _call: BatchReleaseAccountsCall;
+
+  constructor(call: BatchReleaseAccountsCall) {
     this._call = call;
   }
 }
@@ -1252,40 +1214,6 @@ export class OnERC721ReceivedCall__Outputs {
   }
 }
 
-export class PaySLCCall extends ethereum.Call {
-  get inputs(): PaySLCCall__Inputs {
-    return new PaySLCCall__Inputs(this);
-  }
-
-  get outputs(): PaySLCCall__Outputs {
-    return new PaySLCCall__Outputs(this);
-  }
-}
-
-export class PaySLCCall__Inputs {
-  _call: PaySLCCall;
-
-  constructor(call: PaySLCCall) {
-    this._call = call;
-  }
-
-  get serviceIds(): Array<BigInt> {
-    return this._call.inputValues[0].value.toBigIntArray();
-  }
-
-  get quantities(): Array<i32> {
-    return this._call.inputValues[1].value.toI32Array();
-  }
-}
-
-export class PaySLCCall__Outputs {
-  _call: PaySLCCall;
-
-  constructor(call: PaySLCCall) {
-    this._call = call;
-  }
-}
-
 export class ReleaseCall extends ethereum.Call {
   get inputs(): ReleaseCall__Inputs {
     return new ReleaseCall__Inputs(this);
@@ -1306,156 +1234,20 @@ export class ReleaseCall__Inputs {
   get account(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
+
+  get currency(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get withdraw(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
 }
 
 export class ReleaseCall__Outputs {
   _call: ReleaseCall;
 
   constructor(call: ReleaseCall) {
-    this._call = call;
-  }
-
-  get value0(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class RemoveProductCall extends ethereum.Call {
-  get inputs(): RemoveProductCall__Inputs {
-    return new RemoveProductCall__Inputs(this);
-  }
-
-  get outputs(): RemoveProductCall__Outputs {
-    return new RemoveProductCall__Outputs(this);
-  }
-}
-
-export class RemoveProductCall__Inputs {
-  _call: RemoveProductCall;
-
-  constructor(call: RemoveProductCall) {
-    this._call = call;
-  }
-
-  get productId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class RemoveProductCall__Outputs {
-  _call: RemoveProductCall;
-
-  constructor(call: RemoveProductCall) {
-    this._call = call;
-  }
-}
-
-export class SetProductCategoryCall extends ethereum.Call {
-  get inputs(): SetProductCategoryCall__Inputs {
-    return new SetProductCategoryCall__Inputs(this);
-  }
-
-  get outputs(): SetProductCategoryCall__Outputs {
-    return new SetProductCategoryCall__Outputs(this);
-  }
-}
-
-export class SetProductCategoryCall__Inputs {
-  _call: SetProductCategoryCall;
-
-  constructor(call: SetProductCategoryCall) {
-    this._call = call;
-  }
-
-  get productId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get categoryIndex(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SetProductCategoryCall__Outputs {
-  _call: SetProductCategoryCall;
-
-  constructor(call: SetProductCategoryCall) {
-    this._call = call;
-  }
-}
-
-export class SetProductInfoCall extends ethereum.Call {
-  get inputs(): SetProductInfoCall__Inputs {
-    return new SetProductInfoCall__Inputs(this);
-  }
-
-  get outputs(): SetProductInfoCall__Outputs {
-    return new SetProductInfoCall__Outputs(this);
-  }
-}
-
-export class SetProductInfoCall__Inputs {
-  _call: SetProductInfoCall;
-
-  constructor(call: SetProductInfoCall) {
-    this._call = call;
-  }
-
-  get productId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get isInfinite(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-
-  get newUnits(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get newPrice(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-}
-
-export class SetProductInfoCall__Outputs {
-  _call: SetProductInfoCall;
-
-  constructor(call: SetProductInfoCall) {
-    this._call = call;
-  }
-}
-
-export class ToggleUSDPriceCall extends ethereum.Call {
-  get inputs(): ToggleUSDPriceCall__Inputs {
-    return new ToggleUSDPriceCall__Inputs(this);
-  }
-
-  get outputs(): ToggleUSDPriceCall__Outputs {
-    return new ToggleUSDPriceCall__Outputs(this);
-  }
-}
-
-export class ToggleUSDPriceCall__Inputs {
-  _call: ToggleUSDPriceCall;
-
-  constructor(call: ToggleUSDPriceCall) {
-    this._call = call;
-  }
-
-  get productId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get isUSD(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class ToggleUSDPriceCall__Outputs {
-  _call: ToggleUSDPriceCall;
-
-  constructor(call: ToggleUSDPriceCall) {
     this._call = call;
   }
 }
