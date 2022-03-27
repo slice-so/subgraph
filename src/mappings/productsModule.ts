@@ -17,7 +17,7 @@ import {
   ERC721ListingChanged as ERC721ListingChangedEvent,
   ERC1155ListingChanged as ERC1155ListingChangedEvent
 } from "../../generated/ProductsModule/ProductsModule"
-import { Address, BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 
 export function handleProductAdded(event: ProductAddedEvent): void {
   let slicerId = event.params.slicerId.toHex()
