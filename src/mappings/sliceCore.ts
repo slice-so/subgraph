@@ -33,7 +33,7 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   let isControlled = event.params.isControlled
   let slicerVersion = event.params.slicerVersion
   let creator = event.transaction.from.toHexString()
-  let totalSlices: BigInt
+  let totalSlices = BigInt.fromI32(0)
 
   let slicer = new SlicerEntity(slicerId)
 
@@ -193,7 +193,7 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
   let to = event.params.to.toHexString()
   let slicerId = event.params.id.toHex()
   let value = event.params.value
-  let address0 = new Bytes(20) as Address
+  let address0 = new Bytes(20)
 
   if (from != address0.toHexString() && from != to) {
     let toPayee = Payee.load(to)
@@ -221,7 +221,7 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
   let to = event.params.to.toHexString()
   let ids = event.params.ids
   let values = event.params.values
-  let address0 = new Bytes(20) as Address
+  let address0 = new Bytes(20)
   if (from != address0.toHexString() && from != to) {
     let toPayee = Payee.load(to)
     if (!toPayee) {

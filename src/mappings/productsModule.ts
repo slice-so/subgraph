@@ -32,7 +32,7 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   let subSlicerProducts = event.params.subSlicerProducts
   let currencyPrices = event.params.currencyPrices
   let externalCall = event.params.externalCall
-  let address0 = new Bytes(20) as Address
+  let address0 = new Bytes(20)
 
   let product = new Product(slicerId + "-" + productId)
 
