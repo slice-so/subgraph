@@ -98,7 +98,7 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
 
   let context = new DataSourceContext()
   context.setString("slicerId", slicerId)
-  Slicer.createWithContext(event.params.slicerAddress, context)
+  Slicer.createWithContext(slicerAddress, context)
 }
 
 export function handleTokenResliced(event: TokenReslicedEvent): void {
