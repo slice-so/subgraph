@@ -33,8 +33,9 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   let currencyPrices = event.params.currencyPrices
   let externalCall = event.params.externalCall
   let address0 = new Bytes(20)
+  let slicerProductId = slicerId + "-" + productId
 
-  let product = new Product(slicerId + "-" + productId)
+  let product = new Product(slicerProductId)
 
   product.slicer = slicerId
   product.categoryIndex = categoryIndex
@@ -61,8 +62,8 @@ export function handleProductAdded(event: ProductAddedEvent): void {
 
   for (let i = 0; i < currencyPrices.length; i++) {
     let currency = currencyPrices[i].currency.toHexString()
-    let productPrice = new ProductPrices(productId + "-" + currency)
-    productPrice.product = productId
+    let productPrice = new ProductPrices(slicerProductId + "-" + currency)
+    productPrice.product = slicerProductId
     productPrice.currency = currency
     productPrice.price = currencyPrices[i].value
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
@@ -79,8 +80,9 @@ export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
   let isInfinite = event.params.isInfinite
   let availableUnits = event.params.newUnits
   let currencyPrices = event.params.currencyPrices
+  let slicerProductId = slicerId + "-" + productId
 
-  let product = Product.load(slicerId + "-" + productId)!
+  let product = Product.load(slicerProductId)!
 
   product.isFree = isFree
   product.isInfinite = isInfinite
@@ -88,10 +90,10 @@ export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
 
   for (let i = 0; i < currencyPrices.length; i++) {
     let currency = currencyPrices[i].currency.toHexString()
-    let productPrice = ProductPrices.load(productId + "-" + currency)
+    let productPrice = ProductPrices.load(slicerProductId + "-" + currency)
     if (!productPrice) {
-      productPrice = new ProductPrices(productId + "-" + currency)
-      productPrice.product = productId
+      productPrice = new ProductPrices(slicerProductId + "-" + currency)
+      productPrice.product = slicerProductId
       productPrice.currency = currency
     }
     productPrice.price = currencyPrices[i].value
@@ -133,8 +135,9 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   let paymentEth = event.params.paymentEth
   let paymentCurrency = event.params.paymentCurrency
   let address0 = new Bytes(20).toHexString()
+  let slicerProductId = slicerId + "-" + productId
 
-  let product = Product.load(slicerId + "-" + productId)!
+  let product = Product.load(slicerProductId)!
   let slicer = SlicerEntity.load(slicerId)!
 
   slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
@@ -196,10 +199,10 @@ export function handleProductPaid(event: ProductPaidEvent): void {
     payeeSlicerCurrency.save()
   }
 
-  let pp = ProductPurchase.load(productId + "-" + buyerAddress)
+  let pp = ProductPurchase.load(slicerProductId + "-" + buyerAddress)
   if (!pp) {
-    pp = new ProductPurchase(productId + "-" + buyerAddress)
-    pp.product = slicerId + "-" + productId
+    pp = new ProductPurchase(slicerProductId + "-" + buyerAddress)
+    pp.product = slicerProductId
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
@@ -221,6 +224,7 @@ export function handleReleasedToSlicer(event: ReleasedToSlicerEvent): void {
   slicer.productsModuleReleased = slicer.productsModuleReleased.plus(
     ethToRelease
   )
+  slicer.save()
 }
 
 export function handleERC721ListingChanged(

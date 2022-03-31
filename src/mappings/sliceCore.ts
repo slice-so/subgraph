@@ -17,6 +17,7 @@ import {
   Address,
   BigInt,
   Bytes,
+  dataSource,
   DataSourceContext
 } from "@graphprotocol/graph-ts"
 import { Slicer } from "../../generated/templates"
@@ -26,7 +27,6 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   let slicerId = event.params.tokenId.toHex()
   let payees = event.params.payees
   let minimumShares = event.params.minimumShares
-  let currencies = event.params.currencies
   let releaseTimelock = event.params.releaseTimelock
   let transferableTimelock = event.params.transferableTimelock
   let isImmutable = event.params.isImmutable
@@ -34,6 +34,23 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   let slicerVersion = event.params.slicerVersion
   let creator = event.transaction.from.toHexString()
   let totalSlices = BigInt.fromI32(0)
+  let address0 = Address.fromBytes(new Bytes(20))
+
+  let network = dataSource.network()
+  let slxAddress: Address
+  if (network == "rinkeby") {
+    slxAddress = Address.fromString(
+      "0x4F6Ff17F5dCb4f413C5f1b7eC42D6c18666452B0"
+    )
+  } else {
+    slxAddress = Address.fromString(
+      "0x6fa5FF63B2752265c6Bd9350591f97A7dAd9e918"
+    )
+  }
+
+  let currencies = event.params.currencies
+  currencies.push(slxAddress)
+  currencies.push(address0)
 
   let slicer = new SlicerEntity(slicerId)
 
