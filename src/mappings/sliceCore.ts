@@ -212,7 +212,11 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
   let value = event.params.value
   let address0 = new Bytes(20)
 
-  if (from != address0.toHexString() && from != to) {
+  if (
+    from != address0.toHexString() &&
+    to != address0.toHexString() &&
+    from != to
+  ) {
     let toPayee = Payee.load(to)
     let fromSlicer = PayeeSlicer.load(from + "-" + slicerId)!
     let toSlicer = PayeeSlicer.load(to + "-" + slicerId)
@@ -224,7 +228,6 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
       toSlicer = new PayeeSlicer(to + "-" + slicerId)
       toSlicer.payee = to
       toSlicer.slicer = slicerId
-      // toSlicer.slices = BigInt.fromI32(0)
     }
     toSlicer.slices = toSlicer.slices.plus(value)
     fromSlicer.slices = fromSlicer.slices.minus(value)
@@ -239,7 +242,11 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
   let ids = event.params.ids
   let values = event.params.values
   let address0 = new Bytes(20)
-  if (from != address0.toHexString() && from != to) {
+  if (
+    from != address0.toHexString() &&
+    to != address0.toHexString() &&
+    from != to
+  ) {
     let toPayee = Payee.load(to)
     if (!toPayee) {
       toPayee = new Payee(to)
@@ -255,7 +262,6 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
         toSlicer = new PayeeSlicer(to + "-" + slicerId)
         toSlicer.payee = to
         toSlicer.slicer = slicerId
-        // toSlicer.slices = BigInt.fromI32(0)
       }
       toSlicer.slices = toSlicer.slices.plus(value)
       fromSlicer.slices = fromSlicer.slices.minus(value)
