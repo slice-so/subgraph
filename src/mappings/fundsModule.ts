@@ -24,7 +24,9 @@ export function handleDeposited(event: DepositedEvent): void {
     payeeCurrency.payee = account
     payeeCurrency.currency = currencyAddress
   }
-  payeeCurrency.toWithdraw = payeeCurrency.toWithdraw.plus(amount)
+  payeeCurrency.toWithdraw = payeeCurrency.toWithdraw.plus(
+    amount.minus(protocolAmount)
+  )
   payeeCurrency.toPayToProtocol = payeeCurrency.toPayToProtocol.plus(
     protocolAmount
   )
