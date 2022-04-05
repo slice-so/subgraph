@@ -68,6 +68,14 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
 
   if (isControlled) {
     slicer.controller = creator
+  } else {
+    let zeroAddress = address0.toHexString()
+    let address0Payee = Payee.load(zeroAddress)
+    if (!address0Payee) {
+      address0Payee = new Payee(zeroAddress)
+      address0Payee.save()
+    }
+    slicer.controller = zeroAddress
   }
 
   for (let i = 0; i < currencies.length; i++) {
@@ -147,8 +155,6 @@ export function handleTokenResliced(event: TokenReslicedEvent): void {
     totalSlices = totalSlices.plus(tokenDiff)
   }
 
-  // TODO: Check operations with int work as expected
-
   slicer.slices = totalSlices
   slicer.save()
 }
@@ -168,6 +174,9 @@ export function handleSlicerControllerSet(
   }
 
   slicer.controller = controller
+  if (slicer.royaltyReceiver != slicer.address.toHexString()) {
+    slicer.royaltyReceiver = controller
+  }
   slicer.save()
 }
 
@@ -177,6 +186,7 @@ export function handleRoyaltySet(event: RoyaltySetEvent): void {
   let isActive = event.params.isActive
   let royaltyPercentage = event.params.royaltyPercentage
   let slicer = SlicerEntity.load(slicerId)!
+  let address0 = Address.fromBytes(new Bytes(20))
 
   if (isActive) {
     slicer.royaltyPercentage = royaltyPercentage
@@ -194,8 +204,7 @@ export function handleRoyaltySet(event: RoyaltySetEvent): void {
 
     slicer.royaltyReceiver = slicer.address.toHexString()
   } else {
-    if (slicer.controller != "") {
-      // TODO: Check condition is correct
+    if (slicer.controller != address0.toHexString()) {
       slicer.royaltyReceiver = slicer.controller
     } else {
       slicer.royaltyReceiver = slicer.creator
