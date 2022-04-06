@@ -3,18 +3,18 @@ import {
   Payee,
   Currency,
   PayeeSlicer,
-  CurrencySlicer,
-  TokenReceived
+  CurrencySlicer
+  // TokenReceived
 } from "../../generated/schema"
 import {
   Released as ReleasedEvent,
   CurrenciesAdded as CurrenciesAddedEvent,
   ChildSlicerSet as ChildSlicerSetEvent,
   CustomFeeSet as CustomFeeSetEvent,
-  PaymentReceived as PaymentReceivedEvent,
-  ERC721Received as ERC721ReceivedEvent,
-  ERC1155Received as ERC1155ReceivedEvent,
-  ERC1155BatchReceived as ERC1155BatchReceivedEvent
+  PaymentReceived as PaymentReceivedEvent
+  // ERC721Received as ERC721ReceivedEvent,
+  // ERC1155Received as ERC1155ReceivedEvent,
+  // ERC1155BatchReceived as ERC1155BatchReceivedEvent
 } from "../../generated/templates/Slicer/Slicer"
 import { BigInt, dataSource } from "@graphprotocol/graph-ts"
 
@@ -37,12 +37,14 @@ export function handleReleased(event: ReleasedEvent): void {
 export function handleCurrenciesAdded(event: CurrenciesAddedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let slicer = SlicerEntity.load(slicerId)!
   let currencies = event.params.currencies
 
   for (let i = 0; i < currencies.length; i++) {
     let currencyAddress = currencies[i].toHexString()
-    if (!slicer.currencies.includes(currencyAddress)) {
+
+    let acceptsCurrency = CurrencySlicer.load(currencyAddress + "-" + slicerId)
+
+    if (!acceptsCurrency) {
       let currency = Currency.load(currencyAddress)
       if (!currency) {
         currency = new Currency(currencyAddress)
@@ -55,11 +57,8 @@ export function handleCurrenciesAdded(event: CurrenciesAddedEvent): void {
       currencySlicer.save()
     }
   }
-
-  slicer.save()
 }
 
-// Todo: Check if it works
 export function handleChildSlicerSet(event: ChildSlicerSetEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
@@ -67,8 +66,12 @@ export function handleChildSlicerSet(event: ChildSlicerSetEvent): void {
   let childSlicerId = event.params.slicerId.toHex()
   let isAdded = event.params.addChildSlicerMode
   let childrenSlicers = slicer.childrenSlicers
+
   if (isAdded) {
-    slicer.childrenSlicers.push(childSlicerId)
+    if (!childrenSlicers.includes(childSlicerId)) {
+      childrenSlicers.push(childSlicerId)
+      slicer.childrenSlicers = childrenSlicers
+    }
   } else {
     let index = -1
     for (let i = 0; i < childrenSlicers.length; i++) {
@@ -78,7 +81,8 @@ export function handleChildSlicerSet(event: ChildSlicerSetEvent): void {
     }
 
     if (index != -1) {
-      slicer.childrenSlicers.splice(index, 1)
+      childrenSlicers.splice(index, 1)
+      slicer.childrenSlicers = childrenSlicers
     }
   }
   slicer.save()
@@ -118,7 +122,6 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
     payeeSlicer = new PayeeSlicer(sender + "-" + slicerId)
     payeeSlicer.payee = sender
     payeeSlicer.slicer = slicerId
-    payeeSlicer.slices = BigInt.fromI32(0)
   }
 
   slicer.ethReceived = slicer.ethReceived.plus(amount)
@@ -127,78 +130,78 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   slicer.save()
 }
 
-export function handleERC721Received(event: ERC721ReceivedEvent): void {
-  let context = dataSource.context()
-  let slicerId = context.getString("slicerId")
-  let contract = event.params.contractAddress.toHexString()
-  let tokenId = event.params.tokenId.toHex()
+// export function handleERC721Received(event: ERC721ReceivedEvent): void {
+//   let context = dataSource.context()
+//   let slicerId = context.getString("slicerId")
+//   let contract = event.params.contractAddress.toHexString()
+//   let tokenId = event.params.tokenId.toHex()
 
-  let tokenReceived = TokenReceived.load(
-    slicerId + "-" + contract + "-" + tokenId
-  )
-  if (!tokenReceived) {
-    tokenReceived = new TokenReceived(slicerId + "-" + contract + "-" + tokenId)
-    tokenReceived.slicer = slicerId
-    tokenReceived.contract = event.params.contractAddress
-    tokenReceived.tokenId = event.params.tokenId
-    tokenReceived.quantity = BigInt.fromI32(1)
-    tokenReceived.isERC721 = true
-  }
-  tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
-  tokenReceived.save()
-}
+//   let tokenReceived = TokenReceived.load(
+//     slicerId + "-" + contract + "-" + tokenId
+//   )
+//   if (!tokenReceived) {
+//     tokenReceived = new TokenReceived(slicerId + "-" + contract + "-" + tokenId)
+//     tokenReceived.slicer = slicerId
+//     tokenReceived.contract = event.params.contractAddress
+//     tokenReceived.tokenId = event.params.tokenId
+//     tokenReceived.quantity = BigInt.fromI32(1)
+//     tokenReceived.isERC721 = true
+//   }
+//   tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
+//   tokenReceived.save()
+// }
 
-export function handleERC1155Received(event: ERC1155ReceivedEvent): void {
-  let context = dataSource.context()
-  let slicerId = context.getString("slicerId")
-  let contract = event.params.contractAddress.toHexString()
-  let tokenId = event.params.tokenId.toHex()
-  let amount = event.params.amount
+// export function handleERC1155Received(event: ERC1155ReceivedEvent): void {
+//   let context = dataSource.context()
+//   let slicerId = context.getString("slicerId")
+//   let contract = event.params.contractAddress.toHexString()
+//   let tokenId = event.params.tokenId.toHex()
+//   let amount = event.params.amount
 
-  let tokenReceived = TokenReceived.load(
-    slicerId + "-" + contract + "-" + tokenId
-  )
-  if (!tokenReceived) {
-    tokenReceived = new TokenReceived(slicerId + "-" + contract + "-" + tokenId)
-    tokenReceived.slicer = slicerId
-    tokenReceived.contract = event.params.contractAddress
-    tokenReceived.tokenId = event.params.tokenId
-    tokenReceived.quantity = amount
-  } else {
-    tokenReceived.quantity = tokenReceived.quantity.plus(amount)
-  }
-  tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
-  tokenReceived.save()
-}
+//   let tokenReceived = TokenReceived.load(
+//     slicerId + "-" + contract + "-" + tokenId
+//   )
+//   if (!tokenReceived) {
+//     tokenReceived = new TokenReceived(slicerId + "-" + contract + "-" + tokenId)
+//     tokenReceived.slicer = slicerId
+//     tokenReceived.contract = event.params.contractAddress
+//     tokenReceived.tokenId = event.params.tokenId
+//     tokenReceived.quantity = amount
+//   } else {
+//     tokenReceived.quantity = tokenReceived.quantity.plus(amount)
+//   }
+//   tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
+//   tokenReceived.save()
+// }
 
-export function handleERC1155BatchReceived(
-  event: ERC1155BatchReceivedEvent
-): void {
-  let context = dataSource.context()
-  let slicerId = context.getString("slicerId")
-  let contract = event.params.contractAddress.toHexString()
-  let tokenIds = event.params.tokenIds
-  let amounts = event.params.amounts
+// export function handleERC1155BatchReceived(
+//   event: ERC1155BatchReceivedEvent
+// ): void {
+//   let context = dataSource.context()
+//   let slicerId = context.getString("slicerId")
+//   let contract = event.params.contractAddress.toHexString()
+//   let tokenIds = event.params.tokenIds
+//   let amounts = event.params.amounts
 
-  for (let i = 0; i < tokenIds.length; i++) {
-    let tokenId = tokenIds[i].toHex()
-    let amount = amounts[i]
+//   for (let i = 0; i < tokenIds.length; i++) {
+//     let tokenId = tokenIds[i].toHex()
+//     let amount = amounts[i]
 
-    let tokenReceived = TokenReceived.load(
-      slicerId + "-" + contract + "-" + tokenId
-    )
-    if (!tokenReceived) {
-      tokenReceived = new TokenReceived(
-        slicerId + "-" + contract + "-" + tokenId
-      )
-      tokenReceived.slicer = slicerId
-      tokenReceived.contract = event.params.contractAddress
-      tokenReceived.tokenId = tokenIds[i]
-      tokenReceived.quantity = amount
-    } else {
-      tokenReceived.quantity = tokenReceived.quantity.plus(amount)
-    }
-    tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
-    tokenReceived.save()
-  }
-}
+//     let tokenReceived = TokenReceived.load(
+//       slicerId + "-" + contract + "-" + tokenId
+//     )
+//     if (!tokenReceived) {
+//       tokenReceived = new TokenReceived(
+//         slicerId + "-" + contract + "-" + tokenId
+//       )
+//       tokenReceived.slicer = slicerId
+//       tokenReceived.contract = event.params.contractAddress
+//       tokenReceived.tokenId = tokenIds[i]
+//       tokenReceived.quantity = amount
+//     } else {
+//       tokenReceived.quantity = tokenReceived.quantity.plus(amount)
+//     }
+//     tokenReceived.lastReceivedAtTimestamp = event.block.timestamp
+//     tokenReceived.save()
+//   }
+// }

@@ -21,7 +21,7 @@ type Slicer @entity {
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
   products: [Product!]! @derivedFrom(field: "slicer")
   TokenListings: [TokenListing!]! @derivedFrom(field: "slicer")
-  TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
+  # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
 type Payee @entity {
@@ -45,6 +45,7 @@ type Product @entity {
   id: ID!
   slicer: Slicer!
   categoryIndex: BigInt!
+  isRemoved: Boolean!
   isFree: Boolean!
   isMultiple: Boolean!
   isInfinite: Boolean!
@@ -122,15 +123,15 @@ type ProductPurchase @entity {
   lastPurchasedAtTimestamp: BigInt!
 }
 
-type TokenReceived @entity {
-  id: ID!
-  slicer: Slicer!
-  contract: Bytes!
-  tokenId: BigInt!
-  quantity: BigInt!
-  isERC721: Boolean!
-  lastReceivedAtTimestamp: BigInt!
-}
+# type TokenReceived @entity {
+#   id: ID!
+#   slicer: Slicer!
+#   contract: Bytes!
+#   tokenId: BigInt!
+#   quantity: BigInt!
+#   isERC721: Boolean!
+#   lastReceivedAtTimestamp: BigInt!
+# }
 
 type TokenListing @entity {
   id: ID!

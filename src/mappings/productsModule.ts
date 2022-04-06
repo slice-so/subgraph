@@ -17,7 +17,7 @@ import {
   ERC721ListingChanged as ERC721ListingChangedEvent,
   ERC1155ListingChanged as ERC1155ListingChangedEvent
 } from "../../generated/ProductsModule/ProductsModule"
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 
 export function handleProductAdded(event: ProductAddedEvent): void {
   let slicerId = event.params.slicerId.toHex()
@@ -34,6 +34,7 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   let externalCall = event.params.externalCall
   let address0 = new Bytes(20)
   let slicerProductId = slicerId + "-" + productId
+  let subProducts: string[] = []
 
   let product = new Product(slicerProductId)
 
@@ -57,8 +58,9 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   for (let i = 0; i < subSlicerProducts.length; i++) {
     let subSlicerId = subSlicerProducts[i].subSlicerId.toHex()
     let subProductId = subSlicerProducts[i].subProductId.toHex()
-    product.subProducts.push(subSlicerId + "-" + subProductId)
+    subProducts.push(subSlicerId + "-" + subProductId)
   }
+  product.subProducts = subProducts
 
   for (let i = 0; i < currencyPrices.length; i++) {
     let currency = currencyPrices[i].currency.toHexString()
@@ -110,6 +112,7 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
 
   let product = Product.load(slicerId + "-" + productId)!
 
+  product.isRemoved = true
   product.categoryIndex = BigInt.fromI32(0)
   product.isFree = false
   product.isInfinite = false
@@ -122,7 +125,6 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
   product.extExecSig = new Bytes(0)
   product.extData = new Bytes(0)
   product.subProducts = []
-  product.prices = []
   product.save()
 }
 

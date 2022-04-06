@@ -249,15 +249,6 @@ export class Slicer extends Entity {
   set TokenListings(value: Array<string>) {
     this.set("TokenListings", Value.fromStringArray(value));
   }
-
-  get TokensReceived(): Array<string> {
-    let value = this.get("TokensReceived");
-    return value!.toStringArray();
-  }
-
-  set TokensReceived(value: Array<string>) {
-    this.set("TokensReceived", Value.fromStringArray(value));
-  }
 }
 
 export class Payee extends Entity {
@@ -414,6 +405,7 @@ export class Product extends Entity {
 
     this.set("slicer", Value.fromString(""));
     this.set("categoryIndex", Value.fromBigInt(BigInt.zero()));
+    this.set("isRemoved", Value.fromBoolean(false));
     this.set("isFree", Value.fromBoolean(false));
     this.set("isMultiple", Value.fromBoolean(false));
     this.set("isInfinite", Value.fromBoolean(false));
@@ -472,6 +464,15 @@ export class Product extends Entity {
 
   set categoryIndex(value: BigInt) {
     this.set("categoryIndex", Value.fromBigInt(value));
+  }
+
+  get isRemoved(): boolean {
+    let value = this.get("isRemoved");
+    return value!.toBoolean();
+  }
+
+  set isRemoved(value: boolean) {
+    this.set("isRemoved", Value.fromBoolean(value));
   }
 
   get isFree(): boolean {
@@ -1167,100 +1168,6 @@ export class ProductPurchase extends Entity {
 
   set lastPurchasedAtTimestamp(value: BigInt) {
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(value));
-  }
-}
-
-export class TokenReceived extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("slicer", Value.fromString(""));
-    this.set("contract", Value.fromBytes(Bytes.empty()));
-    this.set("tokenId", Value.fromBigInt(BigInt.zero()));
-    this.set("quantity", Value.fromBigInt(BigInt.zero()));
-    this.set("isERC721", Value.fromBoolean(false));
-    this.set("lastReceivedAtTimestamp", Value.fromBigInt(BigInt.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save TokenReceived entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save TokenReceived entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("TokenReceived", id.toString(), this);
-    }
-  }
-
-  static load(id: string): TokenReceived | null {
-    return changetype<TokenReceived | null>(store.get("TokenReceived", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get slicer(): string {
-    let value = this.get("slicer");
-    return value!.toString();
-  }
-
-  set slicer(value: string) {
-    this.set("slicer", Value.fromString(value));
-  }
-
-  get contract(): Bytes {
-    let value = this.get("contract");
-    return value!.toBytes();
-  }
-
-  set contract(value: Bytes) {
-    this.set("contract", Value.fromBytes(value));
-  }
-
-  get tokenId(): BigInt {
-    let value = this.get("tokenId");
-    return value!.toBigInt();
-  }
-
-  set tokenId(value: BigInt) {
-    this.set("tokenId", Value.fromBigInt(value));
-  }
-
-  get quantity(): BigInt {
-    let value = this.get("quantity");
-    return value!.toBigInt();
-  }
-
-  set quantity(value: BigInt) {
-    this.set("quantity", Value.fromBigInt(value));
-  }
-
-  get isERC721(): boolean {
-    let value = this.get("isERC721");
-    return value!.toBoolean();
-  }
-
-  set isERC721(value: boolean) {
-    this.set("isERC721", Value.fromBoolean(value));
-  }
-
-  get lastReceivedAtTimestamp(): BigInt {
-    let value = this.get("lastReceivedAtTimestamp");
-    return value!.toBigInt();
-  }
-
-  set lastReceivedAtTimestamp(value: BigInt) {
-    this.set("lastReceivedAtTimestamp", Value.fromBigInt(value));
   }
 }
 

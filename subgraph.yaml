@@ -131,7 +131,7 @@ templates:
         - Payee
         - PayeeSlicer
         - CurrencySlicer
-        - TokenReceived
+        # - TokenReceived
       abis:
         - name: Slicer
           file: ./abis/Slicer.json
@@ -146,10 +146,10 @@ templates:
           handler: handleCustomFeeSet
         - event: PaymentReceived(indexed address,uint256)
           handler: handlePaymentReceived
-        - event: ERC721Received(indexed address,indexed address,uint256)
-          handler: handleERC721Received
-        - event: ERC1155Received(indexed address,indexed address,uint256,uint256)
-          handler: handleERC1155Received
-        - event: ERC1155BatchReceived(indexed address,indexed address,uint256[],uint256[])
-          handler: handleERC1155BatchReceived
+        # - event: ERC721Received(indexed address,indexed address,uint256)
+        #   handler: handleERC721Received
+        # - event: ERC1155Received(indexed address,indexed address,uint256,uint256)
+        #   handler: handleERC1155Received
+        # - event: ERC1155BatchReceived(indexed address,indexed address,uint256[],uint256[])
+        #   handler: handleERC1155BatchReceived
       file: ./src/mappings/slicer.ts
