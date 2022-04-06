@@ -116,6 +116,150 @@ export class Paused__Params {
   }
 }
 
+export class RoyaltySet extends ethereum.Event {
+  get params(): RoyaltySet__Params {
+    return new RoyaltySet__Params(this);
+  }
+}
+
+export class RoyaltySet__Params {
+  _event: RoyaltySet;
+
+  constructor(event: RoyaltySet) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get isSlicer(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+
+  get isActive(): boolean {
+    return this._event.parameters[2].value.toBoolean();
+  }
+
+  get royaltyPercentage(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class SlicerControllerSet extends ethereum.Event {
+  get params(): SlicerControllerSet__Params {
+    return new SlicerControllerSet__Params(this);
+  }
+}
+
+export class SlicerControllerSet__Params {
+  _event: SlicerControllerSet;
+
+  constructor(event: SlicerControllerSet) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get slicerController(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class TokenResliced extends ethereum.Event {
+  get params(): TokenResliced__Params {
+    return new TokenResliced__Params(this);
+  }
+}
+
+export class TokenResliced__Params {
+  _event: TokenResliced;
+
+  constructor(event: TokenResliced) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get accounts(): Array<Address> {
+    return this._event.parameters[1].value.toAddressArray();
+  }
+
+  get tokensDiffs(): Array<i32> {
+    return this._event.parameters[2].value.toI32Array();
+  }
+}
+
+export class TokenSliced extends ethereum.Event {
+  get params(): TokenSliced__Params {
+    return new TokenSliced__Params(this);
+  }
+}
+
+export class TokenSliced__Params {
+  _event: TokenSliced;
+
+  constructor(event: TokenSliced) {
+    this._event = event;
+  }
+
+  get slicerAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get payees(): Array<TokenSlicedPayeesStruct> {
+    return this._event.parameters[2].value.toTupleArray<
+      TokenSlicedPayeesStruct
+    >();
+  }
+
+  get minimumShares(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get currencies(): Array<Address> {
+    return this._event.parameters[4].value.toAddressArray();
+  }
+
+  get releaseTimelock(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get transferableTimelock(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
+  get isImmutable(): boolean {
+    return this._event.parameters[7].value.toBoolean();
+  }
+
+  get isControlled(): boolean {
+    return this._event.parameters[8].value.toBoolean();
+  }
+
+  get slicerVersion(): BigInt {
+    return this._event.parameters[9].value.toBigInt();
+  }
+}
+
+export class TokenSlicedPayeesStruct extends ethereum.Tuple {
+  get account(): Address {
+    return this[0].toAddress();
+  }
+
+  get shares(): BigInt {
+    return this[1].toBigInt();
+  }
+}
+
 export class TransferBatch extends ethereum.Event {
   get params(): TransferBatch__Params {
     return new TransferBatch__Params(this);
@@ -242,6 +386,23 @@ export class Upgraded__Params {
   }
 }
 
+export class SliceCore__royaltyInfoResult {
+  value0: Address;
+  value1: BigInt;
+
+  constructor(value0: Address, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+}
+
 export class SliceCore extends ethereum.SmartContract {
   static bind(address: Address): SliceCore {
     return new SliceCore("SliceCore", address);
@@ -308,22 +469,18 @@ export class SliceCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigIntArray());
   }
 
-  categoryAddress(categoryIndex: BigInt): Address {
-    let result = super.call(
-      "categoryAddress",
-      "categoryAddress(uint32):(address)",
-      [ethereum.Value.fromUnsignedBigInt(categoryIndex)]
-    );
+  controller(id: BigInt): Address {
+    let result = super.call("controller", "controller(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(id)
+    ]);
 
     return result[0].toAddress();
   }
 
-  try_categoryAddress(categoryIndex: BigInt): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "categoryAddress",
-      "categoryAddress(uint32):(address)",
-      [ethereum.Value.fromUnsignedBigInt(categoryIndex)]
-    );
+  try_controller(id: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall("controller", "controller(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(id)
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -412,6 +569,68 @@ export class SliceCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  proxiableUUID(): Bytes {
+    let result = super.call("proxiableUUID", "proxiableUUID():(bytes32)", []);
+
+    return result[0].toBytes();
+  }
+
+  try_proxiableUUID(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "proxiableUUID",
+      "proxiableUUID():(bytes32)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  royaltyInfo(
+    tokenId: BigInt,
+    salePrice: BigInt
+  ): SliceCore__royaltyInfoResult {
+    let result = super.call(
+      "royaltyInfo",
+      "royaltyInfo(uint256,uint256):(address,uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromUnsignedBigInt(salePrice)
+      ]
+    );
+
+    return new SliceCore__royaltyInfoResult(
+      result[0].toAddress(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_royaltyInfo(
+    tokenId: BigInt,
+    salePrice: BigInt
+  ): ethereum.CallResult<SliceCore__royaltyInfoResult> {
+    let result = super.tryCall(
+      "royaltyInfo",
+      "royaltyInfo(uint256,uint256):(address,uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromUnsignedBigInt(salePrice)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new SliceCore__royaltyInfoResult(
+        value[0].toAddress(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
   slicers(id: BigInt): Address {
     let result = super.call("slicers", "slicers(uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(id)
@@ -495,112 +714,6 @@ export class SliceCore extends ethereum.SmartContract {
   }
 }
 
-export class _addCategoryCall extends ethereum.Call {
-  get inputs(): _addCategoryCall__Inputs {
-    return new _addCategoryCall__Inputs(this);
-  }
-
-  get outputs(): _addCategoryCall__Outputs {
-    return new _addCategoryCall__Outputs(this);
-  }
-}
-
-export class _addCategoryCall__Inputs {
-  _call: _addCategoryCall;
-
-  constructor(call: _addCategoryCall) {
-    this._call = call;
-  }
-
-  get categoryAddress_(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class _addCategoryCall__Outputs {
-  _call: _addCategoryCall;
-
-  constructor(call: _addCategoryCall) {
-    this._call = call;
-  }
-}
-
-export class _changeCategoryAddressCall extends ethereum.Call {
-  get inputs(): _changeCategoryAddressCall__Inputs {
-    return new _changeCategoryAddressCall__Inputs(this);
-  }
-
-  get outputs(): _changeCategoryAddressCall__Outputs {
-    return new _changeCategoryAddressCall__Outputs(this);
-  }
-}
-
-export class _changeCategoryAddressCall__Inputs {
-  _call: _changeCategoryAddressCall;
-
-  constructor(call: _changeCategoryAddressCall) {
-    this._call = call;
-  }
-
-  get categoryIndex(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get newCategoryAddress(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class _changeCategoryAddressCall__Outputs {
-  _call: _changeCategoryAddressCall;
-
-  constructor(call: _changeCategoryAddressCall) {
-    this._call = call;
-  }
-}
-
-export class _mintSliceCall extends ethereum.Call {
-  get inputs(): _mintSliceCall__Inputs {
-    return new _mintSliceCall__Inputs(this);
-  }
-
-  get outputs(): _mintSliceCall__Outputs {
-    return new _mintSliceCall__Outputs(this);
-  }
-}
-
-export class _mintSliceCall__Inputs {
-  _call: _mintSliceCall;
-
-  constructor(call: _mintSliceCall) {
-    this._call = call;
-  }
-
-  get account(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get amount(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get slicerAddress(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
-}
-
-export class _mintSliceCall__Outputs {
-  _call: _mintSliceCall;
-
-  constructor(call: _mintSliceCall) {
-    this._call = call;
-  }
-}
-
 export class _setBasePathCall extends ethereum.Call {
   get inputs(): _setBasePathCall__Inputs {
     return new _setBasePathCall__Inputs(this);
@@ -627,36 +740,6 @@ export class _setBasePathCall__Outputs {
   _call: _setBasePathCall;
 
   constructor(call: _setBasePathCall) {
-    this._call = call;
-  }
-}
-
-export class _setMaximumTransferBatchCall extends ethereum.Call {
-  get inputs(): _setMaximumTransferBatchCall__Inputs {
-    return new _setMaximumTransferBatchCall__Inputs(this);
-  }
-
-  get outputs(): _setMaximumTransferBatchCall__Outputs {
-    return new _setMaximumTransferBatchCall__Outputs(this);
-  }
-}
-
-export class _setMaximumTransferBatchCall__Inputs {
-  _call: _setMaximumTransferBatchCall;
-
-  constructor(call: _setMaximumTransferBatchCall) {
-    this._call = call;
-  }
-
-  get newValue(): i32 {
-    return this._call.inputValues[0].value.toI32();
-  }
-}
-
-export class _setMaximumTransferBatchCall__Outputs {
-  _call: _setMaximumTransferBatchCall;
-
-  constructor(call: _setMaximumTransferBatchCall) {
     this._call = call;
   }
 }
@@ -709,6 +792,70 @@ export class InitializeCall__Outputs {
   _call: InitializeCall;
 
   constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceOwnershipCall extends ethereum.Call {
+  get inputs(): RenounceOwnershipCall__Inputs {
+    return new RenounceOwnershipCall__Inputs(this);
+  }
+
+  get outputs(): RenounceOwnershipCall__Outputs {
+    return new RenounceOwnershipCall__Outputs(this);
+  }
+}
+
+export class RenounceOwnershipCall__Inputs {
+  _call: RenounceOwnershipCall;
+
+  constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceOwnershipCall__Outputs {
+  _call: RenounceOwnershipCall;
+
+  constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class ResliceCall extends ethereum.Call {
+  get inputs(): ResliceCall__Inputs {
+    return new ResliceCall__Inputs(this);
+  }
+
+  get outputs(): ResliceCall__Outputs {
+    return new ResliceCall__Outputs(this);
+  }
+}
+
+export class ResliceCall__Inputs {
+  _call: ResliceCall;
+
+  constructor(call: ResliceCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get accounts(): Array<Address> {
+    return this._call.inputValues[1].value.toAddressArray();
+  }
+
+  get tokensDiffs(): Array<i32> {
+    return this._call.inputValues[2].value.toI32Array();
+  }
+}
+
+export class ResliceCall__Outputs {
+  _call: ResliceCall;
+
+  constructor(call: ResliceCall) {
     this._call = call;
   }
 }
@@ -805,6 +952,52 @@ export class SafeTransferFromCall__Outputs {
   }
 }
 
+export class SafeTransferFromUnreleasedCall extends ethereum.Call {
+  get inputs(): SafeTransferFromUnreleasedCall__Inputs {
+    return new SafeTransferFromUnreleasedCall__Inputs(this);
+  }
+
+  get outputs(): SafeTransferFromUnreleasedCall__Outputs {
+    return new SafeTransferFromUnreleasedCall__Outputs(this);
+  }
+}
+
+export class SafeTransferFromUnreleasedCall__Inputs {
+  _call: SafeTransferFromUnreleasedCall;
+
+  constructor(call: SafeTransferFromUnreleasedCall) {
+    this._call = call;
+  }
+
+  get from(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get to(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get id(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get amount(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get data(): Bytes {
+    return this._call.inputValues[4].value.toBytes();
+  }
+}
+
+export class SafeTransferFromUnreleasedCall__Outputs {
+  _call: SafeTransferFromUnreleasedCall;
+
+  constructor(call: SafeTransferFromUnreleasedCall) {
+    this._call = call;
+  }
+}
+
 export class SetApprovalForAllCall extends ethereum.Call {
   get inputs(): SetApprovalForAllCall__Inputs {
     return new SetApprovalForAllCall__Inputs(this);
@@ -839,6 +1032,148 @@ export class SetApprovalForAllCall__Outputs {
   }
 }
 
+export class SetControllerCall extends ethereum.Call {
+  get inputs(): SetControllerCall__Inputs {
+    return new SetControllerCall__Inputs(this);
+  }
+
+  get outputs(): SetControllerCall__Outputs {
+    return new SetControllerCall__Outputs(this);
+  }
+}
+
+export class SetControllerCall__Inputs {
+  _call: SetControllerCall;
+
+  constructor(call: SetControllerCall) {
+    this._call = call;
+  }
+
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get newController(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetControllerCall__Outputs {
+  _call: SetControllerCall;
+
+  constructor(call: SetControllerCall) {
+    this._call = call;
+  }
+}
+
+export class SetRoyaltyCall extends ethereum.Call {
+  get inputs(): SetRoyaltyCall__Inputs {
+    return new SetRoyaltyCall__Inputs(this);
+  }
+
+  get outputs(): SetRoyaltyCall__Outputs {
+    return new SetRoyaltyCall__Outputs(this);
+  }
+}
+
+export class SetRoyaltyCall__Inputs {
+  _call: SetRoyaltyCall;
+
+  constructor(call: SetRoyaltyCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get isSlicer(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+
+  get isActive(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+
+  get royaltyPercentage(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class SetRoyaltyCall__Outputs {
+  _call: SetRoyaltyCall;
+
+  constructor(call: SetRoyaltyCall) {
+    this._call = call;
+  }
+}
+
+export class SliceCall extends ethereum.Call {
+  get inputs(): SliceCall__Inputs {
+    return new SliceCall__Inputs(this);
+  }
+
+  get outputs(): SliceCall__Outputs {
+    return new SliceCall__Outputs(this);
+  }
+}
+
+export class SliceCall__Inputs {
+  _call: SliceCall;
+
+  constructor(call: SliceCall) {
+    this._call = call;
+  }
+
+  get payees(): Array<SliceCallPayeesStruct> {
+    return this._call.inputValues[0].value.toTupleArray<
+      SliceCallPayeesStruct
+    >();
+  }
+
+  get minimumShares(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get currencies(): Array<Address> {
+    return this._call.inputValues[2].value.toAddressArray();
+  }
+
+  get releaseTimelock(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get transferMintTimelock(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get isImmutable(): boolean {
+    return this._call.inputValues[5].value.toBoolean();
+  }
+
+  get isControlled(): boolean {
+    return this._call.inputValues[6].value.toBoolean();
+  }
+}
+
+export class SliceCall__Outputs {
+  _call: SliceCall;
+
+  constructor(call: SliceCall) {
+    this._call = call;
+  }
+}
+
+export class SliceCallPayeesStruct extends ethereum.Tuple {
+  get account(): Address {
+    return this[0].toAddress();
+  }
+
+  get shares(): BigInt {
+    return this[1].toBigInt();
+  }
+}
+
 export class SlicerBatchTransferCall extends ethereum.Call {
   get inputs(): SlicerBatchTransferCall__Inputs {
     return new SlicerBatchTransferCall__Inputs(this);
@@ -870,6 +1205,10 @@ export class SlicerBatchTransferCall__Inputs {
 
   get amounts(): Array<BigInt> {
     return this._call.inputValues[3].value.toBigIntArray();
+  }
+
+  get release(): boolean {
+    return this._call.inputValues[4].value.toBoolean();
   }
 }
 
