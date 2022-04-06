@@ -11,10 +11,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      # address: "" # Rinkeby (Testnet)
-      # startBlock: 9499451 # Rinkeby (Testnet)
-      address: "0x074E0b90f76109fB749f1D378FAc6a79f536d412" # Rinkeby (Staging)
-      startBlock: 10402588 # Rinkeby (Staging)
+      address: "0x0eD3a883C699DCF8728E7383da7f81f1a32B4E7A" # Rinkeby (Testnet)
+      startBlock: 10454223 # Rinkeby (Testnet)
+      # address: "0x074E0b90f76109fB749f1D378FAc6a79f536d412" # Rinkeby (Staging)
+      # startBlock: 10402588 # Rinkeby (Staging)
       abi: SliceCore
     mapping:
       kind: ethereum/events
@@ -50,10 +50,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      # address: "" # Rinkeby (Testnet)
-      # startBlock: 9499451 # Rinkeby (Testnet)
-      address: "0xC177F975543B419c6c5B68A4DB13cD62CE55b9EE" # Rinkeby (Staging)
-      startBlock: 10402588 # Rinkeby (Staging)
+      address: "0xcc3f2900a9D170DBDc6C9f43B56051AbeBCaA642" # Rinkeby (Testnet)
+      startBlock: 10454223 # Rinkeby (Testnet)
+      # address: "0xC177F975543B419c6c5B68A4DB13cD62CE55b9EE" # Rinkeby (Staging)
+      # startBlock: 10402588 # Rinkeby (Staging)
       abi: ProductsModule
     mapping:
       kind: ethereum/events
@@ -94,10 +94,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      # address: "" # Rinkeby (Testnet)
-      # startBlock: 9499451 # Rinkeby (Testnet)
-      address: "0xeBaBFF08db2Aef1A04755d45d0582aCB67d438af" # Rinkeby (Staging)
-      startBlock: 10402588 # Rinkeby (Staging)
+      address: "0x22037C256cc0BbD21083B82C243EB55ccaDfBCAA" # Rinkeby (Testnet)
+      startBlock: 10454223 # Rinkeby (Testnet)
+      # address: "0xeBaBFF08db2Aef1A04755d45d0582aCB67d438af" # Rinkeby (Staging)
+      # startBlock: 10402588 # Rinkeby (Staging)
       abi: FundsModule
     mapping:
       kind: ethereum/events
