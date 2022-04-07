@@ -24,7 +24,7 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   let productId = event.params.productId.toHex()
   let categoryIndex = event.params.categoryIndex
   let isFree = event.params.isFree
-  let isMultiple = event.params.isMultiple
+  let maxUnitsPerBuyer = event.params.maxUnitsPerBuyer
   let isInfinite = event.params.isInfinite
   let availableUnits = event.params.availableUnits
   let creator = event.params.creator
@@ -42,7 +42,7 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   product.categoryIndex = categoryIndex
   product.isFree = isFree
   product.isInfinite = isInfinite
-  product.isMultiple = isMultiple
+  product.maxUnitsPerBuyer = maxUnitsPerBuyer
   product.availableUnits = availableUnits
   product.creator = creator
   product.data = data
@@ -78,6 +78,7 @@ export function handleProductAdded(event: ProductAddedEvent): void {
 export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
+  let maxUnitsPerBuyer = event.params.maxUnitsPerBuyer
   let isFree = event.params.isFree
   let isInfinite = event.params.isInfinite
   let availableUnits = event.params.newUnits
@@ -86,6 +87,7 @@ export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
 
   let product = Product.load(slicerProductId)!
 
+  product.maxUnitsPerBuyer = maxUnitsPerBuyer
   product.isFree = isFree
   product.isInfinite = isInfinite
   product.availableUnits = availableUnits
@@ -116,7 +118,7 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
   product.categoryIndex = BigInt.fromI32(0)
   product.isFree = false
   product.isInfinite = false
-  product.isMultiple = false
+  product.maxUnitsPerBuyer = BigInt.fromI32(0)
   product.availableUnits = BigInt.fromI32(0)
   product.data = new Bytes(0)
   product.extAddress = new Bytes(0)
