@@ -179,8 +179,8 @@ export class ProductAdded__Params {
     return this._event.parameters[3].value.toBoolean();
   }
 
-  get isMultiple(): boolean {
-    return this._event.parameters[4].value.toBoolean();
+  get maxUnitsPerBuyer(): i32 {
+    return this._event.parameters[4].value.toI32();
   }
 
   get isInfinite(): boolean {
@@ -285,20 +285,24 @@ export class ProductInfoChanged__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get isFree(): boolean {
-    return this._event.parameters[2].value.toBoolean();
+  get maxUnitsPerBuyer(): i32 {
+    return this._event.parameters[2].value.toI32();
   }
 
-  get isInfinite(): boolean {
+  get isFree(): boolean {
     return this._event.parameters[3].value.toBoolean();
   }
 
+  get isInfinite(): boolean {
+    return this._event.parameters[4].value.toBoolean();
+  }
+
   get newUnits(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+    return this._event.parameters[5].value.toBigInt();
   }
 
   get currencyPrices(): Array<ProductInfoChangedCurrencyPricesStruct> {
-    return this._event.parameters[5].value.toTupleArray<
+    return this._event.parameters[6].value.toTupleArray<
       ProductInfoChangedCurrencyPricesStruct
     >();
   }
@@ -477,64 +481,6 @@ export class ProductsModule__validatePurchaseResult {
 export class ProductsModule extends ethereum.SmartContract {
   static bind(address: Address): ProductsModule {
     return new ProductsModule("ProductsModule", address);
-  }
-
-  _getCurrencyPrice(
-    currency: Address,
-    weiPrice: BigInt,
-    twapInterval: i32
-  ): BigInt {
-    let result = super.call(
-      "_getCurrencyPrice",
-      "_getCurrencyPrice(address,uint256,int16):(uint256)",
-      [
-        ethereum.Value.fromAddress(currency),
-        ethereum.Value.fromUnsignedBigInt(weiPrice),
-        ethereum.Value.fromI32(twapInterval)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try__getCurrencyPrice(
-    currency: Address,
-    weiPrice: BigInt,
-    twapInterval: i32
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "_getCurrencyPrice",
-      "_getCurrencyPrice(address,uint256,int16):(uint256)",
-      [
-        ethereum.Value.fromAddress(currency),
-        ethereum.Value.fromUnsignedBigInt(weiPrice),
-        ethereum.Value.fromI32(twapInterval)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  _getPool(currency: Address): Address {
-    let result = super.call("_getPool", "_getPool(address):(address)", [
-      ethereum.Value.fromAddress(currency)
-    ]);
-
-    return result[0].toAddress();
-  }
-
-  try__getPool(currency: Address): ethereum.CallResult<Address> {
-    let result = super.tryCall("_getPool", "_getPool(address):(address)", [
-      ethereum.Value.fromAddress(currency)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   ethBalance(slicerId: BigInt): BigInt {
@@ -824,11 +770,11 @@ export class AddProductCallParamsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get isFree(): boolean {
-    return this[5].toBoolean();
+  get maxUnitsPerBuyer(): i32 {
+    return this[5].toI32();
   }
 
-  get isMultiple(): boolean {
+  get isFree(): boolean {
     return this[6].toBoolean();
   }
 
@@ -1078,20 +1024,24 @@ export class SetProductInfoCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get isFree(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
+  get newMaxUnits(): i32 {
+    return this._call.inputValues[2].value.toI32();
   }
 
-  get isInfinite(): boolean {
+  get isFree(): boolean {
     return this._call.inputValues[3].value.toBoolean();
   }
 
+  get isInfinite(): boolean {
+    return this._call.inputValues[4].value.toBoolean();
+  }
+
   get newUnits(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
+    return this._call.inputValues[5].value.toBigInt();
   }
 
   get currencyPrices(): Array<SetProductInfoCallCurrencyPricesStruct> {
-    return this._call.inputValues[5].value.toTupleArray<
+    return this._call.inputValues[6].value.toTupleArray<
       SetProductInfoCallCurrencyPricesStruct
     >();
   }

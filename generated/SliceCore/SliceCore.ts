@@ -650,6 +650,21 @@ export class SliceCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  supply(): BigInt {
+    let result = super.call("supply", "supply():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_supply(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("supply", "supply():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   supportsInterface(interfaceId: Bytes): boolean {
     let result = super.call(
       "supportsInterface",
