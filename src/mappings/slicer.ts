@@ -54,6 +54,8 @@ export function handleCurrenciesAdded(event: CurrenciesAddedEvent): void {
       let currencySlicer = new CurrencySlicer(currencyAddress + "-" + slicerId)
       currencySlicer.currency = currencyAddress
       currencySlicer.slicer = slicerId
+      currencySlicer.released = BigInt.fromI32(0)
+      currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -122,6 +124,8 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
     payeeSlicer = new PayeeSlicer(sender + "-" + slicerId)
     payeeSlicer.payee = sender
     payeeSlicer.slicer = slicerId
+    payeeSlicer.slices = BigInt.fromI32(0)
+    payeeSlicer.ethSent = BigInt.fromI32(0)
   }
 
   slicer.ethReceived = slicer.ethReceived.plus(amount)

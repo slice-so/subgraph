@@ -47,6 +47,8 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   product.creator = creator
   product.data = data
   product.createdAtTimestamp = event.block.timestamp
+  product.totalPurchases = BigInt.fromI32(0)
+
   if (externalCall.externalAddress != address0) {
     product.extAddress = externalCall.externalAddress
     product.extCheckSig = externalCall.checkFunctionSignature
@@ -167,6 +169,8 @@ export function handleProductPaid(event: ProductPaidEvent): void {
     payeeSlicer = new PayeeSlicer(buyerAddress + "-" + slicerId)
     payeeSlicer.payee = buyerAddress
     payeeSlicer.slicer = slicerId
+    payeeSlicer.slices = BigInt.fromI32(0)
+    payeeSlicer.ethSent = BigInt.fromI32(0)
     payeeSlicer.save()
   }
 

@@ -65,6 +65,9 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   slicer.protocolFee = BigInt.fromI32(25)
   slicer.royaltyPercentage = BigInt.fromI32(50)
   slicer.royaltyReceiver = creator
+  slicer.ethReceived = BigInt.fromI32(0)
+  slicer.productsModuleBalance = BigInt.fromI32(0)
+  slicer.productsModuleReleased = BigInt.fromI32(0)
 
   if (isControlled) {
     slicer.controller = creator
@@ -90,6 +93,8 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
     let currencySlicer = new CurrencySlicer(currencyAddress + "-" + slicerId)
     currencySlicer.currency = currencyAddress
     currencySlicer.slicer = slicerId
+    currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedToProtocol = BigInt.fromI32(0)
     currencySlicer.save()
   }
 
@@ -107,6 +112,7 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
     payeeSlicer.payee = payeeAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = share
+    payeeSlicer.ethSent = BigInt.fromI32(0)
     payeeSlicer.save()
 
     totalSlices = totalSlices.plus(share)
@@ -148,6 +154,8 @@ export function handleTokenResliced(event: TokenReslicedEvent): void {
       payeeSlicer = new PayeeSlicer(account + "-" + slicerId)
       payeeSlicer.payee = account
       payeeSlicer.slicer = slicerId
+      payeeSlicer.slices = BigInt.fromI32(0)
+      payeeSlicer.ethSent = BigInt.fromI32(0)
     }
     payeeSlicer.slices = payeeSlicer.slices.plus(tokenDiff)
     payeeSlicer.save()
@@ -237,6 +245,8 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
       toSlicer = new PayeeSlicer(to + "-" + slicerId)
       toSlicer.payee = to
       toSlicer.slicer = slicerId
+      toSlicer.slices = BigInt.fromI32(0)
+      toSlicer.ethSent = BigInt.fromI32(0)
     }
     toSlicer.slices = toSlicer.slices.plus(value)
     fromSlicer.slices = fromSlicer.slices.minus(value)
@@ -271,6 +281,8 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
         toSlicer = new PayeeSlicer(to + "-" + slicerId)
         toSlicer.payee = to
         toSlicer.slicer = slicerId
+        toSlicer.slices = BigInt.fromI32(0)
+        toSlicer.ethSent = BigInt.fromI32(0)
       }
       toSlicer.slices = toSlicer.slices.plus(value)
       fromSlicer.slices = fromSlicer.slices.minus(value)
