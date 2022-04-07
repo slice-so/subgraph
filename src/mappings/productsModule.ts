@@ -142,6 +142,9 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   let product = Product.load(slicerProductId)!
   let slicer = SlicerEntity.load(slicerId)!
 
+  let paymentEthExternal = product.extValue.times(quantity)
+  let totalPaymentEth = paymentEth.plus(paymentEthExternal)
+
   slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
   slicer.save()
 
@@ -183,7 +186,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
     payeeSlicerCurrency.save()
   }
 
-  if (paymentEth != BigInt.fromI32(0)) {
+  if (totalPaymentEth != BigInt.fromI32(0)) {
     let payeeSlicerCurrency = PayeeSlicerCurrency.load(
       buyerAddress + "-" + slicerId + "-" + address0
     )
@@ -196,7 +199,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
       payeeSlicerCurrency.currencySlicer = address0 + "-" + slicerId
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      paymentEth
+      totalPaymentEth
     )
     payeeSlicerCurrency.save()
   }
@@ -210,7 +213,7 @@ export function handleProductPaid(event: ProductPaidEvent): void {
     pp.buyer = buyerAddress
   }
   pp.quantity = pp.quantity.plus(quantity)
-  pp.paymentEth = pp.paymentEth.plus(paymentEth)
+  pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
   pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
   pp.save()
