@@ -42,8 +42,8 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   product.categoryIndex = categoryIndex
   product.isFree = isFree
   product.isInfinite = isInfinite
-  product.maxUnitsPerBuyer = maxUnitsPerBuyer
   product.availableUnits = availableUnits
+  product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
   product.creator = creator
   product.data = data
   product.createdAtTimestamp = event.block.timestamp
@@ -87,7 +87,7 @@ export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
 
   let product = Product.load(slicerProductId)!
 
-  product.maxUnitsPerBuyer = maxUnitsPerBuyer
+  product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
   product.isFree = isFree
   product.isInfinite = isInfinite
   product.availableUnits = availableUnits
