@@ -47,7 +47,7 @@ type Product @entity {
   categoryIndex: BigInt!
   isRemoved: Boolean!
   isFree: Boolean!
-  isMultiple: Boolean!
+  maxUnitsPerBuyer: BigInt!
   isInfinite: Boolean!
   availableUnits: BigInt!
   creator: Bytes!

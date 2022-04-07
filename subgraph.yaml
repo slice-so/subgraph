@@ -11,10 +11,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      address: "0x0eD3a883C699DCF8728E7383da7f81f1a32B4E7A" # Rinkeby (Testnet)
-      startBlock: 10454223 # Rinkeby (Testnet)
-      # address: "0x074E0b90f76109fB749f1D378FAc6a79f536d412" # Rinkeby (Staging)
-      # startBlock: 10402588 # Rinkeby (Staging)
+      # address: "0x0eD3a883C699DCF8728E7383da7f81f1a32B4E7A" # Rinkeby (Testnet)
+      # startBlock: 10454223 # Rinkeby (Testnet)
+      address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
+      startBlock: 10465234 # Rinkeby (Staging)
       abi: SliceCore
     mapping:
       kind: ethereum/events
@@ -50,10 +50,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      address: "0xcc3f2900a9D170DBDc6C9f43B56051AbeBCaA642" # Rinkeby (Testnet)
-      startBlock: 10454223 # Rinkeby (Testnet)
-      # address: "0xC177F975543B419c6c5B68A4DB13cD62CE55b9EE" # Rinkeby (Staging)
-      # startBlock: 10402588 # Rinkeby (Staging)
+      # address: "0xcc3f2900a9D170DBDc6C9f43B56051AbeBCaA642" # Rinkeby (Testnet)
+      # startBlock: 10454223 # Rinkeby (Testnet)
+      address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
+      startBlock: 10465234 # Rinkeby (Staging)
       abi: ProductsModule
     mapping:
       kind: ethereum/events
@@ -72,9 +72,9 @@ dataSources:
         - name: ProductsModule
           file: ./abis/ProductsModule.json
       eventHandlers:
-        - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,bool,bool,bool,uint256,address,bytes,(uint128,uint32)[],(uint248,bool,address)[],(bytes,uint256,address,bytes4,bytes4))
+        - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,bool,uint8,bool,uint256,address,bytes,(uint128,uint32)[],(uint248,bool,address)[],(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductAdded
-        - event: ProductInfoChanged(indexed uint256,indexed uint256,bool,bool,uint256,(uint248,bool,address)[])
+        - event: ProductInfoChanged(indexed uint256,indexed uint256,uint8,bool,bool,uint256,(uint248,bool,address)[])
           handler: handleProductInfoChanged
         - event: ProductRemoved(indexed uint256,indexed uint256)
           handler: handleProductRemoved
@@ -94,10 +94,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      address: "0x22037C256cc0BbD21083B82C243EB55ccaDfBCAA" # Rinkeby (Testnet)
-      startBlock: 10454223 # Rinkeby (Testnet)
-      # address: "0xeBaBFF08db2Aef1A04755d45d0582aCB67d438af" # Rinkeby (Staging)
-      # startBlock: 10402588 # Rinkeby (Staging)
+      # address: "0x22037C256cc0BbD21083B82C243EB55ccaDfBCAA" # Rinkeby (Testnet)
+      # startBlock: 10454223 # Rinkeby (Testnet)
+      address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
+      startBlock: 10465234 # Rinkeby (Staging)
       abi: FundsModule
     mapping:
       kind: ethereum/events
