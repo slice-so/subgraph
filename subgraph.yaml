@@ -11,10 +11,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      # address: "0x0eD3a883C699DCF8728E7383da7f81f1a32B4E7A" # Rinkeby (Testnet)
-      # startBlock: 10454223 # Rinkeby (Testnet)
-      address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
-      startBlock: 10465234 # Rinkeby (Staging)
+      address: "0xA86830240122455343171Ab54b9896896C7C8a6F" # Rinkeby (Testnet)
+      startBlock: 10466007 # Rinkeby (Testnet)
+      # address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
       abi: SliceCore
     mapping:
       kind: ethereum/events
@@ -50,10 +50,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      # address: "0xcc3f2900a9D170DBDc6C9f43B56051AbeBCaA642" # Rinkeby (Testnet)
-      # startBlock: 10454223 # Rinkeby (Testnet)
-      address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
-      startBlock: 10465234 # Rinkeby (Staging)
+      address: "0x690932aCc7015e7B5Df2146fF11703Be0a4A14B1" # Rinkeby (Testnet)
+      startBlock: 10466007 # Rinkeby (Testnet)
+      # address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
       abi: ProductsModule
     mapping:
       kind: ethereum/events
@@ -94,10 +94,10 @@ dataSources:
     source:
       # address: "" # Mainnet
       # startBlock: 13346238 # Mainnet
-      # address: "0x22037C256cc0BbD21083B82C243EB55ccaDfBCAA" # Rinkeby (Testnet)
-      # startBlock: 10454223 # Rinkeby (Testnet)
-      address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
-      startBlock: 10465234 # Rinkeby (Staging)
+      address: "0x093190b8c22D37871eaB814486C62303c1aE5d14" # Rinkeby (Testnet)
+      startBlock: 10466007 # Rinkeby (Testnet)
+      # address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
       abi: FundsModule
     mapping:
       kind: ethereum/events

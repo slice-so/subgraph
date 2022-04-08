@@ -407,9 +407,9 @@ export class Product extends Entity {
     this.set("categoryIndex", Value.fromBigInt(BigInt.zero()));
     this.set("isRemoved", Value.fromBoolean(false));
     this.set("isFree", Value.fromBoolean(false));
-    this.set("maxUnitsPerBuyer", Value.fromBigInt(BigInt.zero()));
     this.set("isInfinite", Value.fromBoolean(false));
     this.set("availableUnits", Value.fromBigInt(BigInt.zero()));
+    this.set("maxUnitsPerBuyer", Value.fromBigInt(BigInt.zero()));
     this.set("creator", Value.fromBytes(Bytes.empty()));
     this.set("data", Value.fromBytes(Bytes.empty()));
     this.set("createdAtTimestamp", Value.fromBigInt(BigInt.zero()));
@@ -484,15 +484,6 @@ export class Product extends Entity {
     this.set("isFree", Value.fromBoolean(value));
   }
 
-  get maxUnitsPerBuyer(): BigInt {
-    let value = this.get("maxUnitsPerBuyer");
-    return value!.toBigInt();
-  }
-
-  set maxUnitsPerBuyer(value: BigInt) {
-    this.set("maxUnitsPerBuyer", Value.fromBigInt(value));
-  }
-
   get isInfinite(): boolean {
     let value = this.get("isInfinite");
     return value!.toBoolean();
@@ -509,6 +500,15 @@ export class Product extends Entity {
 
   set availableUnits(value: BigInt) {
     this.set("availableUnits", Value.fromBigInt(value));
+  }
+
+  get maxUnitsPerBuyer(): BigInt {
+    let value = this.get("maxUnitsPerBuyer");
+    return value!.toBigInt();
+  }
+
+  set maxUnitsPerBuyer(value: BigInt) {
+    this.set("maxUnitsPerBuyer", Value.fromBigInt(value));
   }
 
   get creator(): Bytes {
