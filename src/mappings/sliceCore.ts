@@ -108,10 +108,14 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
       payee.save()
     }
 
-    let payeeSlicer = new PayeeSlicer(payeeAddress + "-" + slicerId)
+    let payeeSlicer = PayeeSlicer.load(payeeAddress + "-" + slicerId)
+    if (!payeeSlicer) {
+      payeeSlicer = new PayeeSlicer(payeeAddress + "-" + slicerId)
+    }
+
     payeeSlicer.payee = payeeAddress
     payeeSlicer.slicer = slicerId
-    payeeSlicer.slices = share
+    payeeSlicer.slices = payeeSlicer.slices.plus(share)
     payeeSlicer.ethSent = BigInt.fromI32(0)
     payeeSlicer.save()
 
