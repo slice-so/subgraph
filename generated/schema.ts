@@ -1070,6 +1070,7 @@ export class ProductPurchase extends Entity {
     this.set("paymentEth", Value.fromBigInt(BigInt.zero()));
     this.set("paymentCurrency", Value.fromBigInt(BigInt.zero()));
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -1168,6 +1169,88 @@ export class ProductPurchase extends Entity {
 
   set lastPurchasedAtTimestamp(value: BigInt) {
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(value));
+  }
+
+  get totalPurchases(): BigInt {
+    let value = this.get("totalPurchases");
+    return value!.toBigInt();
+  }
+
+  set totalPurchases(value: BigInt) {
+    this.set("totalPurchases", Value.fromBigInt(value));
+  }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
+  }
+}
+
+export class PurchaseData extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("productPurchase", Value.fromString(""));
+    this.set("quantity", Value.fromBigInt(BigInt.zero()));
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PurchaseData entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save PurchaseData entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("PurchaseData", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PurchaseData | null {
+    return changetype<PurchaseData | null>(store.get("PurchaseData", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get productPurchase(): string {
+    let value = this.get("productPurchase");
+    return value!.toString();
+  }
+
+  set productPurchase(value: string) {
+    this.set("productPurchase", Value.fromString(value));
+  }
+
+  get quantity(): BigInt {
+    let value = this.get("quantity");
+    return value!.toBigInt();
+  }
+
+  set quantity(value: BigInt) {
+    this.set("quantity", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }
 
