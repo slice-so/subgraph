@@ -6,7 +6,8 @@ import {
   ProductPurchase,
   ProductPrices,
   PayeeSlicerCurrency,
-  TokenListing
+  TokenListing,
+  PurchaseData
 } from "../../generated/schema"
 import {
   ProductAdded as ProductAddedEvent,
@@ -222,6 +223,19 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
   pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
+
+  let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
+  pp.totalPurchases = totalPurchases
+
+  let purchaseData = new PurchaseData(
+    slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
+  )
+
+  purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
+  purchaseData.quantity = quantity
+  purchaseData.timestamp = event.block.timestamp
+  purchaseData.save()
+
   pp.save()
 }
 

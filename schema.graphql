@@ -121,6 +121,15 @@ type ProductPurchase @entity {
   paymentEth: BigInt!
   paymentCurrency: BigInt!
   lastPurchasedAtTimestamp: BigInt!
+  totalPurchases: BigInt!
+  purchaseData: [PurchaseData!]! @derivedFrom(field: "productPurchase")
+}
+
+type PurchaseData @entity {
+  id: ID!
+  productPurchase: ProductPurchase!
+  quantity: BigInt!
+  timestamp: BigInt!
 }
 
 # type TokenReceived @entity {
