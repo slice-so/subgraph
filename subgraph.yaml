@@ -70,17 +70,7 @@ dataSources:
           file: ./abis/v2/SliceCore.json
       eventHandlers:
         - event: TokenSliced(indexed address,indexed uint256,((address,uint32)[],uint256,address[],uint256,uint40,bool,bool,uint8),indexed uint256)
-          handler: handleTokenSliced
-        - event: TokenResliced(indexed uint256,address[],int32[])
-          handler: handleTokenResliced
-        - event: SlicerControllerSet(indexed uint256,indexed address)
-          handler: handleSlicerControllerSet
-        - event: RoyaltySet(indexed uint256,bool,bool,uint256)
-          handler: handleRoyaltySet
-        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTransferSingle
-        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-          handler: handleTransferBatch
+          handler: handleTokenSlicedV2
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
     name: ProductsModuleV1
