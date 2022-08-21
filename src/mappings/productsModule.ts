@@ -314,16 +314,19 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   let quantity = event.params.quantity
   let buyerAddress = event.params.buyer.toHexString()
   let currency = event.params.currency.toHexString()
-  let paymentEth = event.params.paymentEth
-  let paymentCurrency = event.params.paymentCurrency
+  let price = event.params.price
+  let paymentEth = price.eth
+  let paymentCurrency = price.currency
+  let extPaymentEth = price.ethExternalCall
+  let extPaymentCurrency = price.currencyExternalCall
   let address0 = new Bytes(20).toHexString()
   let slicerProductId = slicerId + "-" + productId
 
   let product = Product.load(slicerProductId)!
   let slicer = SlicerEntity.load(slicerId)!
 
-  let paymentEthExternal = product.extValue.times(quantity)
-  let totalPaymentEth = paymentEth.plus(paymentEthExternal)
+  let totalPaymentEth = paymentEth.plus(extPaymentEth)
+  let totalPaymentCurrency = paymentCurrency.plus(extPaymentCurrency)
 
   slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
   slicer.save()
@@ -349,7 +352,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     payeeSlicer.save()
   }
 
-  if (paymentCurrency != BigInt.fromI32(0)) {
+  if (totalPaymentCurrency != BigInt.fromI32(0)) {
     let payeeSlicerCurrency = PayeeSlicerCurrency.load(
       buyerAddress + "-" + slicerId + "-" + currency
     )
@@ -362,7 +365,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      paymentCurrency
+      totalPaymentCurrency
     )
     payeeSlicerCurrency.save()
   }
