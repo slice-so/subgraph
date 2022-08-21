@@ -29,7 +29,6 @@ export class Slicer extends Entity {
     this.set("royaltyReceiver", Value.fromString(""));
     this.set("creator", Value.fromString(""));
     this.set("controller", Value.fromString(""));
-    this.set("ethReceived", Value.fromBigInt(BigInt.zero()));
     this.set("productsModuleBalance", Value.fromBigInt(BigInt.zero()));
     this.set("productsModuleReleased", Value.fromBigInt(BigInt.zero()));
     this.set("childrenSlicers", Value.fromStringArray(new Array(0)));
@@ -176,15 +175,6 @@ export class Slicer extends Entity {
 
   set controller(value: string) {
     this.set("controller", Value.fromString(value));
-  }
-
-  get ethReceived(): BigInt {
-    let value = this.get("ethReceived");
-    return value!.toBigInt();
-  }
-
-  set ethReceived(value: BigInt) {
-    this.set("ethReceived", Value.fromBigInt(value));
   }
 
   get productsModuleBalance(): BigInt {
@@ -628,7 +618,6 @@ export class PayeeSlicer extends Entity {
     this.set("payee", Value.fromString(""));
     this.set("slicer", Value.fromString(""));
     this.set("slices", Value.fromBigInt(BigInt.zero()));
-    this.set("ethSent", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -682,15 +671,6 @@ export class PayeeSlicer extends Entity {
 
   set slices(value: BigInt) {
     this.set("slices", Value.fromBigInt(value));
-  }
-
-  get ethSent(): BigInt {
-    let value = this.get("ethSent");
-    return value!.toBigInt();
-  }
-
-  set ethSent(value: BigInt) {
-    this.set("ethSent", Value.fromBigInt(value));
   }
 
   get currencyPayments(): Array<string> {

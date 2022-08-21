@@ -13,7 +13,6 @@ type Slicer @entity {
   royaltyReceiver: Payee!
   creator: Payee!
   controller: Payee!
-  ethReceived: BigInt!
   productsModuleBalance: BigInt!
   productsModuleReleased: BigInt!
   childrenSlicers: [Slicer!]!
@@ -69,7 +68,6 @@ type PayeeSlicer @entity {
   payee: Payee!
   slicer: Slicer!
   slices: BigInt!
-  ethSent: BigInt!
   currencyPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeSlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyerSlicer")
 }

@@ -10,8 +10,7 @@ import {
   Released as ReleasedEvent,
   CurrenciesAdded as CurrenciesAddedEvent,
   ChildSlicerSet as ChildSlicerSetEvent,
-  CustomFeeSet as CustomFeeSetEvent,
-  PaymentReceived as PaymentReceivedEvent
+  CustomFeeSet as CustomFeeSetEvent
   // ERC721Received as ERC721ReceivedEvent,
   // ERC1155Received as ERC1155ReceivedEvent,
   // ERC1155BatchReceived as ERC1155BatchReceivedEvent
@@ -30,6 +29,8 @@ export function handleReleased(event: ReleasedEvent): void {
   currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
     protocolPayment
   )
+
+  // TODO: Add how much was released to the address
 
   currencySlicer.save()
 }
@@ -103,34 +104,6 @@ export function handleCustomFeeSet(event: CustomFeeSetEvent): void {
     slicer.protocolFee = BigInt.fromI32(25)
   }
 
-  slicer.save()
-}
-
-export function handlePaymentReceived(event: PaymentReceivedEvent): void {
-  let context = dataSource.context()
-  let slicerId = context.getString("slicerId")
-  let slicer = SlicerEntity.load(slicerId)!
-  let sender = event.params.from.toHexString()
-  let amount = event.params.amount
-
-  let payee = Payee.load(sender)
-  if (!payee) {
-    payee = new Payee(sender)
-    payee.save()
-  }
-
-  let payeeSlicer = PayeeSlicer.load(sender + "-" + slicerId)
-  if (!payeeSlicer) {
-    payeeSlicer = new PayeeSlicer(sender + "-" + slicerId)
-    payeeSlicer.payee = sender
-    payeeSlicer.slicer = slicerId
-    payeeSlicer.slices = BigInt.fromI32(0)
-    payeeSlicer.ethSent = BigInt.fromI32(0)
-  }
-
-  slicer.ethReceived = slicer.ethReceived.plus(amount)
-  payeeSlicer.ethSent = payeeSlicer.ethSent.plus(amount)
-  payeeSlicer.save()
   slicer.save()
 }
 

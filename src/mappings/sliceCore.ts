@@ -65,7 +65,6 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   slicer.protocolFee = BigInt.fromI32(25)
   slicer.royaltyPercentage = BigInt.fromI32(50)
   slicer.royaltyReceiver = creator
-  slicer.ethReceived = BigInt.fromI32(0)
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
 
@@ -116,7 +115,6 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
     payeeSlicer.payee = payeeAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = payeeSlicer.slices.plus(share)
-    payeeSlicer.ethSent = BigInt.fromI32(0)
     payeeSlicer.save()
 
     totalSlices = totalSlices.plus(share)
@@ -159,7 +157,6 @@ export function handleTokenResliced(event: TokenReslicedEvent): void {
       payeeSlicer.payee = account
       payeeSlicer.slicer = slicerId
       payeeSlicer.slices = BigInt.fromI32(0)
-      payeeSlicer.ethSent = BigInt.fromI32(0)
     }
     payeeSlicer.slices = payeeSlicer.slices.plus(tokenDiff)
     payeeSlicer.save()
@@ -250,7 +247,6 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
       toSlicer.payee = to
       toSlicer.slicer = slicerId
       toSlicer.slices = BigInt.fromI32(0)
-      toSlicer.ethSent = BigInt.fromI32(0)
     }
     toSlicer.slices = toSlicer.slices.plus(value)
     fromSlicer.slices = fromSlicer.slices.minus(value)
@@ -286,7 +282,6 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
         toSlicer.payee = to
         toSlicer.slicer = slicerId
         toSlicer.slices = BigInt.fromI32(0)
-        toSlicer.ethSent = BigInt.fromI32(0)
       }
       toSlicer.slices = toSlicer.slices.plus(value)
       fromSlicer.slices = fromSlicer.slices.minus(value)

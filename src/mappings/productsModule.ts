@@ -171,7 +171,6 @@ export function handleProductPaid(event: ProductPaidEvent): void {
     payeeSlicer.payee = buyerAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = BigInt.fromI32(0)
-    payeeSlicer.ethSent = BigInt.fromI32(0)
     payeeSlicer.save()
   }
 
@@ -235,6 +234,9 @@ export function handleProductPaid(event: ProductPaidEvent): void {
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
   purchaseData.save()
+
+  // TODO: Add productPurchase or ProudctPurchaseData ID
+  // TODO: Adapt to new event signature (Price struct)
 
   pp.save()
 }
