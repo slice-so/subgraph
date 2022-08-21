@@ -215,52 +215,42 @@ export class TokenSliced__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get params(): TokenSlicedParamsStruct {
-    return changetype<TokenSlicedParamsStruct>(
-      this._event.parameters[2].value.toTuple()
-    );
-  }
-
-  get slicerVersion(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
-  }
-}
-
-export class TokenSlicedParamsStruct extends ethereum.Tuple {
-  get payees(): Array<TokenSlicedParamsPayeesStruct> {
-    return this[0].toTupleArray<TokenSlicedParamsPayeesStruct>();
+  get payees(): Array<TokenSlicedPayeesStruct> {
+    return this._event.parameters[2].value.toTupleArray<
+      TokenSlicedPayeesStruct
+    >();
   }
 
   get minimumShares(): BigInt {
-    return this[1].toBigInt();
+    return this._event.parameters[3].value.toBigInt();
   }
 
   get currencies(): Array<Address> {
-    return this[2].toAddressArray();
+    return this._event.parameters[4].value.toAddressArray();
   }
 
   get releaseTimelock(): BigInt {
-    return this[3].toBigInt();
+    return this._event.parameters[5].value.toBigInt();
   }
 
-  get transferMintTimelock(): BigInt {
-    return this[4].toBigInt();
+  get transferableTimelock(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
   }
 
   get isImmutable(): boolean {
-    return this[5].toBoolean();
+    return this._event.parameters[7].value.toBoolean();
   }
 
   get isControlled(): boolean {
-    return this[6].toBoolean();
+    return this._event.parameters[8].value.toBoolean();
   }
 
-  get flags1(): i32 {
-    return this[7].toI32();
+  get slicerVersion(): BigInt {
+    return this._event.parameters[9].value.toBigInt();
   }
 }
 
-export class TokenSlicedParamsPayeesStruct extends ethereum.Tuple {
+export class TokenSlicedPayeesStruct extends ethereum.Tuple {
   get account(): Address {
     return this[0].toAddress();
   }
@@ -1150,10 +1140,34 @@ export class SliceCall__Inputs {
     this._call = call;
   }
 
-  get params(): SliceCallParamsStruct {
-    return changetype<SliceCallParamsStruct>(
-      this._call.inputValues[0].value.toTuple()
-    );
+  get payees(): Array<SliceCallPayeesStruct> {
+    return this._call.inputValues[0].value.toTupleArray<
+      SliceCallPayeesStruct
+    >();
+  }
+
+  get minimumShares(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get currencies(): Array<Address> {
+    return this._call.inputValues[2].value.toAddressArray();
+  }
+
+  get releaseTimelock(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get transferMintTimelock(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get isImmutable(): boolean {
+    return this._call.inputValues[5].value.toBoolean();
+  }
+
+  get isControlled(): boolean {
+    return this._call.inputValues[6].value.toBoolean();
   }
 }
 
@@ -1165,41 +1179,7 @@ export class SliceCall__Outputs {
   }
 }
 
-export class SliceCallParamsStruct extends ethereum.Tuple {
-  get payees(): Array<SliceCallParamsPayeesStruct> {
-    return this[0].toTupleArray<SliceCallParamsPayeesStruct>();
-  }
-
-  get minimumShares(): BigInt {
-    return this[1].toBigInt();
-  }
-
-  get currencies(): Array<Address> {
-    return this[2].toAddressArray();
-  }
-
-  get releaseTimelock(): BigInt {
-    return this[3].toBigInt();
-  }
-
-  get transferMintTimelock(): BigInt {
-    return this[4].toBigInt();
-  }
-
-  get isImmutable(): boolean {
-    return this[5].toBoolean();
-  }
-
-  get isControlled(): boolean {
-    return this[6].toBoolean();
-  }
-
-  get flags1(): i32 {
-    return this[7].toI32();
-  }
-}
-
-export class SliceCallParamsPayeesStruct extends ethereum.Tuple {
+export class SliceCallPayeesStruct extends ethereum.Tuple {
   get account(): Address {
     return this[0].toAddress();
   }
