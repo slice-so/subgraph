@@ -285,7 +285,6 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
   }
-  pp.quantity = pp.quantity.plus(quantity)
   pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
   pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
@@ -297,14 +296,14 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
   )
 
+  purchaseData.startPurchaseId = pp.totalQuantity
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+
+  pp.totalQuantity = pp.totalQuantity.plus(quantity)
+
   purchaseData.save()
-
-  // TODO: Add productPurchase or ProudctPurchaseData ID
-  // TODO: Adapt to new event signature (Price struct)
-
   pp.save()
 }
 
@@ -396,7 +395,6 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
   }
-  pp.quantity = pp.quantity.plus(quantity)
   pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
   pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
@@ -408,14 +406,14 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
   )
 
+  purchaseData.startPurchaseId = pp.totalQuantity
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+
+  pp.totalQuantity = pp.totalQuantity.plus(quantity)
+
   purchaseData.save()
-
-  // TODO: Add productPurchase or ProudctPurchaseData ID
-  // TODO: Adapt to new event signature (Price struct)
-
   pp.save()
 }
 

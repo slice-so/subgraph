@@ -118,10 +118,10 @@ type ProductPurchase @entity {
   buyerSlicer: PayeeSlicer!
   currencySlicer: CurrencySlicer!
   buyer: Payee!
-  quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
   lastPurchasedAtTimestamp: BigInt!
+  totalQuantity: BigInt!
   totalPurchases: BigInt!
   purchaseData: [PurchaseData!]! @derivedFrom(field: "productPurchase")
 }
@@ -129,6 +129,7 @@ type ProductPurchase @entity {
 type PurchaseData @entity {
   id: ID!
   productPurchase: ProductPurchase!
+  startPurchaseId: BigInt!
   quantity: BigInt!
   timestamp: BigInt!
 }

@@ -1076,10 +1076,10 @@ export class ProductPurchase extends Entity {
     this.set("buyerSlicer", Value.fromString(""));
     this.set("currencySlicer", Value.fromString(""));
     this.set("buyer", Value.fromString(""));
-    this.set("quantity", Value.fromBigInt(BigInt.zero()));
     this.set("paymentEth", Value.fromBigInt(BigInt.zero()));
     this.set("paymentCurrency", Value.fromBigInt(BigInt.zero()));
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("totalQuantity", Value.fromBigInt(BigInt.zero()));
     this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -1145,15 +1145,6 @@ export class ProductPurchase extends Entity {
     this.set("buyer", Value.fromString(value));
   }
 
-  get quantity(): BigInt {
-    let value = this.get("quantity");
-    return value!.toBigInt();
-  }
-
-  set quantity(value: BigInt) {
-    this.set("quantity", Value.fromBigInt(value));
-  }
-
   get paymentEth(): BigInt {
     let value = this.get("paymentEth");
     return value!.toBigInt();
@@ -1181,6 +1172,15 @@ export class ProductPurchase extends Entity {
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(value));
   }
 
+  get totalQuantity(): BigInt {
+    let value = this.get("totalQuantity");
+    return value!.toBigInt();
+  }
+
+  set totalQuantity(value: BigInt) {
+    this.set("totalQuantity", Value.fromBigInt(value));
+  }
+
   get totalPurchases(): BigInt {
     let value = this.get("totalPurchases");
     return value!.toBigInt();
@@ -1206,6 +1206,7 @@ export class PurchaseData extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("productPurchase", Value.fromString(""));
+    this.set("startPurchaseId", Value.fromBigInt(BigInt.zero()));
     this.set("quantity", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
   }
@@ -1243,6 +1244,15 @@ export class PurchaseData extends Entity {
 
   set productPurchase(value: string) {
     this.set("productPurchase", Value.fromString(value));
+  }
+
+  get startPurchaseId(): BigInt {
+    let value = this.get("startPurchaseId");
+    return value!.toBigInt();
+  }
+
+  set startPurchaseId(value: BigInt) {
+    this.set("startPurchaseId", Value.fromBigInt(value));
   }
 
   get quantity(): BigInt {
