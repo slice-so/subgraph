@@ -175,23 +175,19 @@ export class ProductAdded__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get availableUnits(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
-  }
-
   get creator(): Address {
-    return this._event.parameters[4].value.toAddress();
+    return this._event.parameters[3].value.toAddress();
   }
 
   get params(): ProductAddedParamsStruct {
     return changetype<ProductAddedParamsStruct>(
-      this._event.parameters[5].value.toTuple()
+      this._event.parameters[4].value.toTuple()
     );
   }
 
   get externalCall(): ProductAddedExternalCallStruct {
     return changetype<ProductAddedExternalCallStruct>(
-      this._event.parameters[6].value.toTuple()
+      this._event.parameters[5].value.toTuple()
     );
   }
 }

@@ -10,17 +10,21 @@ import {
   PurchaseData
 } from "../../generated/schema"
 import {
-  ProductAdded as ProductAddedEvent,
+  ProductAdded as ProductAddedEventV1,
   ProductInfoChanged as ProductInfoChangedEvent,
   ProductRemoved as ProductRemovedEvent,
-  ProductPaid as ProductPaidEvent,
+  ProductPaid as ProductPaidEventV1,
   ReleasedToSlicer as ReleasedToSlicerEvent,
   ERC721ListingChanged as ERC721ListingChangedEvent,
   ERC1155ListingChanged as ERC1155ListingChangedEvent
-} from "../../generated/ProductsModule/ProductsModule"
+} from "../../generated/ProductsModuleV1/ProductsModule"
+import {
+  ProductAdded as ProductAddedEventV2,
+  ProductPaid as ProductPaidEventV2
+} from "../../generated/ProductsModuleV2/ProductsModule"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 
-export function handleProductAdded(event: ProductAddedEvent): void {
+export function handleProductAddedV1(event: ProductAddedEventV1): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
   let categoryIndex = event.params.categoryIndex
@@ -49,6 +53,69 @@ export function handleProductAdded(event: ProductAddedEvent): void {
   product.data = data
   product.createdAtTimestamp = event.block.timestamp
   product.totalPurchases = BigInt.fromI32(0)
+
+  if (externalCall.externalAddress != address0) {
+    product.extAddress = externalCall.externalAddress
+    product.extCheckSig = externalCall.checkFunctionSignature
+    product.extExecSig = externalCall.execFunctionSignature
+    product.extValue = externalCall.value
+    product.extData = externalCall.data
+  }
+
+  for (let i = 0; i < subSlicerProducts.length; i++) {
+    let subSlicerId = subSlicerProducts[i].subSlicerId.toHex()
+    let subProductId = subSlicerProducts[i].subProductId.toHex()
+    subProducts.push(subSlicerId + "-" + subProductId)
+  }
+  product.subProducts = subProducts
+
+  for (let i = 0; i < currencyPrices.length; i++) {
+    let currency = currencyPrices[i].currency.toHexString()
+    let productPrice = new ProductPrices(slicerProductId + "-" + currency)
+    productPrice.product = slicerProductId
+    productPrice.currency = currency
+    productPrice.price = currencyPrices[i].value
+    productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
+    productPrice.save()
+  }
+
+  product.save()
+}
+
+export function handleProductAddedV2(event: ProductAddedEventV2): void {
+  let slicerId = event.params.slicerId.toHex()
+  let productId = event.params.productId.toHex()
+  let categoryIndex = event.params.categoryIndex
+  let creator = event.params.creator
+  let params = event.params.params
+  let subSlicerProducts = params.subSlicerProducts
+  let currencyPrices = params.currencyPrices
+  let data = params.data
+  let availableUnits = params.availableUnits
+  let maxUnitsPerBuyer = params.maxUnitsPerBuyer
+  let isFree = params.isFree
+  let isInfinite = params.isInfinite
+  let isExternalCallPaymentRelative = params.isExternalCallPaymentRelative
+  let isExternalCallPreferredToken = params.isExternalCallPreferredToken
+  let externalCall = event.params.externalCall
+  let address0 = new Bytes(20)
+  let slicerProductId = slicerId + "-" + productId
+  let subProducts: string[] = []
+
+  let product = new Product(slicerProductId)
+
+  product.slicer = slicerId
+  product.categoryIndex = categoryIndex
+  product.isFree = isFree
+  product.isInfinite = isInfinite
+  product.extRelativePrice = isExternalCallPaymentRelative
+  product.extPreferredToken = isExternalCallPreferredToken
+  product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
+  product.creator = creator
+  product.data = data
+  product.createdAtTimestamp = event.block.timestamp
+  product.totalPurchases = BigInt.fromI32(0)
+  product.availableUnits = isInfinite ? BigInt.fromI32(0) : availableUnits
 
   if (externalCall.externalAddress != address0) {
     product.extAddress = externalCall.externalAddress
@@ -133,7 +200,115 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
   product.save()
 }
 
-export function handleProductPaid(event: ProductPaidEvent): void {
+export function handleProductPaidV1(event: ProductPaidEventV1): void {
+  let slicerId = event.params.slicerId.toHex()
+  let productId = event.params.productId.toHex()
+  let quantity = event.params.quantity
+  let buyerAddress = event.params.buyer.toHexString()
+  let currency = event.params.currency.toHexString()
+  let paymentEth = event.params.paymentEth
+  let paymentCurrency = event.params.paymentCurrency
+  let address0 = new Bytes(20).toHexString()
+  let slicerProductId = slicerId + "-" + productId
+
+  let product = Product.load(slicerProductId)!
+  let slicer = SlicerEntity.load(slicerId)!
+
+  let paymentEthExternal = product.extValue.times(quantity)
+  let totalPaymentEth = paymentEth.plus(paymentEthExternal)
+
+  slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
+  slicer.save()
+
+  product.totalPurchases = product.totalPurchases.plus(quantity)
+  if (!product.isInfinite) {
+    product.availableUnits = product.availableUnits.minus(quantity)
+  }
+  product.save()
+
+  let payee = Payee.load(buyerAddress)
+  if (!payee) {
+    payee = new Payee(buyerAddress)
+    payee.save()
+  }
+
+  let payeeSlicer = PayeeSlicer.load(buyerAddress + "-" + slicerId)
+  if (!payeeSlicer) {
+    payeeSlicer = new PayeeSlicer(buyerAddress + "-" + slicerId)
+    payeeSlicer.payee = buyerAddress
+    payeeSlicer.slicer = slicerId
+    payeeSlicer.slices = BigInt.fromI32(0)
+    payeeSlicer.save()
+  }
+
+  if (paymentCurrency != BigInt.fromI32(0)) {
+    let payeeSlicerCurrency = PayeeSlicerCurrency.load(
+      buyerAddress + "-" + slicerId + "-" + currency
+    )
+    if (!payeeSlicerCurrency) {
+      payeeSlicerCurrency = new PayeeSlicerCurrency(
+        buyerAddress + "-" + slicerId + "-" + currency
+      )
+      payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
+      payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + currency
+      payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
+    }
+    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
+      paymentCurrency
+    )
+    payeeSlicerCurrency.save()
+  }
+
+  if (totalPaymentEth != BigInt.fromI32(0)) {
+    let payeeSlicerCurrency = PayeeSlicerCurrency.load(
+      buyerAddress + "-" + slicerId + "-" + address0
+    )
+    if (!payeeSlicerCurrency) {
+      payeeSlicerCurrency = new PayeeSlicerCurrency(
+        buyerAddress + "-" + slicerId + "-" + address0
+      )
+      payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
+      payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + address0
+      payeeSlicerCurrency.currencySlicer = address0 + "-" + slicerId
+    }
+    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
+      totalPaymentEth
+    )
+    payeeSlicerCurrency.save()
+  }
+
+  let pp = ProductPurchase.load(slicerProductId + "-" + buyerAddress)
+  if (!pp) {
+    pp = new ProductPurchase(slicerProductId + "-" + buyerAddress)
+    pp.product = slicerProductId
+    pp.buyerSlicer = buyerAddress + "-" + slicerId
+    pp.currencySlicer = currency + "-" + slicerId
+    pp.buyer = buyerAddress
+  }
+  pp.quantity = pp.quantity.plus(quantity)
+  pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
+  pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
+  pp.lastPurchasedAtTimestamp = event.block.timestamp
+
+  let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
+  pp.totalPurchases = totalPurchases
+
+  let purchaseData = new PurchaseData(
+    slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
+  )
+
+  purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
+  purchaseData.quantity = quantity
+  purchaseData.timestamp = event.block.timestamp
+  purchaseData.save()
+
+  // TODO: Add productPurchase or ProudctPurchaseData ID
+  // TODO: Adapt to new event signature (Price struct)
+
+  pp.save()
+}
+
+export function handleProductPaidV2(event: ProductPaidEventV2): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
   let quantity = event.params.quantity

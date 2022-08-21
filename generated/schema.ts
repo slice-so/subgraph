@@ -418,6 +418,8 @@ export class Product extends Entity {
     this.set("extCheckSig", Value.fromBytes(Bytes.empty()));
     this.set("extExecSig", Value.fromBytes(Bytes.empty()));
     this.set("extData", Value.fromBytes(Bytes.empty()));
+    this.set("extRelativePrice", Value.fromBoolean(false));
+    this.set("extPreferredToken", Value.fromBoolean(false));
     this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
     this.set("subProducts", Value.fromStringArray(new Array(0)));
   }
@@ -581,6 +583,24 @@ export class Product extends Entity {
 
   set extData(value: Bytes) {
     this.set("extData", Value.fromBytes(value));
+  }
+
+  get extRelativePrice(): boolean {
+    let value = this.get("extRelativePrice");
+    return value!.toBoolean();
+  }
+
+  set extRelativePrice(value: boolean) {
+    this.set("extRelativePrice", Value.fromBoolean(value));
+  }
+
+  get extPreferredToken(): boolean {
+    let value = this.get("extPreferredToken");
+    return value!.toBoolean();
+  }
+
+  set extPreferredToken(value: boolean) {
+    this.set("extPreferredToken", Value.fromBoolean(value));
   }
 
   get totalPurchases(): BigInt {

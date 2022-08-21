@@ -58,6 +58,8 @@ type Product @entity {
   extCheckSig: Bytes!
   extExecSig: Bytes!
   extData: Bytes!
+  extRelativePrice: Boolean!
+  extPreferredToken: Boolean!
   totalPurchases: BigInt!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
