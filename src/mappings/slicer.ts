@@ -20,6 +20,7 @@ import { BigInt, dataSource } from "@graphprotocol/graph-ts"
 export function handleReleased(event: ReleasedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
+  let payee = event.params.payee
   let currency = event.params.currency.toHexString()
   let amountReleased = event.params.amountReleased
   let protocolPayment = event.params.protocolPayment
@@ -29,8 +30,6 @@ export function handleReleased(event: ReleasedEvent): void {
   currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
     protocolPayment
   )
-
-  // TODO: Add how much was released to the address
 
   currencySlicer.save()
 }
