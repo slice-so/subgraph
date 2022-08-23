@@ -9,7 +9,6 @@ type Slicer @entity {
   transferableTimelock: BigInt!
   isImmutable: Boolean!
   acceptsAllCurrencies: Boolean!
-  allowsTimelocksReset: Boolean!
   protocolFee: BigInt!
   royaltyPercentage: BigInt!
   royaltyReceiver: Payee!

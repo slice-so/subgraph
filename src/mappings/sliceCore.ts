@@ -13,10 +13,7 @@ import {
   TransferSingle as TransferSingleEvent,
   TransferBatch as TransferBatchEvent
 } from "../../generated/SliceCoreV1/SliceCore"
-import {
-  TokenSliced as TokenSlicedEventV2,
-  TimelocksSet as TimelocksSetEvent
-} from "../../generated/SliceCoreV2/SliceCore"
+import { TokenSliced as TokenSlicedEventV2 } from "../../generated/SliceCoreV2/SliceCore"
 import {
   Address,
   BigInt,
@@ -145,7 +142,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let payees = params.payees
   let minimumShares = params.minimumShares
   let releaseTimelock = params.releaseTimelock
-  let transferableTimelock = params.transferMintTimelock
+  let transferableTimelock = params.transferTimelock
   let isImmutable = params.isImmutable
   let isControlled = params.isControlled
   let slicerFlags = params.slicerFlags
@@ -206,11 +203,8 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     }
   }
 
-  if (sliceCoreFlags != 0) {
-    if (sliceCoreFlags % 2 != 0) {
-      slicer.allowsTimelocksReset = true
-    }
-  }
+  // if (sliceCoreFlags != 0) {
+  // }
 
   for (let i = 0; i < currencies.length; i++) {
     let currencyAddress = currencies[i].toHexString()
@@ -318,18 +312,6 @@ export function handleSlicerControllerSet(
   if (slicer.royaltyReceiver != slicer.address.toHexString()) {
     slicer.royaltyReceiver = controller
   }
-  slicer.save()
-}
-
-export function handleTimelocksSet(event: TimelocksSetEvent): void {
-  let slicerId = event.params.tokenId.toHex()
-  let transferMintTimelock = event.params.transferMintTimelock
-  let releaseTimelock = event.params.releaseTimelock
-  let slicer = SlicerEntity.load(slicerId)!
-
-  slicer.transferableTimelock = transferMintTimelock
-  slicer.releaseTimelock = releaseTimelock
-
   slicer.save()
 }
 

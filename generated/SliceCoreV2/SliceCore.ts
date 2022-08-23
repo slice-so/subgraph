@@ -168,32 +168,6 @@ export class SlicerControllerSet__Params {
   }
 }
 
-export class TimelocksSet extends ethereum.Event {
-  get params(): TimelocksSet__Params {
-    return new TimelocksSet__Params(this);
-  }
-}
-
-export class TimelocksSet__Params {
-  _event: TimelocksSet;
-
-  constructor(event: TimelocksSet) {
-    this._event = event;
-  }
-
-  get tokenId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get transferMintTimelock(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get releaseTimelock(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-}
-
 export class TokenResliced extends ethereum.Event {
   get params(): TokenResliced__Params {
     return new TokenResliced__Params(this);
@@ -269,7 +243,7 @@ export class TokenSlicedParamsStruct extends ethereum.Tuple {
     return this[3].toBigInt();
   }
 
-  get transferMintTimelock(): BigInt {
+  get transferTimelock(): BigInt {
     return this[4].toBigInt();
   }
 
@@ -1163,44 +1137,6 @@ export class SetRoyaltyCall__Outputs {
   }
 }
 
-export class SetSlicerTimelocksCall extends ethereum.Call {
-  get inputs(): SetSlicerTimelocksCall__Inputs {
-    return new SetSlicerTimelocksCall__Inputs(this);
-  }
-
-  get outputs(): SetSlicerTimelocksCall__Outputs {
-    return new SetSlicerTimelocksCall__Outputs(this);
-  }
-}
-
-export class SetSlicerTimelocksCall__Inputs {
-  _call: SetSlicerTimelocksCall;
-
-  constructor(call: SetSlicerTimelocksCall) {
-    this._call = call;
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get transferMintTimelock(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get releaseTimelock(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class SetSlicerTimelocksCall__Outputs {
-  _call: SetSlicerTimelocksCall;
-
-  constructor(call: SetSlicerTimelocksCall) {
-    this._call = call;
-  }
-}
-
 export class SliceCall extends ethereum.Call {
   get inputs(): SliceCall__Inputs {
     return new SliceCall__Inputs(this);
@@ -1250,7 +1186,7 @@ export class SliceCallParamsStruct extends ethereum.Tuple {
     return this[3].toBigInt();
   }
 
-  get transferMintTimelock(): BigInt {
+  get transferTimelock(): BigInt {
     return this[4].toBigInt();
   }
 
