@@ -13,7 +13,10 @@ import {
   TransferSingle as TransferSingleEvent,
   TransferBatch as TransferBatchEvent
 } from "../../generated/SliceCoreV1/SliceCore"
-import { TokenSliced as TokenSlicedEventV2 } from "../../generated/SliceCoreV2/SliceCore"
+import {
+  TokenSliced as TokenSlicedEventV2,
+  TimelocksSet as TimelocksSetEvent
+} from "../../generated/SliceCoreV2/SliceCore"
 import {
   Address,
   BigInt,
@@ -145,7 +148,8 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let transferableTimelock = params.transferMintTimelock
   let isImmutable = params.isImmutable
   let isControlled = params.isControlled
-  let flags = params.flags1
+  let slicerFlags = params.slicerFlags
+  let sliceCoreFlags = params.sliceCoreFlags
   let slicerVersion = event.params.slicerVersion
   let creator = event.transaction.from.toHexString()
   let totalSlices = BigInt.fromI32(0)
@@ -195,10 +199,16 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     slicer.controller = zeroAddress
   }
 
-  if (flags != 0) {
-    // Update this as new flags get added
-    if (flags % 2 != 0) {
+  // Update this as new flags get added
+  if (slicerFlags != 0) {
+    if (slicerFlags % 2 != 0) {
       slicer.acceptsAllCurrencies = true
+    }
+  }
+
+  if (sliceCoreFlags != 0) {
+    if (sliceCoreFlags % 2 != 0) {
+      slicer.allowsTimelocksReset = true
     }
   }
 
@@ -308,6 +318,18 @@ export function handleSlicerControllerSet(
   if (slicer.royaltyReceiver != slicer.address.toHexString()) {
     slicer.royaltyReceiver = controller
   }
+  slicer.save()
+}
+
+export function handleTimelocksSet(event: TimelocksSetEvent): void {
+  let slicerId = event.params.tokenId.toHex()
+  let transferMintTimelock = event.params.transferMintTimelock
+  let releaseTimelock = event.params.releaseTimelock
+  let slicer = SlicerEntity.load(slicerId)!
+
+  slicer.transferableTimelock = transferMintTimelock
+  slicer.releaseTimelock = releaseTimelock
+
   slicer.save()
 }
 

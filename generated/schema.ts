@@ -25,6 +25,7 @@ export class Slicer extends Entity {
     this.set("transferableTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("isImmutable", Value.fromBoolean(false));
     this.set("acceptsAllCurrencies", Value.fromBoolean(false));
+    this.set("allowsTimelocksReset", Value.fromBoolean(false));
     this.set("protocolFee", Value.fromBigInt(BigInt.zero()));
     this.set("royaltyPercentage", Value.fromBigInt(BigInt.zero()));
     this.set("royaltyReceiver", Value.fromString(""));
@@ -140,6 +141,15 @@ export class Slicer extends Entity {
 
   set acceptsAllCurrencies(value: boolean) {
     this.set("acceptsAllCurrencies", Value.fromBoolean(value));
+  }
+
+  get allowsTimelocksReset(): boolean {
+    let value = this.get("allowsTimelocksReset");
+    return value!.toBoolean();
+  }
+
+  set allowsTimelocksReset(value: boolean) {
+    this.set("allowsTimelocksReset", Value.fromBoolean(value));
   }
 
   get protocolFee(): BigInt {
