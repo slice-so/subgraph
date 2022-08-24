@@ -247,11 +247,11 @@ export class TokenSlicedParamsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get isImmutable(): boolean {
-    return this[5].toBoolean();
+  get controller(): Address {
+    return this[5].toAddress();
   }
 
-  get isControlled(): boolean {
+  get isImmutable(): boolean {
     return this[6].toBoolean();
   }
 
@@ -1190,11 +1190,11 @@ export class SliceCallParamsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get isImmutable(): boolean {
-    return this[5].toBoolean();
+  get controller(): Address {
+    return this[5].toAddress();
   }
 
-  get isControlled(): boolean {
+  get isImmutable(): boolean {
     return this[6].toBoolean();
   }
 

@@ -144,13 +144,14 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let releaseTimelock = params.releaseTimelock
   let transferableTimelock = params.transferTimelock
   let isImmutable = params.isImmutable
-  let isControlled = params.isControlled
+  let controller = params.controller
   let slicerFlags = params.slicerFlags
   let sliceCoreFlags = params.sliceCoreFlags
   let slicerVersion = event.params.slicerVersion
   let creator = event.transaction.from.toHexString()
   let totalSlices = BigInt.fromI32(0)
   let address0 = Address.fromBytes(new Bytes(20))
+  let zeroAddress = address0.toHexString()
 
   let network = dataSource.network()
   let slxAddress: Address
@@ -183,17 +184,14 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.royaltyReceiver = creator
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
+  slicer.controller = controller.toHexString()
 
-  if (isControlled) {
-    slicer.controller = creator
-  } else {
-    let zeroAddress = address0.toHexString()
+  if (controller.toHexString() == zeroAddress) {
     let address0Payee = Payee.load(zeroAddress)
     if (!address0Payee) {
       address0Payee = new Payee(zeroAddress)
       address0Payee.save()
     }
-    slicer.controller = zeroAddress
   }
 
   // Update this as new flags get added

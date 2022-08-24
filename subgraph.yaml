@@ -69,7 +69,7 @@ dataSources:
         - name: SliceCore
           file: ./abis/v2/SliceCore.json
       eventHandlers:
-        - event: TokenSliced(indexed address,indexed uint256,((address,uint32)[],uint256,address[],uint256,uint40,bool,bool,uint8,uint8),indexed uint256)
+        - event: TokenSliced(indexed address,indexed uint256,((address,uint32)[],uint256,address[],uint256,uint40,address,bool,uint8,uint8),indexed uint256)
           handler: handleTokenSlicedV2
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
