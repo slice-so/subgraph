@@ -251,16 +251,12 @@ export class TokenSlicedParamsStruct extends ethereum.Tuple {
     return this[5].toAddress();
   }
 
-  get isImmutable(): boolean {
-    return this[6].toBoolean();
-  }
-
   get slicerFlags(): i32 {
-    return this[7].toI32();
+    return this[6].toI32();
   }
 
   get sliceCoreFlags(): i32 {
-    return this[8].toI32();
+    return this[7].toI32();
   }
 }
 
@@ -271,6 +267,10 @@ export class TokenSlicedParamsPayeesStruct extends ethereum.Tuple {
 
   get shares(): BigInt {
     return this[1].toBigInt();
+  }
+
+  get transfersAllowedWhileLocked(): boolean {
+    return this[2].toBoolean();
   }
 }
 
@@ -1194,16 +1194,12 @@ export class SliceCallParamsStruct extends ethereum.Tuple {
     return this[5].toAddress();
   }
 
-  get isImmutable(): boolean {
-    return this[6].toBoolean();
-  }
-
   get slicerFlags(): i32 {
-    return this[7].toI32();
+    return this[6].toI32();
   }
 
   get sliceCoreFlags(): i32 {
-    return this[8].toI32();
+    return this[7].toI32();
   }
 }
 
@@ -1214,6 +1210,10 @@ export class SliceCallParamsPayeesStruct extends ethereum.Tuple {
 
   get shares(): BigInt {
     return this[1].toBigInt();
+  }
+
+  get transfersAllowedWhileLocked(): boolean {
+    return this[2].toBoolean();
   }
 }
 
@@ -1250,7 +1250,7 @@ export class SlicerBatchTransferCall__Inputs {
     return this._call.inputValues[3].value.toBigIntArray();
   }
 
-  get release(): boolean {
+  get toRelease(): boolean {
     return this._call.inputValues[4].value.toBoolean();
   }
 }

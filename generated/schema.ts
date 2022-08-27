@@ -24,6 +24,10 @@ export class Slicer extends Entity {
     this.set("releaseTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("transferableTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("isImmutable", Value.fromBoolean(false));
+    this.set("currenciesControlled", Value.fromBoolean(false));
+    this.set("productsControlled", Value.fromBoolean(false));
+    this.set("resliceAllowed", Value.fromBoolean(false));
+    this.set("transferWhileControlledAllowed", Value.fromBoolean(false));
     this.set("acceptsAllCurrencies", Value.fromBoolean(false));
     this.set("protocolFee", Value.fromBigInt(BigInt.zero()));
     this.set("royaltyPercentage", Value.fromBigInt(BigInt.zero()));
@@ -131,6 +135,42 @@ export class Slicer extends Entity {
 
   set isImmutable(value: boolean) {
     this.set("isImmutable", Value.fromBoolean(value));
+  }
+
+  get currenciesControlled(): boolean {
+    let value = this.get("currenciesControlled");
+    return value!.toBoolean();
+  }
+
+  set currenciesControlled(value: boolean) {
+    this.set("currenciesControlled", Value.fromBoolean(value));
+  }
+
+  get productsControlled(): boolean {
+    let value = this.get("productsControlled");
+    return value!.toBoolean();
+  }
+
+  set productsControlled(value: boolean) {
+    this.set("productsControlled", Value.fromBoolean(value));
+  }
+
+  get resliceAllowed(): boolean {
+    let value = this.get("resliceAllowed");
+    return value!.toBoolean();
+  }
+
+  set resliceAllowed(value: boolean) {
+    this.set("resliceAllowed", Value.fromBoolean(value));
+  }
+
+  get transferWhileControlledAllowed(): boolean {
+    let value = this.get("transferWhileControlledAllowed");
+    return value!.toBoolean();
+  }
+
+  set transferWhileControlledAllowed(value: boolean) {
+    this.set("transferWhileControlledAllowed", Value.fromBoolean(value));
   }
 
   get acceptsAllCurrencies(): boolean {
@@ -648,6 +688,7 @@ export class PayeeSlicer extends Entity {
     this.set("payee", Value.fromString(""));
     this.set("slicer", Value.fromString(""));
     this.set("slices", Value.fromBigInt(BigInt.zero()));
+    this.set("transfersAllowedWhileLocked", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -701,6 +742,15 @@ export class PayeeSlicer extends Entity {
 
   set slices(value: BigInt) {
     this.set("slices", Value.fromBigInt(value));
+  }
+
+  get transfersAllowedWhileLocked(): boolean {
+    let value = this.get("transfersAllowedWhileLocked");
+    return value!.toBoolean();
+  }
+
+  set transfersAllowedWhileLocked(value: boolean) {
+    this.set("transfersAllowedWhileLocked", Value.fromBoolean(value));
   }
 
   get currencyPayments(): Array<string> {

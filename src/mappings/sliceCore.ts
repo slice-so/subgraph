@@ -143,7 +143,6 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let minimumShares = params.minimumShares
   let releaseTimelock = params.releaseTimelock
   let transferableTimelock = params.transferTimelock
-  let isImmutable = params.isImmutable
   let controller = params.controller
   let slicerFlags = params.slicerFlags
   let sliceCoreFlags = params.sliceCoreFlags
@@ -152,6 +151,9 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let totalSlices = BigInt.fromI32(0)
   let address0 = Address.fromBytes(new Bytes(20))
   let zeroAddress = address0.toHexString()
+
+  let royaltyReceiver = creator
+  let royaltyPercentage = BigInt.fromI32(50)
 
   let network = dataSource.network()
   let slxAddress: Address
@@ -177,11 +179,8 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.createdAtTimestamp = event.block.timestamp
   slicer.releaseTimelock = releaseTimelock
   slicer.transferableTimelock = transferableTimelock
-  slicer.isImmutable = isImmutable
   slicer.creator = creator
   slicer.protocolFee = BigInt.fromI32(25)
-  slicer.royaltyPercentage = BigInt.fromI32(50)
-  slicer.royaltyReceiver = creator
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
   slicer.controller = controller.toHexString()
@@ -194,15 +193,45 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     }
   }
 
-  // Update this as new flags get added
+  // Boolean flags ordered right to left: [isImmutable, currenciesControlled, productsControlled, acceptsAllCurrencies]
   if (slicerFlags != 0) {
-    if (slicerFlags % 2 != 0) {
+    if (slicerFlags % 2 == 1) {
+      slicer.isImmutable = true
+    }
+    if ((slicerFlags / 2) % 2 == 1) {
+      slicer.currenciesControlled = true
+    }
+    if ((slicerFlags / 2 ** 2) % 2 == 1) {
+      slicer.productsControlled = true
+    }
+    if ((slicerFlags / 2 ** 3) % 2 == 1) {
       slicer.acceptsAllCurrencies = true
     }
   }
 
-  // if (sliceCoreFlags != 0) {
-  // }
+  // Boolean flags ordered right to left: [isCustomRoyaltyActive, isRoyaltyReceiverSlicer, resliceAllowed, transferWhileControlledAllowed]
+  if (sliceCoreFlags != 0) {
+    if (sliceCoreFlags % 2 == 1) {
+      royaltyPercentage = BigInt.fromI32(0)
+    }
+    if ((sliceCoreFlags / 2) % 2 == 1) {
+      let payee = new Payee(slicerAddress.toHexString())
+      payee.save()
+
+      royaltyReceiver = slicerAddress.toHexString()
+    } else if (controller != address0) {
+      royaltyReceiver = controller.toHexString()
+    }
+    if ((sliceCoreFlags / 2 ** 2) % 2 == 1) {
+      slicer.resliceAllowed = true
+    }
+    if ((sliceCoreFlags / 2 ** 3) % 2 == 1) {
+      slicer.transferWhileControlledAllowed = true
+    }
+  }
+
+  slicer.royaltyReceiver = royaltyReceiver
+  slicer.royaltyPercentage = royaltyPercentage
 
   for (let i = 0; i < currencies.length; i++) {
     let currencyAddress = currencies[i].toHexString()
@@ -224,6 +253,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   for (let i = 0; i < payees.length; i++) {
     let payeeAddress = payees[i].account.toHexString()
     let share = payees[i].shares
+    let transfersAllowedWhileLocked = payees[i].transfersAllowedWhileLocked
 
     let payee = Payee.load(payeeAddress)
     if (!payee) {
@@ -239,6 +269,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     payeeSlicer.payee = payeeAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = payeeSlicer.slices.plus(share)
+    payeeSlicer.transfersAllowedWhileLocked = transfersAllowedWhileLocked
     payeeSlicer.save()
 
     totalSlices = totalSlices.plus(share)

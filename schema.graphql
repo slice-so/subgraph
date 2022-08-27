@@ -8,6 +8,10 @@ type Slicer @entity {
   releaseTimelock: BigInt!
   transferableTimelock: BigInt!
   isImmutable: Boolean!
+  currenciesControlled: Boolean!
+  productsControlled: Boolean!
+  resliceAllowed: Boolean!
+  transferWhileControlledAllowed: Boolean!
   acceptsAllCurrencies: Boolean!
   protocolFee: BigInt!
   royaltyPercentage: BigInt!
@@ -71,6 +75,7 @@ type PayeeSlicer @entity {
   payee: Payee!
   slicer: Slicer!
   slices: BigInt!
+  transfersAllowedWhileLocked: Boolean!
   currencyPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeSlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyerSlicer")
 }
