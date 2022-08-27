@@ -139,6 +139,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
     productPrice.currency = currency
     productPrice.price = currencyPrices[i].value
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
+    productPrice.externalAddress = currencyPrices[i].externalAddress
     productPrice.save()
   }
 

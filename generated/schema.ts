@@ -1052,6 +1052,7 @@ export class ProductPrices extends Entity {
     this.set("currency", Value.fromString(""));
     this.set("price", Value.fromBigInt(BigInt.zero()));
     this.set("dynamicPricing", Value.fromBoolean(false));
+    this.set("externalAddress", Value.fromBytes(Bytes.empty()));
   }
 
   save(): void {
@@ -1114,6 +1115,15 @@ export class ProductPrices extends Entity {
 
   set dynamicPricing(value: boolean) {
     this.set("dynamicPricing", Value.fromBoolean(value));
+  }
+
+  get externalAddress(): Bytes {
+    let value = this.get("externalAddress");
+    return value!.toBytes();
+  }
+
+  set externalAddress(value: Bytes) {
+    this.set("externalAddress", Value.fromBytes(value));
   }
 }
 

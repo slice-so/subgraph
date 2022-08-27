@@ -115,6 +115,7 @@ type ProductPrices @entity {
   currency: Currency!
   price: BigInt!
   dynamicPricing: Boolean!
+  externalAddress: Bytes!
 }
 
 type ProductPurchase @entity {

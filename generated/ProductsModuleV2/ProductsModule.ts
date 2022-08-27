@@ -253,8 +253,12 @@ export class ProductAddedParamsCurrencyPricesStruct extends ethereum.Tuple {
     return this[1].toBoolean();
   }
 
-  get currency(): Address {
+  get externalAddress(): Address {
     return this[2].toAddress();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
   }
 }
 
@@ -333,8 +337,12 @@ export class ProductInfoChangedCurrencyPricesStruct extends ethereum.Tuple {
     return this[1].toBoolean();
   }
 
-  get currency(): Address {
+  get externalAddress(): Address {
     return this[2].toAddress();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
   }
 }
 
@@ -573,7 +581,7 @@ export class ProductsModule extends ethereum.SmartContract {
   ): ProductsModule__productPriceResultPriceStruct {
     let result = super.call(
       "productPrice",
-      "productPrice(uint256,uint32,address,uint256):((uint256,uint256,uint256,uint256))",
+      "productPrice(uint256,uint256,address,uint256):((uint256,uint256,uint256,uint256))",
       [
         ethereum.Value.fromUnsignedBigInt(slicerId),
         ethereum.Value.fromUnsignedBigInt(productId),
@@ -595,7 +603,7 @@ export class ProductsModule extends ethereum.SmartContract {
   ): ethereum.CallResult<ProductsModule__productPriceResultPriceStruct> {
     let result = super.tryCall(
       "productPrice",
-      "productPrice(uint256,uint32,address,uint256):((uint256,uint256,uint256,uint256))",
+      "productPrice(uint256,uint256,address,uint256):((uint256,uint256,uint256,uint256))",
       [
         ethereum.Value.fromUnsignedBigInt(slicerId),
         ethereum.Value.fromUnsignedBigInt(productId),
@@ -845,8 +853,12 @@ export class AddProductCallParamsCurrencyPricesStruct extends ethereum.Tuple {
     return this[1].toBoolean();
   }
 
-  get currency(): Address {
+  get externalAddress(): Address {
     return this[2].toAddress();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
   }
 }
 
@@ -1111,8 +1123,12 @@ export class SetProductInfoCallCurrencyPricesStruct extends ethereum.Tuple {
     return this[1].toBoolean();
   }
 
-  get currency(): Address {
+  get externalAddress(): Address {
     return this[2].toAddress();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
   }
 }
 
