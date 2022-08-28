@@ -11,7 +11,7 @@ import {
 } from "../../generated/schema"
 import {
   ProductAdded as ProductAddedEventV1,
-  ProductInfoChanged as ProductInfoChangedEvent,
+  ProductInfoChanged as ProductInfoChangedEventV1,
   ProductRemoved as ProductRemovedEvent,
   ProductPaid as ProductPaidEventV1,
   ReleasedToSlicer as ReleasedToSlicerEvent,
@@ -20,6 +20,7 @@ import {
 } from "../../generated/ProductsModuleV1/ProductsModule"
 import {
   ProductAdded as ProductAddedEventV2,
+  ProductInfoChanged as ProductInfoChangedEventV2,
   ProductPaid as ProductPaidEventV2
 } from "../../generated/ProductsModuleV2/ProductsModule"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
@@ -146,7 +147,9 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
   product.save()
 }
 
-export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
+export function handleProductInfoChangedV1(
+  event: ProductInfoChangedEventV1
+): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
   let maxUnitsPerBuyer = event.params.maxUnitsPerBuyer
@@ -173,6 +176,42 @@ export function handleProductInfoChanged(event: ProductInfoChangedEvent): void {
     }
     productPrice.price = currencyPrices[i].value
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
+    productPrice.save()
+  }
+
+  product.save()
+}
+
+export function handleProductInfoChangedV2(
+  event: ProductInfoChangedEventV2
+): void {
+  let slicerId = event.params.slicerId.toHex()
+  let productId = event.params.productId.toHex()
+  let maxUnitsPerBuyer = event.params.maxUnitsPerBuyer
+  let isFree = event.params.isFree
+  let isInfinite = event.params.isInfinite
+  let availableUnits = event.params.newUnits
+  let currencyPrices = event.params.currencyPrices
+  let slicerProductId = slicerId + "-" + productId
+
+  let product = Product.load(slicerProductId)!
+
+  product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
+  product.isFree = isFree
+  product.isInfinite = isInfinite
+  product.availableUnits = availableUnits
+
+  for (let i = 0; i < currencyPrices.length; i++) {
+    let currency = currencyPrices[i].currency.toHexString()
+    let productPrice = ProductPrices.load(slicerProductId + "-" + currency)
+    if (!productPrice) {
+      productPrice = new ProductPrices(slicerProductId + "-" + currency)
+      productPrice.product = slicerProductId
+      productPrice.currency = currency
+    }
+    productPrice.price = currencyPrices[i].value
+    productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
+    productPrice.externalAddress = currencyPrices[i].externalAddress
     productPrice.save()
   }
 
