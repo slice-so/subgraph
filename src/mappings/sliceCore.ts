@@ -6,13 +6,14 @@ import {
   Currency
 } from "../../generated/schema"
 import {
-  TokenSliced as TokenSlicedEvent,
+  TokenSliced as TokenSlicedEventV1,
   TokenResliced as TokenReslicedEvent,
   SlicerControllerSet as SlicerControllerSetEvent,
   RoyaltySet as RoyaltySetEvent,
   TransferSingle as TransferSingleEvent,
   TransferBatch as TransferBatchEvent
-} from "../../generated/SliceCore/SliceCore"
+} from "../../generated/SliceCoreV1/SliceCore"
+import { TokenSliced as TokenSlicedEventV2 } from "../../generated/SliceCoreV2/SliceCore"
 import {
   Address,
   BigInt,
@@ -22,7 +23,7 @@ import {
 } from "@graphprotocol/graph-ts"
 import { Slicer } from "../../generated/templates"
 
-export function handleTokenSliced(event: TokenSlicedEvent): void {
+export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   let slicerAddress = event.params.slicerAddress
   let slicerId = event.params.tokenId.toHex()
   let payees = event.params.payees
@@ -65,7 +66,6 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
   slicer.protocolFee = BigInt.fromI32(25)
   slicer.royaltyPercentage = BigInt.fromI32(50)
   slicer.royaltyReceiver = creator
-  slicer.ethReceived = BigInt.fromI32(0)
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
 
@@ -116,7 +116,160 @@ export function handleTokenSliced(event: TokenSlicedEvent): void {
     payeeSlicer.payee = payeeAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = payeeSlicer.slices.plus(share)
-    payeeSlicer.ethSent = BigInt.fromI32(0)
+    payeeSlicer.save()
+
+    totalSlices = totalSlices.plus(share)
+  }
+
+  let creatorPayee = Payee.load(creator)
+  if (!creatorPayee) {
+    creatorPayee = new Payee(creator)
+    creatorPayee.save()
+  }
+
+  slicer.slices = totalSlices
+  slicer.save()
+
+  let context = new DataSourceContext()
+  context.setString("slicerId", slicerId)
+  Slicer.createWithContext(slicerAddress, context)
+}
+
+export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
+  let slicerAddress = event.params.slicerAddress
+  let slicerId = event.params.tokenId.toHex()
+  let params = event.params.params
+  let payees = params.payees
+  let minimumShares = params.minimumShares
+  let releaseTimelock = params.releaseTimelock
+  let transferableTimelock = params.transferTimelock
+  let controller = params.controller
+  let slicerFlags = params.slicerFlags
+  let sliceCoreFlags = params.sliceCoreFlags
+  let slicerVersion = event.params.slicerVersion
+  let creator = event.transaction.from.toHexString()
+  let totalSlices = BigInt.fromI32(0)
+  let address0 = Address.fromBytes(new Bytes(20))
+  let zeroAddress = address0.toHexString()
+
+  let royaltyReceiver = creator
+  let royaltyPercentage = BigInt.fromI32(50)
+
+  let network = dataSource.network()
+  let slxAddress: Address
+  if (network == "rinkeby") {
+    slxAddress = Address.fromString(
+      "0x4F6Ff17F5dCb4f413C5f1b7eC42D6c18666452B0"
+    )
+  } else {
+    slxAddress = Address.fromString(
+      "0x6fa5FF63B2752265c6Bd9350591f97A7dAd9e918"
+    )
+  }
+
+  let currencies = params.currencies
+  currencies.push(slxAddress)
+  currencies.push(address0)
+
+  let slicer = new SlicerEntity(slicerId)
+
+  slicer.slicerVersion = slicerVersion
+  slicer.address = slicerAddress
+  slicer.minimumSlices = minimumShares
+  slicer.createdAtTimestamp = event.block.timestamp
+  slicer.releaseTimelock = releaseTimelock
+  slicer.transferableTimelock = transferableTimelock
+  slicer.creator = creator
+  slicer.protocolFee = BigInt.fromI32(25)
+  slicer.productsModuleBalance = BigInt.fromI32(0)
+  slicer.productsModuleReleased = BigInt.fromI32(0)
+  slicer.controller = controller.toHexString()
+
+  if (controller.toHexString() == zeroAddress) {
+    let address0Payee = Payee.load(zeroAddress)
+    if (!address0Payee) {
+      address0Payee = new Payee(zeroAddress)
+      address0Payee.save()
+    }
+  }
+
+  // Boolean flags ordered right to left: [isImmutable, currenciesControlled, productsControlled, acceptsAllCurrencies]
+  if (slicerFlags != 0) {
+    if (slicerFlags % 2 == 1) {
+      slicer.isImmutable = true
+    }
+    if ((slicerFlags / 2) % 2 == 1) {
+      slicer.currenciesControlled = true
+    }
+    if ((slicerFlags / 2 ** 2) % 2 == 1) {
+      slicer.productsControlled = true
+    }
+    if ((slicerFlags / 2 ** 3) % 2 == 1) {
+      slicer.acceptsAllCurrencies = true
+    }
+  }
+
+  // Boolean flags ordered right to left: [isCustomRoyaltyActive, isRoyaltyReceiverSlicer, resliceAllowed, transferWhileControlledAllowed]
+  if (sliceCoreFlags != 0) {
+    if (sliceCoreFlags % 2 == 1) {
+      royaltyPercentage = BigInt.fromI32(0)
+    }
+    if ((sliceCoreFlags / 2) % 2 == 1) {
+      let payee = new Payee(slicerAddress.toHexString())
+      payee.save()
+
+      royaltyReceiver = slicerAddress.toHexString()
+    } else if (controller != address0) {
+      royaltyReceiver = controller.toHexString()
+    }
+    if ((sliceCoreFlags / 2 ** 2) % 2 == 1) {
+      slicer.resliceAllowed = true
+    }
+    if ((sliceCoreFlags / 2 ** 3) % 2 == 1) {
+      slicer.transferWhileControlledAllowed = true
+    }
+  }
+
+  slicer.royaltyReceiver = royaltyReceiver
+  slicer.royaltyPercentage = royaltyPercentage
+
+  for (let i = 0; i < currencies.length; i++) {
+    let currencyAddress = currencies[i].toHexString()
+
+    let currency = Currency.load(currencyAddress)
+    if (!currency) {
+      currency = new Currency(currencyAddress)
+      currency.save()
+    }
+
+    let currencySlicer = new CurrencySlicer(currencyAddress + "-" + slicerId)
+    currencySlicer.currency = currencyAddress
+    currencySlicer.slicer = slicerId
+    currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+    currencySlicer.save()
+  }
+
+  for (let i = 0; i < payees.length; i++) {
+    let payeeAddress = payees[i].account.toHexString()
+    let share = payees[i].shares
+    let transfersAllowedWhileLocked = payees[i].transfersAllowedWhileLocked
+
+    let payee = Payee.load(payeeAddress)
+    if (!payee) {
+      payee = new Payee(payeeAddress)
+      payee.save()
+    }
+
+    let payeeSlicer = PayeeSlicer.load(payeeAddress + "-" + slicerId)
+    if (!payeeSlicer) {
+      payeeSlicer = new PayeeSlicer(payeeAddress + "-" + slicerId)
+    }
+
+    payeeSlicer.payee = payeeAddress
+    payeeSlicer.slicer = slicerId
+    payeeSlicer.slices = payeeSlicer.slices.plus(share)
+    payeeSlicer.transfersAllowedWhileLocked = transfersAllowedWhileLocked
     payeeSlicer.save()
 
     totalSlices = totalSlices.plus(share)
@@ -159,7 +312,6 @@ export function handleTokenResliced(event: TokenReslicedEvent): void {
       payeeSlicer.payee = account
       payeeSlicer.slicer = slicerId
       payeeSlicer.slices = BigInt.fromI32(0)
-      payeeSlicer.ethSent = BigInt.fromI32(0)
     }
     payeeSlicer.slices = payeeSlicer.slices.plus(tokenDiff)
     payeeSlicer.save()
@@ -250,7 +402,6 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
       toSlicer.payee = to
       toSlicer.slicer = slicerId
       toSlicer.slices = BigInt.fromI32(0)
-      toSlicer.ethSent = BigInt.fromI32(0)
     }
     toSlicer.slices = toSlicer.slices.plus(value)
     fromSlicer.slices = fromSlicer.slices.minus(value)
@@ -286,7 +437,6 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
         toSlicer.payee = to
         toSlicer.slicer = slicerId
         toSlicer.slices = BigInt.fromI32(0)
-        toSlicer.ethSent = BigInt.fromI32(0)
       }
       toSlicer.slices = toSlicer.slices.plus(value)
       fromSlicer.slices = fromSlicer.slices.minus(value)

@@ -24,12 +24,16 @@ export class Slicer extends Entity {
     this.set("releaseTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("transferableTimelock", Value.fromBigInt(BigInt.zero()));
     this.set("isImmutable", Value.fromBoolean(false));
+    this.set("currenciesControlled", Value.fromBoolean(false));
+    this.set("productsControlled", Value.fromBoolean(false));
+    this.set("resliceAllowed", Value.fromBoolean(false));
+    this.set("transferWhileControlledAllowed", Value.fromBoolean(false));
+    this.set("acceptsAllCurrencies", Value.fromBoolean(false));
     this.set("protocolFee", Value.fromBigInt(BigInt.zero()));
     this.set("royaltyPercentage", Value.fromBigInt(BigInt.zero()));
     this.set("royaltyReceiver", Value.fromString(""));
     this.set("creator", Value.fromString(""));
     this.set("controller", Value.fromString(""));
-    this.set("ethReceived", Value.fromBigInt(BigInt.zero()));
     this.set("productsModuleBalance", Value.fromBigInt(BigInt.zero()));
     this.set("productsModuleReleased", Value.fromBigInt(BigInt.zero()));
     this.set("childrenSlicers", Value.fromStringArray(new Array(0)));
@@ -133,6 +137,51 @@ export class Slicer extends Entity {
     this.set("isImmutable", Value.fromBoolean(value));
   }
 
+  get currenciesControlled(): boolean {
+    let value = this.get("currenciesControlled");
+    return value!.toBoolean();
+  }
+
+  set currenciesControlled(value: boolean) {
+    this.set("currenciesControlled", Value.fromBoolean(value));
+  }
+
+  get productsControlled(): boolean {
+    let value = this.get("productsControlled");
+    return value!.toBoolean();
+  }
+
+  set productsControlled(value: boolean) {
+    this.set("productsControlled", Value.fromBoolean(value));
+  }
+
+  get resliceAllowed(): boolean {
+    let value = this.get("resliceAllowed");
+    return value!.toBoolean();
+  }
+
+  set resliceAllowed(value: boolean) {
+    this.set("resliceAllowed", Value.fromBoolean(value));
+  }
+
+  get transferWhileControlledAllowed(): boolean {
+    let value = this.get("transferWhileControlledAllowed");
+    return value!.toBoolean();
+  }
+
+  set transferWhileControlledAllowed(value: boolean) {
+    this.set("transferWhileControlledAllowed", Value.fromBoolean(value));
+  }
+
+  get acceptsAllCurrencies(): boolean {
+    let value = this.get("acceptsAllCurrencies");
+    return value!.toBoolean();
+  }
+
+  set acceptsAllCurrencies(value: boolean) {
+    this.set("acceptsAllCurrencies", Value.fromBoolean(value));
+  }
+
   get protocolFee(): BigInt {
     let value = this.get("protocolFee");
     return value!.toBigInt();
@@ -176,15 +225,6 @@ export class Slicer extends Entity {
 
   set controller(value: string) {
     this.set("controller", Value.fromString(value));
-  }
-
-  get ethReceived(): BigInt {
-    let value = this.get("ethReceived");
-    return value!.toBigInt();
-  }
-
-  set ethReceived(value: BigInt) {
-    this.set("ethReceived", Value.fromBigInt(value));
   }
 
   get productsModuleBalance(): BigInt {
@@ -418,6 +458,8 @@ export class Product extends Entity {
     this.set("extCheckSig", Value.fromBytes(Bytes.empty()));
     this.set("extExecSig", Value.fromBytes(Bytes.empty()));
     this.set("extData", Value.fromBytes(Bytes.empty()));
+    this.set("extRelativePrice", Value.fromBoolean(false));
+    this.set("extPreferredToken", Value.fromBoolean(false));
     this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
     this.set("subProducts", Value.fromStringArray(new Array(0)));
   }
@@ -583,6 +625,24 @@ export class Product extends Entity {
     this.set("extData", Value.fromBytes(value));
   }
 
+  get extRelativePrice(): boolean {
+    let value = this.get("extRelativePrice");
+    return value!.toBoolean();
+  }
+
+  set extRelativePrice(value: boolean) {
+    this.set("extRelativePrice", Value.fromBoolean(value));
+  }
+
+  get extPreferredToken(): boolean {
+    let value = this.get("extPreferredToken");
+    return value!.toBoolean();
+  }
+
+  set extPreferredToken(value: boolean) {
+    this.set("extPreferredToken", Value.fromBoolean(value));
+  }
+
   get totalPurchases(): BigInt {
     let value = this.get("totalPurchases");
     return value!.toBigInt();
@@ -628,7 +688,7 @@ export class PayeeSlicer extends Entity {
     this.set("payee", Value.fromString(""));
     this.set("slicer", Value.fromString(""));
     this.set("slices", Value.fromBigInt(BigInt.zero()));
-    this.set("ethSent", Value.fromBigInt(BigInt.zero()));
+    this.set("transfersAllowedWhileLocked", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -684,13 +744,13 @@ export class PayeeSlicer extends Entity {
     this.set("slices", Value.fromBigInt(value));
   }
 
-  get ethSent(): BigInt {
-    let value = this.get("ethSent");
-    return value!.toBigInt();
+  get transfersAllowedWhileLocked(): boolean {
+    let value = this.get("transfersAllowedWhileLocked");
+    return value!.toBoolean();
   }
 
-  set ethSent(value: BigInt) {
-    this.set("ethSent", Value.fromBigInt(value));
+  set transfersAllowedWhileLocked(value: boolean) {
+    this.set("transfersAllowedWhileLocked", Value.fromBoolean(value));
   }
 
   get currencyPayments(): Array<string> {
@@ -992,6 +1052,7 @@ export class ProductPrices extends Entity {
     this.set("currency", Value.fromString(""));
     this.set("price", Value.fromBigInt(BigInt.zero()));
     this.set("dynamicPricing", Value.fromBoolean(false));
+    this.set("externalAddress", Value.fromBytes(Bytes.empty()));
   }
 
   save(): void {
@@ -1055,6 +1116,15 @@ export class ProductPrices extends Entity {
   set dynamicPricing(value: boolean) {
     this.set("dynamicPricing", Value.fromBoolean(value));
   }
+
+  get externalAddress(): Bytes {
+    let value = this.get("externalAddress");
+    return value!.toBytes();
+  }
+
+  set externalAddress(value: Bytes) {
+    this.set("externalAddress", Value.fromBytes(value));
+  }
 }
 
 export class ProductPurchase extends Entity {
@@ -1066,10 +1136,10 @@ export class ProductPurchase extends Entity {
     this.set("buyerSlicer", Value.fromString(""));
     this.set("currencySlicer", Value.fromString(""));
     this.set("buyer", Value.fromString(""));
-    this.set("quantity", Value.fromBigInt(BigInt.zero()));
     this.set("paymentEth", Value.fromBigInt(BigInt.zero()));
     this.set("paymentCurrency", Value.fromBigInt(BigInt.zero()));
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("totalQuantity", Value.fromBigInt(BigInt.zero()));
     this.set("totalPurchases", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -1135,15 +1205,6 @@ export class ProductPurchase extends Entity {
     this.set("buyer", Value.fromString(value));
   }
 
-  get quantity(): BigInt {
-    let value = this.get("quantity");
-    return value!.toBigInt();
-  }
-
-  set quantity(value: BigInt) {
-    this.set("quantity", Value.fromBigInt(value));
-  }
-
   get paymentEth(): BigInt {
     let value = this.get("paymentEth");
     return value!.toBigInt();
@@ -1171,6 +1232,15 @@ export class ProductPurchase extends Entity {
     this.set("lastPurchasedAtTimestamp", Value.fromBigInt(value));
   }
 
+  get totalQuantity(): BigInt {
+    let value = this.get("totalQuantity");
+    return value!.toBigInt();
+  }
+
+  set totalQuantity(value: BigInt) {
+    this.set("totalQuantity", Value.fromBigInt(value));
+  }
+
   get totalPurchases(): BigInt {
     let value = this.get("totalPurchases");
     return value!.toBigInt();
@@ -1196,6 +1266,7 @@ export class PurchaseData extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("productPurchase", Value.fromString(""));
+    this.set("startPurchaseId", Value.fromBigInt(BigInt.zero()));
     this.set("quantity", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
   }
@@ -1233,6 +1304,15 @@ export class PurchaseData extends Entity {
 
   set productPurchase(value: string) {
     this.set("productPurchase", Value.fromString(value));
+  }
+
+  get startPurchaseId(): BigInt {
+    let value = this.get("startPurchaseId");
+    return value!.toBigInt();
+  }
+
+  set startPurchaseId(value: BigInt) {
+    this.set("startPurchaseId", Value.fromBigInt(value));
   }
 
   get quantity(): BigInt {

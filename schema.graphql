@@ -8,12 +8,16 @@ type Slicer @entity {
   releaseTimelock: BigInt!
   transferableTimelock: BigInt!
   isImmutable: Boolean!
+  currenciesControlled: Boolean!
+  productsControlled: Boolean!
+  resliceAllowed: Boolean!
+  transferWhileControlledAllowed: Boolean!
+  acceptsAllCurrencies: Boolean!
   protocolFee: BigInt!
   royaltyPercentage: BigInt!
   royaltyReceiver: Payee!
   creator: Payee!
   controller: Payee!
-  ethReceived: BigInt!
   productsModuleBalance: BigInt!
   productsModuleReleased: BigInt!
   childrenSlicers: [Slicer!]!
@@ -58,6 +62,8 @@ type Product @entity {
   extCheckSig: Bytes!
   extExecSig: Bytes!
   extData: Bytes!
+  extRelativePrice: Boolean!
+  extPreferredToken: Boolean!
   totalPurchases: BigInt!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
@@ -69,7 +75,7 @@ type PayeeSlicer @entity {
   payee: Payee!
   slicer: Slicer!
   slices: BigInt!
-  ethSent: BigInt!
+  transfersAllowedWhileLocked: Boolean!
   currencyPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeSlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyerSlicer")
 }
@@ -109,6 +115,7 @@ type ProductPrices @entity {
   currency: Currency!
   price: BigInt!
   dynamicPricing: Boolean!
+  externalAddress: Bytes!
 }
 
 type ProductPurchase @entity {
@@ -117,10 +124,10 @@ type ProductPurchase @entity {
   buyerSlicer: PayeeSlicer!
   currencySlicer: CurrencySlicer!
   buyer: Payee!
-  quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
   lastPurchasedAtTimestamp: BigInt!
+  totalQuantity: BigInt!
   totalPurchases: BigInt!
   purchaseData: [PurchaseData!]! @derivedFrom(field: "productPurchase")
 }
@@ -128,6 +135,7 @@ type ProductPurchase @entity {
 type PurchaseData @entity {
   id: ID!
   productPurchase: ProductPurchase!
+  startPurchaseId: BigInt!
   quantity: BigInt!
   timestamp: BigInt!
 }

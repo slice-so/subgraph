@@ -5,7 +5,7 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: SliceCore
+    name: SliceCoreV1
     network: mainnet
     # network: rinkeby
     source:
@@ -28,10 +28,10 @@ dataSources:
         - CurrencySlicer
       abis:
         - name: SliceCore
-          file: ./abis/SliceCore.json
+          file: ./abis/v1/SliceCore.json
       eventHandlers:
         - event: TokenSliced(indexed address,indexed uint256,(address,uint32)[],uint256,address[],uint256,uint256,bool,bool,indexed uint256)
-          handler: handleTokenSliced
+          handler: handleTokenSlicedV1
         - event: TokenResliced(indexed uint256,address[],int32[])
           handler: handleTokenResliced
         - event: SlicerControllerSet(indexed uint256,indexed address)
@@ -44,7 +44,36 @@ dataSources:
           handler: handleTransferBatch
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
-    name: ProductsModule
+    name: SliceCoreV2
+    network: mainnet
+    # network: rinkeby
+    source:
+      address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
+      startBlock: 15430294 # Mainnet
+      # address: "0xA86830240122455343171Ab54b9896896C7C8a6F" # Rinkeby (Testnet)
+      # startBlock: 11282197 # Rinkeby (Testnet)
+      # address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Staging)
+      abi: SliceCore
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Slicer
+        - Payee
+        - Currency
+        - PayeeSlicer
+        - CurrencySlicer
+      abis:
+        - name: SliceCore
+          file: ./abis/v2/SliceCore.json
+      eventHandlers:
+        - event: TokenSliced(indexed address,indexed uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8),indexed uint256)
+          handler: handleTokenSlicedV2
+      file: ./src/mappings/sliceCore.ts
+  - kind: ethereum/contract
+    name: ProductsModuleV1
     network: mainnet
     # network: rinkeby
     source:
@@ -70,22 +99,58 @@ dataSources:
         - TokenListing
       abis:
         - name: ProductsModule
-          file: ./abis/ProductsModule.json
+          file: ./abis/v1/ProductsModule.json
       eventHandlers:
         - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,bool,uint8,bool,uint256,address,bytes,(uint128,uint32)[],(uint248,bool,address)[],(bytes,uint256,address,bytes4,bytes4))
-          handler: handleProductAdded
+          handler: handleProductAddedV1
         - event: ProductInfoChanged(indexed uint256,indexed uint256,uint8,bool,bool,uint256,(uint248,bool,address)[])
-          handler: handleProductInfoChanged
+          handler: handleProductInfoChangedV1
+        - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,uint256,uint256)
+          handler: handleProductPaidV1
         - event: ProductRemoved(indexed uint256,indexed uint256)
           handler: handleProductRemoved
-        - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,uint256,uint256)
-          handler: handleProductPaid
         - event: ReleasedToSlicer(indexed uint256,uint256)
           handler: handleReleasedToSlicer
         - event: ERC721ListingChanged(indexed uint256,indexed address,indexed uint256,bool)
           handler: handleERC721ListingChanged
         - event: ERC1155ListingChanged(indexed uint256,indexed address,indexed uint256,uint256)
           handler: handleERC1155ListingChanged
+      file: ./src/mappings/productsModule.ts
+  - kind: ethereum/contract
+    name: ProductsModuleV2
+    network: mainnet
+    # network: rinkeby
+    source:
+      address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
+      startBlock: 15430294 # Mainnet
+      # address: "0x690932aCc7015e7B5Df2146fF11703Be0a4A14B1" # Rinkeby (Testnet)
+      # startBlock: 11282197 # Rinkeby (Testnet)
+      # address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Staging)
+      abi: ProductsModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Slicer
+        - Payee
+        - Product
+        - PayeeSlicer
+        - ProductPurchase
+        - ProductPrices
+        - PayeeSlicerCurrency
+        - TokenListing
+      abis:
+        - name: ProductsModule
+          file: ./abis/v2/ProductsModule.json
+      eventHandlers:
+        - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,address,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool),(bytes,uint256,address,bytes4,bytes4))
+          handler: handleProductAddedV2
+        - event: ProductInfoChanged(indexed uint256,indexed uint256,uint8,bool,bool,uint256,(uint248,bool,address,address)[])
+          handler: handleProductInfoChangedV2
+        - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,(uint256,uint256,uint256,uint256))
+          handler: handleProductPaidV2
       file: ./src/mappings/productsModule.ts
   - kind: ethereum/contract
     name: FundsModule
@@ -108,7 +173,7 @@ dataSources:
         - PayeeCurrency
       abis:
         - name: FundsModule
-          file: ./abis/FundsModule.json
+          file: ./abis/v1/FundsModule.json
       eventHandlers:
         - event: Deposited(indexed address,indexed address,uint256,uint256)
           handler: handleDeposited
@@ -134,7 +199,7 @@ templates:
         # - TokenReceived
       abis:
         - name: Slicer
-          file: ./abis/Slicer.json
+          file: ./abis/v1/Slicer.json
       eventHandlers:
         - event: Released(indexed address,indexed address,uint256,uint256)
           handler: handleReleased
@@ -144,8 +209,6 @@ templates:
           handler: handleChildSlicerSet
         - event: CustomFeeSet(bool,uint256)
           handler: handleCustomFeeSet
-        - event: PaymentReceived(indexed address,uint256)
-          handler: handlePaymentReceived
         # - event: ERC721Received(indexed address,indexed address,uint256)
         #   handler: handleERC721Received
         # - event: ERC1155Received(indexed address,indexed address,uint256,uint256)
