@@ -6,15 +6,15 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: SliceCoreV1
-    # network: mainnet
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      # address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
-      # startBlock: 14544808 # Mainnet
+      address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
+      startBlock: 14544808 # Mainnet
       # address: "0xA86830240122455343171Ab54b9896896C7C8a6F" # Rinkeby (Testnet)
       # startBlock: 10466007 # Rinkeby (Testnet)
-      address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
-      startBlock: 10465234 # Rinkeby (Staging)
+      # address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
       abi: SliceCore
     mapping:
       kind: ethereum/events
@@ -45,15 +45,15 @@ dataSources:
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
     name: SliceCoreV2
-    # network: mainnet
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      # address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
-      # startBlock: 24544808 # Mainnet
+      address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
+      startBlock: 15430294 # Mainnet
       # address: "0xA86830240122455343171Ab54b9896896C7C8a6F" # Rinkeby (Testnet)
-      # startBlock: 10466007 # Rinkeby (Testnet)
-      address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
-      startBlock: 11243995 # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Testnet)
+      # address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Staging)
       abi: SliceCore
     mapping:
       kind: ethereum/events
@@ -74,15 +74,15 @@ dataSources:
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
     name: ProductsModuleV1
-    # network: mainnet
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      # address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
-      # startBlock: 14544808 # Mainnet
+      address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
+      startBlock: 14544808 # Mainnet
       # address: "0x690932aCc7015e7B5Df2146fF11703Be0a4A14B1" # Rinkeby (Testnet)
       # startBlock: 10466007 # Rinkeby (Testnet)
-      address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
-      startBlock: 10465234 # Rinkeby (Staging)
+      # address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
       abi: ProductsModule
     mapping:
       kind: ethereum/events
@@ -118,15 +118,15 @@ dataSources:
       file: ./src/mappings/productsModule.ts
   - kind: ethereum/contract
     name: ProductsModuleV2
-    # network: mainnet
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      # address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
-      # startBlock: 24544808 # Mainnet
+      address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
+      startBlock: 15430294 # Mainnet
       # address: "0x690932aCc7015e7B5Df2146fF11703Be0a4A14B1" # Rinkeby (Testnet)
-      # startBlock: 10466007 # Rinkeby (Testnet)
-      address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
-      startBlock: 11243995 # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Testnet)
+      # address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Staging)
       abi: ProductsModule
     mapping:
       kind: ethereum/events
@@ -154,15 +154,15 @@ dataSources:
       file: ./src/mappings/productsModule.ts
   - kind: ethereum/contract
     name: FundsModule
-    # network: mainnet
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
-      # address: "0x6bcA3Dfd6c2b146dcdd460174dE95Fd1e26960BC" # Mainnet
-      # startBlock: 14544808 # Mainnet
+      address: "0x6bcA3Dfd6c2b146dcdd460174dE95Fd1e26960BC" # Mainnet
+      startBlock: 14544808 # Mainnet
       # address: "0x093190b8c22D37871eaB814486C62303c1aE5d14" # Rinkeby (Testnet)
       # startBlock: 10466007 # Rinkeby (Testnet)
-      address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
-      startBlock: 10465234 # Rinkeby (Staging)
+      # address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
       abi: FundsModule
     mapping:
       kind: ethereum/events
@@ -183,8 +183,8 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Slicer
-    # network: mainnet
-    network: rinkeby
+    network: mainnet
+    # network: rinkeby
     source:
       abi: Slicer
     mapping:
