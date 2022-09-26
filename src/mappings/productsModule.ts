@@ -142,6 +142,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
     productPrice.externalAddress = currencyPrices[i].externalAddress
     productPrice.save()
+    // TODO: Do not assume currencySlicer exists - true for slicers that acceptsAllCurrencies
   }
 
   product.save()
@@ -402,6 +403,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + currency
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
+      // TODO: Do not assume payeeCurrency exists
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
       totalPaymentCurrency
