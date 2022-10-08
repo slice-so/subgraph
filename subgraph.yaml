@@ -44,35 +44,6 @@ dataSources:
           handler: handleTransferBatch
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
-    name: SliceCoreV2
-    network: mainnet
-    # network: rinkeby
-    source:
-      address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
-      startBlock: 15430294 # Mainnet
-      # address: "0xA86830240122455343171Ab54b9896896C7C8a6F" # Rinkeby (Testnet)
-      # startBlock: 11282197 # Rinkeby (Testnet)
-      # address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
-      # startBlock: 11282197 # Rinkeby (Staging)
-      abi: SliceCore
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - Slicer
-        - Payee
-        - Currency
-        - PayeeSlicer
-        - CurrencySlicer
-      abis:
-        - name: SliceCore
-          file: ./abis/v2/SliceCore.json
-      eventHandlers:
-        - event: TokenSliced(indexed address,indexed uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8),indexed uint256)
-          handler: handleTokenSlicedV2
-      file: ./src/mappings/sliceCore.ts
-  - kind: ethereum/contract
     name: ProductsModuleV1
     network: mainnet
     # network: rinkeby
@@ -117,9 +88,77 @@ dataSources:
           handler: handleERC1155ListingChanged
       file: ./src/mappings/productsModule.ts
   - kind: ethereum/contract
+    name: FundsModule
+    network: mainnet
+    # network: rinkeby
+    # network: goerli
+    source:
+      address: "0x6bcA3Dfd6c2b146dcdd460174dE95Fd1e26960BC" # Mainnet
+      startBlock: 14544808 # Mainnet
+      # address: "0x093190b8c22D37871eaB814486C62303c1aE5d14" # Rinkeby (Testnet)
+      # startBlock: 10466007 # Rinkeby (Testnet)
+      # address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
+      # startBlock: 10465234 # Rinkeby (Staging)
+      # address: "0x8bf3585b3740a2Da2190f911eA8Bc84Dd7972dD6" # Goerli (Testnet)
+      # startBlock: 7535839 # Goerli (Testnet)
+      # address: "0x5Cef0380cE0aD3DAEefef8bDb85dBDeD7965adf9" # Goerli (Staging)
+      # startBlock: 7535839 # Goerli (Staging)
+      abi: FundsModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Payee
+        - PayeeCurrency
+      abis:
+        - name: FundsModule
+          file: ./abis/v1/FundsModule.json
+      eventHandlers:
+        - event: Deposited(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposited
+        - event: Withdrawn(indexed address,indexed address,uint256,uint256)
+          handler: handleWithdrawn
+      file: ./src/mappings/fundsModule.ts
+  - kind: ethereum/contract
+    name: SliceCoreV2
+    network: mainnet
+    # network: rinkeby
+    # network: goerli
+    source:
+      address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
+      startBlock: 15430294 # Mainnet
+      # address: "0xA86830240122455343171Ab54b9896896C7C8a6F" # Rinkeby (Testnet)
+      # startBlock: 11282197 # Rinkeby (Testnet)
+      # address: "0x180550826A266a9b9474539410b934B9A838d4b3" # Rinkeby (Staging)
+      # startBlock: 11282197 # Rinkeby (Staging)
+      # address: "0x115978100953D0Aa6f2f8865d11Dc5888f728370" # Goerli (Testnet)
+      # startBlock: 7535839 # Goerli (Testnet)
+      # address: "0xAE38a794E839D045460839ABe288a8e5C28B0fc6" # Goerli (Staging)
+      # startBlock: 7535839 # Goerli (Staging)
+      abi: SliceCore
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Slicer
+        - Payee
+        - Currency
+        - PayeeSlicer
+        - CurrencySlicer
+      abis:
+        - name: SliceCore
+          file: ./abis/v2/SliceCore.json
+      eventHandlers:
+        - event: TokenSliced(indexed address,indexed uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8),indexed uint256)
+          handler: handleTokenSlicedV2
+      file: ./src/mappings/sliceCore.ts
+  - kind: ethereum/contract
     name: ProductsModuleV2
     network: mainnet
     # network: rinkeby
+    # network: goerli
     source:
       address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
       startBlock: 15430294 # Mainnet
@@ -127,6 +166,10 @@ dataSources:
       # startBlock: 11282197 # Rinkeby (Testnet)
       # address: "0xC41B314bDf942d16F9Bb796892F0A772e94BC727" # Rinkeby (Staging)
       # startBlock: 11282197 # Rinkeby (Staging)
+      # address: "0xcA6b9D59849EC880e82210e9cb8237E1d0cAA69e" # Goerli (Testnet)
+      # startBlock: 7535839 # Goerli (Testnet)
+      # address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d" # Goerli (Staging)
+      # startBlock: 7535839 # Goerli (Staging)
       abi: ProductsModule
     mapping:
       kind: ethereum/events
@@ -152,39 +195,12 @@ dataSources:
         - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,(uint256,uint256,uint256,uint256))
           handler: handleProductPaidV2
       file: ./src/mappings/productsModule.ts
-  - kind: ethereum/contract
-    name: FundsModule
-    network: mainnet
-    # network: rinkeby
-    source:
-      address: "0x6bcA3Dfd6c2b146dcdd460174dE95Fd1e26960BC" # Mainnet
-      startBlock: 14544808 # Mainnet
-      # address: "0x093190b8c22D37871eaB814486C62303c1aE5d14" # Rinkeby (Testnet)
-      # startBlock: 10466007 # Rinkeby (Testnet)
-      # address: "0xA5e1B2822e7ad11D14C217a513CC0D5dDd7d011b" # Rinkeby (Staging)
-      # startBlock: 10465234 # Rinkeby (Staging)
-      abi: FundsModule
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - Payee
-        - PayeeCurrency
-      abis:
-        - name: FundsModule
-          file: ./abis/v1/FundsModule.json
-      eventHandlers:
-        - event: Deposited(indexed address,indexed address,uint256,uint256)
-          handler: handleDeposited
-        - event: Withdrawn(indexed address,indexed address,uint256,uint256)
-          handler: handleWithdrawn
-      file: ./src/mappings/fundsModule.ts
 templates:
   - kind: ethereum/contract
     name: Slicer
     network: mainnet
     # network: rinkeby
+    # network: goerli
     source:
       abi: Slicer
     mapping:
