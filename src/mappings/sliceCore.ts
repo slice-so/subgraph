@@ -157,9 +157,9 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
 
   let network = dataSource.network()
   let slxAddress: Address
-  if (network == "rinkeby") {
+  if (network == "goerli") {
     slxAddress = Address.fromString(
-      "0x4F6Ff17F5dCb4f413C5f1b7eC42D6c18666452B0"
+      "0x1D3804fd06f09266153882bF391552BEFA2DBC05"
     )
   } else {
     slxAddress = Address.fromString(
