@@ -143,7 +143,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let minimumShares = params.minimumShares
   let releaseTimelock = params.releaseTimelock
   let transferableTimelock = params.transferTimelock
-  let controller = params.controller
+  let controller = params.controller.toHexString()
   let slicerFlags = params.slicerFlags
   let sliceCoreFlags = params.sliceCoreFlags
   let slicerVersion = event.params.slicerVersion
@@ -157,9 +157,9 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
 
   let network = dataSource.network()
   let slxAddress: Address
-  if (network == "rinkeby") {
+  if (network == "goerli") {
     slxAddress = Address.fromString(
-      "0x4F6Ff17F5dCb4f413C5f1b7eC42D6c18666452B0"
+      "0x1D3804fd06f09266153882bF391552BEFA2DBC05"
     )
   } else {
     slxAddress = Address.fromString(
@@ -183,14 +183,12 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.protocolFee = BigInt.fromI32(25)
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
-  slicer.controller = controller.toHexString()
+  slicer.controller = controller
 
-  if (controller.toHexString() == zeroAddress) {
-    let address0Payee = Payee.load(zeroAddress)
-    if (!address0Payee) {
-      address0Payee = new Payee(zeroAddress)
-      address0Payee.save()
-    }
+  let controllerPayee = Payee.load(controller)
+  if (!controllerPayee) {
+    controllerPayee = new Payee(controller)
+    controllerPayee.save()
   }
 
   // Boolean flags ordered right to left: [isImmutable, currenciesControlled, productsControlled, acceptsAllCurrencies]
@@ -219,8 +217,8 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
       payee.save()
 
       royaltyReceiver = slicerAddress.toHexString()
-    } else if (controller != address0) {
-      royaltyReceiver = controller.toHexString()
+    } else if (controller != zeroAddress) {
+      royaltyReceiver = controller
     }
     if ((sliceCoreFlags / 2 ** 2) % 2 == 1) {
       slicer.resliceAllowed = true

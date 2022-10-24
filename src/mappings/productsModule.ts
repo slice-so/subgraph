@@ -5,6 +5,8 @@ import {
   PayeeSlicer,
   ProductPurchase,
   ProductPrices,
+  CurrencySlicer,
+  PayeeCurrency,
   PayeeSlicerCurrency,
   TokenListing,
   PurchaseData
@@ -142,6 +144,12 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
     productPrice.externalAddress = currencyPrices[i].externalAddress
     productPrice.save()
+
+    let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
+    if (!currencySlicer) {
+      currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+      currencySlicer.save()
+    }
   }
 
   product.save()
@@ -213,6 +221,12 @@ export function handleProductInfoChangedV2(
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
     productPrice.externalAddress = currencyPrices[i].externalAddress
     productPrice.save()
+
+    let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
+    if (!currencySlicer) {
+      currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+      currencySlicer.save()
+    }
   }
 
   product.save()
@@ -399,6 +413,13 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       payeeSlicerCurrency = new PayeeSlicerCurrency(
         buyerAddress + "-" + slicerId + "-" + currency
       )
+
+      let payeeCurrency = PayeeCurrency.load(buyerAddress + "-" + currency)
+      if (!payeeCurrency) {
+        payeeCurrency = new PayeeCurrency(buyerAddress + "-" + currency)
+        payeeCurrency.save()
+      }
+
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + currency
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
@@ -417,6 +438,13 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       payeeSlicerCurrency = new PayeeSlicerCurrency(
         buyerAddress + "-" + slicerId + "-" + address0
       )
+
+      let payeeCurrency = PayeeCurrency.load(buyerAddress + "-" + address0)
+      if (!payeeCurrency) {
+        payeeCurrency = new PayeeCurrency(buyerAddress + "-" + address0)
+        payeeCurrency.save()
+      }
+
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + address0
       payeeSlicerCurrency.currencySlicer = address0 + "-" + slicerId

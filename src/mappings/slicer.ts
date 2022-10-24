@@ -25,7 +25,11 @@ export function handleReleased(event: ReleasedEvent): void {
   let amountReleased = event.params.amountReleased
   let protocolPayment = event.params.protocolPayment
 
-  let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)!
+  let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
+  if (!currencySlicer) {
+    currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+    currencySlicer.save()
+  }
   currencySlicer.released = currencySlicer.released.plus(amountReleased)
   currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
     protocolPayment
