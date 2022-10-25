@@ -133,16 +133,16 @@ dataSources:
       eventHandlers:
         - event: TokenSliced(indexed address,indexed uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8),indexed uint256)
           handler: handleTokenSlicedV2
-        - event: TokenResliced(indexed uint256,address[],int32[])
-          handler: handleTokenResliced
-        - event: SlicerControllerSet(indexed uint256,indexed address)
-          handler: handleSlicerControllerSet
-        - event: RoyaltySet(indexed uint256,bool,bool,uint256)
-          handler: handleRoyaltySet
-        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTransferSingle
-        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-          handler: handleTransferBatch
+        # - event: TokenResliced(indexed uint256,address[],int32[]) # Only goerli
+        #   handler: handleTokenResliced # Only goerli
+        # - event: SlicerControllerSet(indexed uint256,indexed address) # Only goerli
+        #   handler: handleSlicerControllerSet # Only goerli
+        # - event: RoyaltySet(indexed uint256,bool,bool,uint256) # Only goerli
+        #   handler: handleRoyaltySet # Only goerli
+        # - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256) # Only goerli
+        #   handler: handleTransferSingle # Only goerli
+        # - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[]) # Only goerli
+        #   handler: handleTransferBatch # Only goerli
       file: ./src/mappings/sliceCore.ts
   - kind: ethereum/contract
     name: ProductsModuleV2
@@ -181,14 +181,14 @@ dataSources:
           handler: handleProductInfoChangedV2
         - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,(uint256,uint256,uint256,uint256))
           handler: handleProductPaidV2
-        - event: ProductRemoved(indexed uint256,indexed uint256)
-          handler: handleProductRemoved
-        - event: ReleasedToSlicer(indexed uint256,uint256)
-          handler: handleReleasedToSlicer
-        - event: ERC721ListingChanged(indexed uint256,indexed address,indexed uint256,bool)
-          handler: handleERC721ListingChanged
-        - event: ERC1155ListingChanged(indexed uint256,indexed address,indexed uint256,uint256)
-          handler: handleERC1155ListingChanged
+        # - event: ProductRemoved(indexed uint256,indexed uint256) # Only goerli
+        #   handler: handleProductRemoved # Only goerli
+        # - event: ReleasedToSlicer(indexed uint256,uint256) # Only goerli
+        #   handler: handleReleasedToSlicer # Only goerli
+        # - event: ERC721ListingChanged(indexed uint256,indexed address,indexed uint256,bool) # Only goerli
+        #   handler: handleERC721ListingChanged # Only goerli
+        # - event: ERC1155ListingChanged(indexed uint256,indexed address,indexed uint256,uint256) # Only goerli
+        #   handler: handleERC1155ListingChanged # Only goerli
       file: ./src/mappings/productsModule.ts
 templates:
   - kind: ethereum/contract
