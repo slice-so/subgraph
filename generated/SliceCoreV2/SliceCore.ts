@@ -415,6 +415,14 @@ export class SliceCore__royaltyInfoResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     return map;
   }
+
+  getReceiver(): Address {
+    return this.value0;
+  }
+
+  getRoyaltyAmount(): BigInt {
+    return this.value1;
+  }
 }
 
 export class SliceCore extends ethereum.SmartContract {

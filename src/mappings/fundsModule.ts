@@ -23,7 +23,9 @@ export function handleDeposited(event: DepositedEvent): void {
     payeeCurrency = new PayeeCurrency(account + "-" + currencyAddress)
     payeeCurrency.payee = account
     payeeCurrency.currency = currencyAddress
+    payeeCurrency.toWithdraw = BigInt.fromI32(0)
     payeeCurrency.withdrawn = BigInt.fromI32(0)
+    payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
     payeeCurrency.paidToProtocol = BigInt.fromI32(0)
   }
   payeeCurrency.toWithdraw = payeeCurrency.toWithdraw.plus(

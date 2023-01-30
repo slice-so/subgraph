@@ -225,6 +225,14 @@ export class Slicer___releaseFromFundsModuleResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     return map;
   }
+
+  getAmount(): BigInt {
+    return this.value0;
+  }
+
+  getProtocolPayment(): BigInt {
+    return this.value1;
+  }
 }
 
 export class Slicer__slicerInfoResult {
@@ -260,6 +268,30 @@ export class Slicer__slicerInfoResult {
     map.set("value4", ethereum.Value.fromBoolean(this.value4));
     map.set("value5", ethereum.Value.fromAddressArray(this.value5));
     return map;
+  }
+
+  getTokenId(): BigInt {
+    return this.value0;
+  }
+
+  getMinimumShares(): BigInt {
+    return this.value1;
+  }
+
+  getCreator(): Address {
+    return this.value2;
+  }
+
+  getIsImmutable(): boolean {
+    return this.value3;
+  }
+
+  getIsControlled(): boolean {
+    return this.value4;
+  }
+
+  getCurrencies(): Array<Address> {
+    return this.value5;
   }
 }
 
