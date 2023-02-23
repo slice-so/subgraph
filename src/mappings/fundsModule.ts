@@ -55,6 +55,8 @@ export function handleWithdrawn(event: WithdrawnEvent): void {
     payeeCurrency = new PayeeCurrency(account + "-" + currencyAddress)
     payeeCurrency.payee = account
     payeeCurrency.currency = currencyAddress
+    payeeCurrency.withdrawn = BigInt.fromI32(0)
+    payeeCurrency.paidToProtocol = BigInt.fromI32(0)
   }
   payeeCurrency.withdrawn = payeeCurrency.withdrawn.plus(amount)
   payeeCurrency.paidToProtocol = payeeCurrency.paidToProtocol.plus(
