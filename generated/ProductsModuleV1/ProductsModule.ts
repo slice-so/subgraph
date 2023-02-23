@@ -459,6 +459,14 @@ export class ProductsModule__productPriceResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     return map;
   }
+
+  getEthPayment(): BigInt {
+    return this.value0;
+  }
+
+  getCurrencyPayment(): BigInt {
+    return this.value1;
+  }
 }
 
 export class ProductsModule__validatePurchaseResult {
@@ -475,6 +483,14 @@ export class ProductsModule__validatePurchaseResult {
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromBytes(this.value1));
     return map;
+  }
+
+  getPurchases(): BigInt {
+    return this.value0;
+  }
+
+  getPurchaseData(): Bytes {
+    return this.value1;
   }
 }
 
