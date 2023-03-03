@@ -48,8 +48,11 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
 
   product.slicer = slicerId
   product.categoryIndex = categoryIndex
+  product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
+  product.extRelativePrice = false
+  product.extPreferredToken = false
   product.availableUnits = availableUnits
   product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
   product.creator = creator
@@ -63,6 +66,12 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
     product.extExecSig = externalCall.execFunctionSignature
     product.extValue = externalCall.value
     product.extData = externalCall.data
+  } else {
+    product.extAddress = address0
+    product.extCheckSig = new Bytes(0)
+    product.extExecSig = new Bytes(0)
+    product.extValue = BigInt.fromI32(0)
+    product.extData = new Bytes(0)
   }
 
   for (let i = 0; i < subSlicerProducts.length; i++) {
@@ -79,6 +88,7 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
     productPrice.currency = currency
     productPrice.price = currencyPrices[i].value
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
+    productPrice.externalAddress = address0
     productPrice.save()
   }
 
@@ -109,6 +119,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
 
   product.slicer = slicerId
   product.categoryIndex = categoryIndex
+  product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
   product.extRelativePrice = isExternalCallPaymentRelative
@@ -126,6 +137,12 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
     product.extExecSig = externalCall.execFunctionSignature
     product.extValue = externalCall.value
     product.extData = externalCall.data
+  } else {
+    product.extAddress = address0
+    product.extCheckSig = new Bytes(0)
+    product.extExecSig = new Bytes(0)
+    product.extValue = BigInt.fromI32(0)
+    product.extData = new Bytes(0)
   }
 
   for (let i = 0; i < subSlicerProducts.length; i++) {
@@ -148,6 +165,10 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
     let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
     if (!currencySlicer) {
       currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+      currencySlicer.currency = currency
+      currencySlicer.slicer = slicerId
+      currencySlicer.released = BigInt.fromI32(0)
+      currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -181,6 +202,7 @@ export function handleProductInfoChangedV1(
       productPrice = new ProductPrices(slicerProductId + "-" + currency)
       productPrice.product = slicerProductId
       productPrice.currency = currency
+      productPrice.externalAddress = new Bytes(20)
     }
     productPrice.price = currencyPrices[i].value
     productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
@@ -225,6 +247,10 @@ export function handleProductInfoChangedV2(
     let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
     if (!currencySlicer) {
       currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+      currencySlicer.currency = currency
+      currencySlicer.slicer = slicerId
+      currencySlicer.released = BigInt.fromI32(0)
+      currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -292,6 +318,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     payeeSlicer.payee = buyerAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = BigInt.fromI32(0)
+    payeeSlicer.transfersAllowedWhileLocked = false
     payeeSlicer.save()
   }
 
@@ -306,6 +333,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + currency
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
+      payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
       paymentCurrency
@@ -324,6 +352,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + address0
       payeeSlicerCurrency.currencySlicer = address0 + "-" + slicerId
+      payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
       totalPaymentEth
@@ -338,6 +367,10 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
+    pp.paymentEth = BigInt.fromI32(0)
+    pp.paymentCurrency = BigInt.fromI32(0)
+    pp.totalPurchases = BigInt.fromI32(0)
+    pp.totalQuantity = BigInt.fromI32(0)
   }
   pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
   pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
@@ -402,6 +435,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     payeeSlicer.payee = buyerAddress
     payeeSlicer.slicer = slicerId
     payeeSlicer.slices = BigInt.fromI32(0)
+    payeeSlicer.transfersAllowedWhileLocked = false
     payeeSlicer.save()
   }
 
@@ -417,12 +451,19 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       let payeeCurrency = PayeeCurrency.load(buyerAddress + "-" + currency)
       if (!payeeCurrency) {
         payeeCurrency = new PayeeCurrency(buyerAddress + "-" + currency)
+        payeeCurrency.payee = buyerAddress
+        payeeCurrency.currency = currency
+        payeeCurrency.toWithdraw = BigInt.fromI32(0)
+        payeeCurrency.withdrawn = BigInt.fromI32(0)
+        payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
+        payeeCurrency.paidToProtocol = BigInt.fromI32(0)
         payeeCurrency.save()
       }
 
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + currency
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
+      payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
       totalPaymentCurrency
@@ -442,12 +483,19 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       let payeeCurrency = PayeeCurrency.load(buyerAddress + "-" + address0)
       if (!payeeCurrency) {
         payeeCurrency = new PayeeCurrency(buyerAddress + "-" + address0)
+        payeeCurrency.payee = buyerAddress
+        payeeCurrency.currency = address0
+        payeeCurrency.toWithdraw = BigInt.fromI32(0)
+        payeeCurrency.withdrawn = BigInt.fromI32(0)
+        payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
+        payeeCurrency.paidToProtocol = BigInt.fromI32(0)
         payeeCurrency.save()
       }
 
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
       payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + address0
       payeeSlicerCurrency.currencySlicer = address0 + "-" + slicerId
+      payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
       totalPaymentEth
@@ -462,6 +510,10 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
+    pp.paymentEth = BigInt.fromI32(0)
+    pp.paymentCurrency = BigInt.fromI32(0)
+    pp.totalPurchases = BigInt.fromI32(0)
+    pp.totalQuantity = BigInt.fromI32(0)
   }
   pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
   pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
@@ -550,6 +602,7 @@ export function handleERC1155ListingChanged(
     tokenListing.slicer = slicerId
     tokenListing.contract = contract
     tokenListing.tokenId = tokenId
+    tokenListing.isERC721 = false
   }
   tokenListing.quantity = currentAmount
   tokenListing.lastEditedAtTimestamp = event.block.timestamp

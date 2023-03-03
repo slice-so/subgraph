@@ -28,6 +28,8 @@ export function handleReleased(event: ReleasedEvent): void {
   let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
   if (!currencySlicer) {
     currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+    currencySlicer.currency = currency
+    currencySlicer.slicer = slicerId
     currencySlicer.save()
   }
   currencySlicer.released = currencySlicer.released.plus(amountReleased)

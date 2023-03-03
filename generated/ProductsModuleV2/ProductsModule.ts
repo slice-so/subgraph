@@ -517,6 +517,14 @@ export class ProductsModule__validatePurchaseResult {
     map.set("value1", ethereum.Value.fromBytes(this.value1));
     return map;
   }
+
+  getPurchases(): BigInt {
+    return this.value0;
+  }
+
+  getPurchaseData(): Bytes {
+    return this.value1;
+  }
 }
 
 export class ProductsModule extends ethereum.SmartContract {

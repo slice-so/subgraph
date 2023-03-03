@@ -165,6 +165,14 @@ export class FundsModule__balanceResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     return map;
   }
+
+  getAccountBalance(): BigInt {
+    return this.value0;
+  }
+
+  getProtocolPayment(): BigInt {
+    return this.value1;
+  }
 }
 
 export class FundsModule extends ethereum.SmartContract {
