@@ -81,9 +81,15 @@ dataSources:
     name: FundsModule
     # network: mainnet
     network: goerli
+    # network: optimism
+    # network: base
     source:
       # address: "0x6bcA3Dfd6c2b146dcdd460174dE95Fd1e26960BC" # Mainnet
       # startBlock: 14544808 # Mainnet
+      # address: "0x115978100953D0Aa6f2f8865d11Dc5888f728370" # OP
+      # startBlock: 107107189 # OP
+      # address: "0x61bCd1ED11fC03C958A847A6687b1875f5eAcaaf" # BASE
+      # startBlock: 1511944 # BASE
       address: "0x8bf3585b3740a2Da2190f911eA8Bc84Dd7972dD6" # Goerli (Testnet)
       startBlock: 7535839 # Goerli (Testnet)
       # address: "0x5Cef0380cE0aD3DAEefef8bDb85dBDeD7965adf9" # Goerli (Staging)
@@ -109,9 +115,15 @@ dataSources:
     name: SliceCoreV2
     # network: mainnet
     network: goerli
+    # network: optimism
+    # network: base
     source:
       # address: "0x21da1b084175f95285B49b22C018889c45E1820d" # Mainnet
       # startBlock: 15430294 # Mainnet
+      # address: "0xb9d5B99d5D0fA04dD7eb2b0CD7753317C2ea1a84" # OP
+      # startBlock: 107107189 # OP
+      # address: "0x5Cef0380cE0aD3DAEefef8bDb85dBDeD7965adf9" # BASE
+      # startBlock: 1511944 # BASE
       address: "0x115978100953D0Aa6f2f8865d11Dc5888f728370" # Goerli (Testnet)
       startBlock: 7535839 # Goerli (Testnet)
       # address: "0xAE38a794E839D045460839ABe288a8e5C28B0fc6" # Goerli (Staging)
@@ -148,9 +160,15 @@ dataSources:
     name: ProductsModuleV2
     # network: mainnet
     network: goerli
+    # network: optimism
+    # network: base
     source:
       # address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
       # startBlock: 15430294 # Mainnet
+      # address: "0x61bCd1ED11fC03C958A847A6687b1875f5eAcaaf" # OP
+      # startBlock: 107107189 # OP
+      # address: "0xb9d5B99d5D0fA04dD7eb2b0CD7753317C2ea1a84" # BASE
+      # startBlock: 1511944 # BASE
       address: "0xcA6b9D59849EC880e82210e9cb8237E1d0cAA69e" # Goerli (Testnet)
       startBlock: 7535839 # Goerli (Testnet)
       # address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d" # Goerli (Staging)
@@ -195,6 +213,8 @@ templates:
     name: Slicer
     # network: mainnet
     network: goerli
+    # network: optimism
+    # network: base
     source:
       abi: Slicer
     mapping:
