@@ -414,8 +414,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   let totalPaymentEth = paymentEth.plus(extPaymentEth)
   let totalPaymentCurrency = paymentCurrency.plus(extPaymentCurrency)
 
-  slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
-  slicer.save()
+  // slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
+  // slicer.save()
 
   product.totalPurchases = product.totalPurchases.plus(quantity)
   if (!product.isInfinite) {
