@@ -367,13 +367,13 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
-    pp.paymentEth = BigInt.fromI32(0)
-    pp.paymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentEth = BigInt.fromI32(0)
+    pp.totalPaymentCurrency = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
-  pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
-  pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
+  pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
+  pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -387,6 +387,8 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+  purchaseData.paymentEth = totalPaymentEth
+  purchaseData.paymentCurrency = paymentCurrency
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
@@ -510,13 +512,13 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
-    pp.paymentEth = BigInt.fromI32(0)
-    pp.paymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentEth = BigInt.fromI32(0)
+    pp.totalPaymentCurrency = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
-  pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
-  pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
+  pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
+  pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -530,6 +532,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+  purchaseData.paymentEth = totalPaymentEth
+  purchaseData.paymentCurrency = paymentCurrency
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
