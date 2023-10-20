@@ -383,6 +383,8 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
   )
 
+  purchaseData.slicer = slicerId
+  purchaseData.product = slicerProductId
   purchaseData.startPurchaseId = pp.totalQuantity
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
@@ -528,6 +530,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
   )
 
+  purchaseData.slicer = slicerId
+  purchaseData.product = slicerProductId
   purchaseData.startPurchaseId = pp.totalQuantity
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity

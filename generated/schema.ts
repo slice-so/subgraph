@@ -266,6 +266,15 @@ export class Slicer extends Entity {
   set TokenListings(value: Array<string>) {
     this.set("TokenListings", Value.fromStringArray(value));
   }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
+  }
 }
 
 export class Payee extends Entity {
@@ -631,6 +640,15 @@ export class Product extends Entity {
 
   set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
+  }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
   }
 }
 
@@ -1294,6 +1312,24 @@ export class PurchaseData extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get product(): string {
+    let value = this.get("product");
+    return value!.toString();
+  }
+
+  set product(value: string) {
+    this.set("product", Value.fromString(value));
   }
 
   get productPurchase(): string {
