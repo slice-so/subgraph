@@ -97,8 +97,19 @@ type CurrencySlicer @entity {
   slicer: Slicer!
   released: BigInt!
   releasedToProtocol: BigInt!
+  releaseEvents: [ReleaseEvent!]! @derivedFrom(field: "currencySlicer")
   payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")
+}
+
+type ReleaseEvent @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  payee: Payee!
+  currencySlicer: CurrencySlicer!
+  amountReleased: BigInt!
+  timestamp: BigInt!
 }
 
 type PayeeSlicerCurrency @entity {
@@ -124,8 +135,8 @@ type ProductPurchase @entity {
   buyerSlicer: PayeeSlicer!
   currencySlicer: CurrencySlicer!
   buyer: Payee!
-  paymentEth: BigInt!
-  paymentCurrency: BigInt!
+  totalPaymentEth: BigInt!
+  totalPaymentCurrency: BigInt!
   lastPurchasedAtTimestamp: BigInt!
   totalQuantity: BigInt!
   totalPurchases: BigInt!
@@ -135,8 +146,10 @@ type ProductPurchase @entity {
 type PurchaseData @entity {
   id: ID!
   productPurchase: ProductPurchase!
-  startPurchaseId: BigInt!
   quantity: BigInt!
+  paymentEth: BigInt!
+  paymentCurrency: BigInt!
+  startPurchaseId: BigInt!
   timestamp: BigInt!
 }
 
