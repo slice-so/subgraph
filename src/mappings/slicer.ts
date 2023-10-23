@@ -126,7 +126,7 @@ export function handleCustomFeeSet(event: CustomFeeSetEvent): void {
   if (customFeeActive) {
     slicer.protocolFee = customFee
   } else {
-    slicer.protocolFee = BigInt.fromI32(10)
+    slicer.protocolFee = BigInt.fromI32(0)
   }
 
   slicer.save()
