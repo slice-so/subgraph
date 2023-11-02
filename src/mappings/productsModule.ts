@@ -22,6 +22,7 @@ import {
 } from "../../generated/ProductsModuleV1/ProductsModule"
 import {
   ProductAdded as ProductAddedEventV2,
+  StoreClosed as StoreClosedEvent,
   ProductInfoChanged as ProductInfoChangedEventV2,
   ProductPaid as ProductPaidEventV2
 } from "../../generated/ProductsModuleV2/ProductsModule"
@@ -555,6 +556,17 @@ export function handleReleasedToSlicer(event: ReleasedToSlicerEvent): void {
   slicer.productsModuleReleased = slicer.productsModuleReleased.plus(
     ethToRelease
   )
+  slicer.save()
+}
+
+export function handleStoreClosed(event: StoreClosedEvent): void {
+  let slicerId = event.params.slicerId.toHex()
+  let StoreClosed = event.params.isStoreClosed
+
+  let slicer = SlicerEntity.load(slicerId)!
+
+  slicer.storeClosed = StoreClosed
+
   slicer.save()
 }
 

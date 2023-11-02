@@ -13,6 +13,7 @@ type Slicer @entity {
   resliceAllowed: Boolean!
   transferWhileControlledAllowed: Boolean!
   acceptsAllCurrencies: Boolean!
+  storeClosed: Boolean!
   protocolFee: BigInt!
   royaltyPercentage: BigInt!
   royaltyReceiver: Payee!

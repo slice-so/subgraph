@@ -110,6 +110,24 @@ export class ERC721ListingChanged__Params {
   }
 }
 
+export class Initialized extends ethereum.Event {
+  get params(): Initialized__Params {
+    return new Initialized__Params(this);
+  }
+}
+
+export class Initialized__Params {
+  _event: Initialized;
+
+  constructor(event: Initialized) {
+    this._event = event;
+  }
+
+  get version(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+}
+
 export class OwnershipTransferred extends ethereum.Event {
   get params(): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);
@@ -448,6 +466,28 @@ export class ReleasedToSlicer__Params {
   }
 }
 
+export class StoreClosed extends ethereum.Event {
+  get params(): StoreClosed__Params {
+    return new StoreClosed__Params(this);
+  }
+}
+
+export class StoreClosed__Params {
+  _event: StoreClosed;
+
+  constructor(event: StoreClosed) {
+    this._event = event;
+  }
+
+  get slicerId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get isStoreClosed(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+}
+
 export class Unpaused extends ethereum.Event {
   get params(): Unpaused__Params {
     return new Unpaused__Params(this);
@@ -481,6 +521,31 @@ export class Upgraded__Params {
 
   get implementation(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class ProductsModule__availableUnitsResult {
+  value0: BigInt;
+  value1: boolean;
+
+  constructor(value0: BigInt, value1: boolean) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromBoolean(this.value1));
+    return map;
+  }
+
+  getUnits(): BigInt {
+    return this.value0;
+  }
+
+  getIsInfinite(): boolean {
+    return this.value1;
   }
 }
 
@@ -532,6 +597,72 @@ export class ProductsModule extends ethereum.SmartContract {
     return new ProductsModule("ProductsModule", address);
   }
 
+  MINT_PRODUCT_AMOUNT(): BigInt {
+    let result = super.call(
+      "MINT_PRODUCT_AMOUNT",
+      "MINT_PRODUCT_AMOUNT():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_MINT_PRODUCT_AMOUNT(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "MINT_PRODUCT_AMOUNT",
+      "MINT_PRODUCT_AMOUNT():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  availableUnits(
+    slicerId: BigInt,
+    productId: BigInt
+  ): ProductsModule__availableUnitsResult {
+    let result = super.call(
+      "availableUnits",
+      "availableUnits(uint256,uint256):(uint256,bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(slicerId),
+        ethereum.Value.fromUnsignedBigInt(productId)
+      ]
+    );
+
+    return new ProductsModule__availableUnitsResult(
+      result[0].toBigInt(),
+      result[1].toBoolean()
+    );
+  }
+
+  try_availableUnits(
+    slicerId: BigInt,
+    productId: BigInt
+  ): ethereum.CallResult<ProductsModule__availableUnitsResult> {
+    let result = super.tryCall(
+      "availableUnits",
+      "availableUnits(uint256,uint256):(uint256,bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(slicerId),
+        ethereum.Value.fromUnsignedBigInt(productId)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ProductsModule__availableUnitsResult(
+        value[0].toBigInt(),
+        value[1].toBoolean()
+      )
+    );
+  }
+
   ethBalance(slicerId: BigInt): BigInt {
     let result = super.call("ethBalance", "ethBalance(uint256):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(slicerId)
@@ -549,6 +680,60 @@ export class ProductsModule extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  fundsModule(): Address {
+    let result = super.call("fundsModule", "fundsModule():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_fundsModule(): ethereum.CallResult<Address> {
+    let result = super.tryCall("fundsModule", "fundsModule():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  isProductOwner(
+    slicerId: BigInt,
+    productId: BigInt,
+    account: Address
+  ): boolean {
+    let result = super.call(
+      "isProductOwner",
+      "isProductOwner(uint256,uint256,address):(bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(slicerId),
+        ethereum.Value.fromUnsignedBigInt(productId),
+        ethereum.Value.fromAddress(account)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isProductOwner(
+    slicerId: BigInt,
+    productId: BigInt,
+    account: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isProductOwner",
+      "isProductOwner(uint256,uint256,address):(bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(slicerId),
+        ethereum.Value.fromUnsignedBigInt(productId),
+        ethereum.Value.fromAddress(account)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   owner(): Address {
@@ -581,20 +766,39 @@ export class ProductsModule extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  priceFeed(): Address {
+    let result = super.call("priceFeed", "priceFeed():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_priceFeed(): ethereum.CallResult<Address> {
+    let result = super.tryCall("priceFeed", "priceFeed():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   productPrice(
     slicerId: BigInt,
     productId: BigInt,
     currency: Address,
-    quantity: BigInt
+    quantity: BigInt,
+    buyer: Address,
+    data: Bytes
   ): ProductsModule__productPriceResultPriceStruct {
     let result = super.call(
       "productPrice",
-      "productPrice(uint256,uint256,address,uint256):((uint256,uint256,uint256,uint256))",
+      "productPrice(uint256,uint256,address,uint256,address,bytes):((uint256,uint256,uint256,uint256))",
       [
         ethereum.Value.fromUnsignedBigInt(slicerId),
         ethereum.Value.fromUnsignedBigInt(productId),
         ethereum.Value.fromAddress(currency),
-        ethereum.Value.fromUnsignedBigInt(quantity)
+        ethereum.Value.fromUnsignedBigInt(quantity),
+        ethereum.Value.fromAddress(buyer),
+        ethereum.Value.fromBytes(data)
       ]
     );
 
@@ -607,16 +811,20 @@ export class ProductsModule extends ethereum.SmartContract {
     slicerId: BigInt,
     productId: BigInt,
     currency: Address,
-    quantity: BigInt
+    quantity: BigInt,
+    buyer: Address,
+    data: Bytes
   ): ethereum.CallResult<ProductsModule__productPriceResultPriceStruct> {
     let result = super.tryCall(
       "productPrice",
-      "productPrice(uint256,uint256,address,uint256):((uint256,uint256,uint256,uint256))",
+      "productPrice(uint256,uint256,address,uint256,address,bytes):((uint256,uint256,uint256,uint256))",
       [
         ethereum.Value.fromUnsignedBigInt(slicerId),
         ethereum.Value.fromUnsignedBigInt(productId),
         ethereum.Value.fromAddress(currency),
-        ethereum.Value.fromUnsignedBigInt(quantity)
+        ethereum.Value.fromUnsignedBigInt(quantity),
+        ethereum.Value.fromAddress(buyer),
+        ethereum.Value.fromBytes(data)
       ]
     );
     if (result.reverted) {
@@ -649,13 +857,28 @@ export class ProductsModule extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  sliceCore(): Address {
+    let result = super.call("sliceCore", "sliceCore():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_sliceCore(): ethereum.CallResult<Address> {
+    let result = super.tryCall("sliceCore", "sliceCore():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   validatePurchase(
     slicerId: BigInt,
     productId: BigInt
   ): ProductsModule__validatePurchaseResult {
     let result = super.call(
       "validatePurchase",
-      "validatePurchase(uint256,uint32):(uint256,bytes)",
+      "validatePurchase(uint256,uint256):(uint256,bytes)",
       [
         ethereum.Value.fromUnsignedBigInt(slicerId),
         ethereum.Value.fromUnsignedBigInt(productId)
@@ -674,7 +897,7 @@ export class ProductsModule extends ethereum.SmartContract {
   ): ethereum.CallResult<ProductsModule__validatePurchaseResult> {
     let result = super.tryCall(
       "validatePurchase",
-      "validatePurchase(uint256,uint32):(uint256,bytes)",
+      "validatePurchase(uint256,uint256):(uint256,bytes)",
       [
         ethereum.Value.fromUnsignedBigInt(slicerId),
         ethereum.Value.fromUnsignedBigInt(productId)
@@ -699,7 +922,7 @@ export class ProductsModule extends ethereum.SmartContract {
   ): BigInt {
     let result = super.call(
       "validatePurchaseUnits",
-      "validatePurchaseUnits(address,uint256,uint32):(uint256)",
+      "validatePurchaseUnits(address,uint256,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
         ethereum.Value.fromUnsignedBigInt(slicerId),
@@ -717,7 +940,7 @@ export class ProductsModule extends ethereum.SmartContract {
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "validatePurchaseUnits",
-      "validatePurchaseUnits(address,uint256,uint32):(uint256)",
+      "validatePurchaseUnits(address,uint256,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
         ethereum.Value.fromUnsignedBigInt(slicerId),
@@ -729,6 +952,66 @@ export class ProductsModule extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+}
+
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
+
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class _setStoreClosedCall extends ethereum.Call {
+  get inputs(): _setStoreClosedCall__Inputs {
+    return new _setStoreClosedCall__Inputs(this);
+  }
+
+  get outputs(): _setStoreClosedCall__Outputs {
+    return new _setStoreClosedCall__Outputs(this);
+  }
+}
+
+export class _setStoreClosedCall__Inputs {
+  _call: _setStoreClosedCall;
+
+  constructor(call: _setStoreClosedCall) {
+    this._call = call;
+  }
+
+  get slicerId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get isClosed(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class _setStoreClosedCall__Outputs {
+  _call: _setStoreClosedCall;
+
+  constructor(call: _setStoreClosedCall) {
+    this._call = call;
   }
 }
 
@@ -935,12 +1218,8 @@ export class PayProductsCall__Inputs {
     this._call = call;
   }
 
-  get buyer(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
   get purchases(): Array<PayProductsCallPurchasesStruct> {
-    return this._call.inputValues[1].value.toTupleArray<
+    return this._call.inputValues[0].value.toTupleArray<
       PayProductsCallPurchasesStruct
     >();
   }
@@ -955,24 +1234,28 @@ export class PayProductsCall__Outputs {
 }
 
 export class PayProductsCallPurchasesStruct extends ethereum.Tuple {
-  get slicerId(): BigInt {
-    return this[0].toBigInt();
+  get buyer(): Address {
+    return this[0].toAddress();
   }
 
-  get quantity(): BigInt {
+  get slicerId(): BigInt {
     return this[1].toBigInt();
   }
 
+  get quantity(): BigInt {
+    return this[2].toBigInt();
+  }
+
   get currency(): Address {
-    return this[2].toAddress();
+    return this[3].toAddress();
   }
 
   get productId(): BigInt {
-    return this[3].toBigInt();
+    return this[4].toBigInt();
   }
 
   get buyerCustomData(): Bytes {
-    return this[4].toBytes();
+    return this[5].toBytes();
   }
 }
 

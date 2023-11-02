@@ -159,6 +159,15 @@ export class Slicer extends Entity {
     this.set("acceptsAllCurrencies", Value.fromBoolean(value));
   }
 
+  get storeClosed(): boolean {
+    let value = this.get("storeClosed");
+    return value!.toBoolean();
+  }
+
+  set storeClosed(value: boolean) {
+    this.set("storeClosed", Value.fromBoolean(value));
+  }
+
   get protocolFee(): BigInt {
     let value = this.get("protocolFee");
     return value!.toBigInt();

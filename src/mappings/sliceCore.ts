@@ -74,6 +74,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.resliceAllowed = false
   slicer.transferWhileControlledAllowed = false
   slicer.childrenSlicers = []
+  slicer.storeClosed = false
 
   if (isControlled) {
     slicer.controller = creator
@@ -193,6 +194,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.productsModuleReleased = BigInt.fromI32(0)
   slicer.controller = controller
   slicer.childrenSlicers = []
+  slicer.storeClosed = false
 
   let controllerPayee = Payee.load(controller)
   if (!controllerPayee) {

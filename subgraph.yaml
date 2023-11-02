@@ -208,6 +208,8 @@ dataSources:
           handler: handleProductInfoChangedV2
         - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,(uint256,uint256,uint256,uint256))
           handler: handleProductPaidV2
+        - event: StoreClosed(indexed uint256,bool)
+          handler: handleStoreClosed
         - event: ProductRemoved(indexed uint256,indexed uint256) # Only goerli
           handler: handleProductRemoved # Only goerli
         - event: ReleasedToSlicer(indexed uint256,uint256) # Only goerli
