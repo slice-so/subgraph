@@ -24,7 +24,8 @@ import {
   ProductAdded as ProductAddedEventV2,
   StoreClosed as StoreClosedEvent,
   ProductInfoChanged as ProductInfoChangedEventV2,
-  ProductPaid as ProductPaidEventV2
+  ProductPaid as ProductPaidEventV2,
+  ProductExternalCallUpdated
 } from "../../generated/ProductsModuleV2/ProductsModule"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 
@@ -569,6 +570,29 @@ export function handleStoreClosed(event: StoreClosedEvent): void {
   slicer.storeClosed = StoreClosed
 
   slicer.save()
+}
+
+export function handleProductExternalCallUpdated(
+  event: ProductExternalCallUpdated
+): void {
+  let slicerId = event.params.slicerId.toHex()
+  let productId = event.params.productId.toHex()
+  let extAddress = event.params.externalCall.externalAddress
+  let extCheckSig = event.params.externalCall.checkFunctionSignature
+  let extExecSig = event.params.externalCall.execFunctionSignature
+  let extValue = event.params.externalCall.value
+  let extData = event.params.externalCall.data
+  let slicerProductId = slicerId + "-" + productId
+
+  let product = Product.load(slicerProductId)!
+
+  product.extAddress = extAddress
+  product.extCheckSig = extCheckSig
+  product.extExecSig = extExecSig
+  product.extValue = extValue
+  product.extData = extData
+
+  product.save()
 }
 
 export function handleERC721ListingChanged(
