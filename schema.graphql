@@ -156,6 +156,7 @@ type PurchaseData @entity {
   paymentCurrency: BigInt!
   startPurchaseId: BigInt!
   timestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 # type TokenReceived @entity {

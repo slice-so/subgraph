@@ -539,6 +539,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   purchaseData.timestamp = event.block.timestamp
   purchaseData.paymentEth = totalPaymentEth
   purchaseData.paymentCurrency = paymentCurrency
+  purchaseData.transactionHash = event.transaction.hash
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
