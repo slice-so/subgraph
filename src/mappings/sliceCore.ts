@@ -63,7 +63,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.transferableTimelock = transferableTimelock
   slicer.isImmutable = isImmutable
   slicer.creator = creator
-  slicer.protocolFee = BigInt.fromI32(25)
+  slicer.protocolFee = BigInt.fromI32(0)
   slicer.royaltyPercentage = BigInt.fromI32(50)
   slicer.royaltyReceiver = creator
   slicer.productsModuleBalance = BigInt.fromI32(0)
@@ -74,6 +74,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.resliceAllowed = false
   slicer.transferWhileControlledAllowed = false
   slicer.childrenSlicers = []
+  slicer.storeClosed = false
 
   if (isControlled) {
     slicer.controller = creator
@@ -188,11 +189,12 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.releaseTimelock = releaseTimelock
   slicer.transferableTimelock = transferableTimelock
   slicer.creator = creator
-  slicer.protocolFee = BigInt.fromI32(25)
+  slicer.protocolFee = BigInt.fromI32(0)
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
   slicer.controller = controller
   slicer.childrenSlicers = []
+  slicer.storeClosed = false
 
   let controllerPayee = Payee.load(controller)
   if (!controllerPayee) {

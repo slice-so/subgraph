@@ -159,6 +159,15 @@ export class Slicer extends Entity {
     this.set("acceptsAllCurrencies", Value.fromBoolean(value));
   }
 
+  get storeClosed(): boolean {
+    let value = this.get("storeClosed");
+    return value!.toBoolean();
+  }
+
+  set storeClosed(value: boolean) {
+    this.set("storeClosed", Value.fromBoolean(value));
+  }
+
   get protocolFee(): BigInt {
     let value = this.get("protocolFee");
     return value!.toBigInt();
@@ -265,6 +274,15 @@ export class Slicer extends Entity {
 
   set TokenListings(value: Array<string>) {
     this.set("TokenListings", Value.fromStringArray(value));
+  }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
   }
 }
 
@@ -632,6 +650,15 @@ export class Product extends Entity {
   set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
   }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
+  }
 }
 
 export class PayeeSlicer extends Entity {
@@ -882,6 +909,15 @@ export class CurrencySlicer extends Entity {
     this.set("releasedToProtocol", Value.fromBigInt(value));
   }
 
+  get releaseEvents(): Array<string> {
+    let value = this.get("releaseEvents");
+    return value!.toStringArray();
+  }
+
+  set releaseEvents(value: Array<string>) {
+    this.set("releaseEvents", Value.fromStringArray(value));
+  }
+
   get payeePayments(): Array<string> {
     let value = this.get("payeePayments");
     return value!.toStringArray();
@@ -898,6 +934,92 @@ export class CurrencySlicer extends Entity {
 
   set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
+  }
+}
+
+export class ReleaseEvent extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ReleaseEvent entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ReleaseEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ReleaseEvent", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ReleaseEvent | null {
+    return changetype<ReleaseEvent | null>(store.get("ReleaseEvent", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get payee(): string {
+    let value = this.get("payee");
+    return value!.toString();
+  }
+
+  set payee(value: string) {
+    this.set("payee", Value.fromString(value));
+  }
+
+  get currencySlicer(): string {
+    let value = this.get("currencySlicer");
+    return value!.toString();
+  }
+
+  set currencySlicer(value: string) {
+    this.set("currencySlicer", Value.fromString(value));
+  }
+
+  get amountReleased(): BigInt {
+    let value = this.get("amountReleased");
+    return value!.toBigInt();
+  }
+
+  set amountReleased(value: BigInt) {
+    this.set("amountReleased", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }
 
@@ -1115,22 +1237,22 @@ export class ProductPurchase extends Entity {
     this.set("buyer", Value.fromString(value));
   }
 
-  get paymentEth(): BigInt {
-    let value = this.get("paymentEth");
+  get totalPaymentEth(): BigInt {
+    let value = this.get("totalPaymentEth");
     return value!.toBigInt();
   }
 
-  set paymentEth(value: BigInt) {
-    this.set("paymentEth", Value.fromBigInt(value));
+  set totalPaymentEth(value: BigInt) {
+    this.set("totalPaymentEth", Value.fromBigInt(value));
   }
 
-  get paymentCurrency(): BigInt {
-    let value = this.get("paymentCurrency");
+  get totalPaymentCurrency(): BigInt {
+    let value = this.get("totalPaymentCurrency");
     return value!.toBigInt();
   }
 
-  set paymentCurrency(value: BigInt) {
-    this.set("paymentCurrency", Value.fromBigInt(value));
+  set totalPaymentCurrency(value: BigInt) {
+    this.set("totalPaymentCurrency", Value.fromBigInt(value));
   }
 
   get lastPurchasedAtTimestamp(): BigInt {
@@ -1201,6 +1323,24 @@ export class PurchaseData extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get product(): string {
+    let value = this.get("product");
+    return value!.toString();
+  }
+
+  set product(value: string) {
+    this.set("product", Value.fromString(value));
+  }
+
   get productPurchase(): string {
     let value = this.get("productPurchase");
     return value!.toString();
@@ -1208,15 +1348,6 @@ export class PurchaseData extends Entity {
 
   set productPurchase(value: string) {
     this.set("productPurchase", Value.fromString(value));
-  }
-
-  get startPurchaseId(): BigInt {
-    let value = this.get("startPurchaseId");
-    return value!.toBigInt();
-  }
-
-  set startPurchaseId(value: BigInt) {
-    this.set("startPurchaseId", Value.fromBigInt(value));
   }
 
   get quantity(): BigInt {
@@ -1228,6 +1359,33 @@ export class PurchaseData extends Entity {
     this.set("quantity", Value.fromBigInt(value));
   }
 
+  get paymentEth(): BigInt {
+    let value = this.get("paymentEth");
+    return value!.toBigInt();
+  }
+
+  set paymentEth(value: BigInt) {
+    this.set("paymentEth", Value.fromBigInt(value));
+  }
+
+  get paymentCurrency(): BigInt {
+    let value = this.get("paymentCurrency");
+    return value!.toBigInt();
+  }
+
+  set paymentCurrency(value: BigInt) {
+    this.set("paymentCurrency", Value.fromBigInt(value));
+  }
+
+  get startPurchaseId(): BigInt {
+    let value = this.get("startPurchaseId");
+    return value!.toBigInt();
+  }
+
+  set startPurchaseId(value: BigInt) {
+    this.set("startPurchaseId", Value.fromBigInt(value));
+  }
+
   get timestamp(): BigInt {
     let value = this.get("timestamp");
     return value!.toBigInt();
@@ -1235,6 +1393,15 @@ export class PurchaseData extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value!.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
   }
 }
 

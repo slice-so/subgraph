@@ -3,7 +3,8 @@ import {
   Payee,
   Currency,
   PayeeSlicer,
-  CurrencySlicer
+  CurrencySlicer,
+  ReleaseEvent
   // TokenReceived
 } from "../../generated/schema"
 import {
@@ -20,7 +21,7 @@ import { BigInt, dataSource } from "@graphprotocol/graph-ts"
 export function handleReleased(event: ReleasedEvent): void {
   let context = dataSource.context()
   let slicerId = context.getString("slicerId")
-  let payee = event.params.payee
+  let payee = event.params.payee.toHexString()
   let currency = event.params.currency.toHexString()
   let amountReleased = event.params.amountReleased
   let protocolPayment = event.params.protocolPayment
@@ -38,6 +39,25 @@ export function handleReleased(event: ReleasedEvent): void {
   )
 
   currencySlicer.save()
+
+  let releaseEvent = new ReleaseEvent(
+    slicerId +
+      "-" +
+      currency +
+      "-" +
+      payee +
+      "-" +
+      event.block.timestamp.toString()
+  )
+
+  releaseEvent.slicer = slicerId
+  releaseEvent.currency = currency
+  releaseEvent.payee = payee
+  releaseEvent.currencySlicer = currency + "-" + slicerId
+  releaseEvent.amountReleased = amountReleased
+  releaseEvent.timestamp = event.block.timestamp
+
+  releaseEvent.save()
 }
 
 export function handleCurrenciesAdded(event: CurrenciesAddedEvent): void {
@@ -106,7 +126,7 @@ export function handleCustomFeeSet(event: CustomFeeSetEvent): void {
   if (customFeeActive) {
     slicer.protocolFee = customFee
   } else {
-    slicer.protocolFee = BigInt.fromI32(25)
+    slicer.protocolFee = BigInt.fromI32(0)
   }
 
   slicer.save()

@@ -22,8 +22,10 @@ import {
 } from "../../generated/ProductsModuleV1/ProductsModule"
 import {
   ProductAdded as ProductAddedEventV2,
+  StoreClosed as StoreClosedEvent,
   ProductInfoChanged as ProductInfoChangedEventV2,
-  ProductPaid as ProductPaidEventV2
+  ProductPaid as ProductPaidEventV2,
+  ProductExternalCallUpdated
 } from "../../generated/ProductsModuleV2/ProductsModule"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 
@@ -367,13 +369,13 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
-    pp.paymentEth = BigInt.fromI32(0)
-    pp.paymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentEth = BigInt.fromI32(0)
+    pp.totalPaymentCurrency = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
-  pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
-  pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
+  pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
+  pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -383,10 +385,14 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
   )
 
+  purchaseData.slicer = slicerId
+  purchaseData.product = slicerProductId
   purchaseData.startPurchaseId = pp.totalQuantity
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+  purchaseData.paymentEth = totalPaymentEth
+  purchaseData.paymentCurrency = paymentCurrency
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
@@ -414,8 +420,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   let totalPaymentEth = paymentEth.plus(extPaymentEth)
   let totalPaymentCurrency = paymentCurrency.plus(extPaymentCurrency)
 
-  slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
-  slicer.save()
+  // slicer.productsModuleBalance = slicer.productsModuleBalance.plus(paymentEth)
+  // slicer.save()
 
   product.totalPurchases = product.totalPurchases.plus(quantity)
   if (!product.isInfinite) {
@@ -510,13 +516,13 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     pp.buyerSlicer = buyerAddress + "-" + slicerId
     pp.currencySlicer = currency + "-" + slicerId
     pp.buyer = buyerAddress
-    pp.paymentEth = BigInt.fromI32(0)
-    pp.paymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentEth = BigInt.fromI32(0)
+    pp.totalPaymentCurrency = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
-  pp.paymentEth = pp.paymentEth.plus(totalPaymentEth)
-  pp.paymentCurrency = pp.paymentCurrency.plus(paymentCurrency)
+  pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
+  pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(paymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -526,10 +532,15 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     slicerProductId + "-" + buyerAddress + "-" + totalPurchases.toHex()
   )
 
+  purchaseData.slicer = slicerId
+  purchaseData.product = slicerProductId
   purchaseData.startPurchaseId = pp.totalQuantity
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+  purchaseData.paymentEth = totalPaymentEth
+  purchaseData.paymentCurrency = paymentCurrency
+  purchaseData.transactionHash = event.transaction.hash
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
@@ -548,6 +559,40 @@ export function handleReleasedToSlicer(event: ReleasedToSlicerEvent): void {
     ethToRelease
   )
   slicer.save()
+}
+
+export function handleStoreClosed(event: StoreClosedEvent): void {
+  let slicerId = event.params.slicerId.toHex()
+  let StoreClosed = event.params.isStoreClosed
+
+  let slicer = SlicerEntity.load(slicerId)!
+
+  slicer.storeClosed = StoreClosed
+
+  slicer.save()
+}
+
+export function handleProductExternalCallUpdated(
+  event: ProductExternalCallUpdated
+): void {
+  let slicerId = event.params.slicerId.toHex()
+  let productId = event.params.productId.toHex()
+  let extAddress = event.params.externalCall.externalAddress
+  let extCheckSig = event.params.externalCall.checkFunctionSignature
+  let extExecSig = event.params.externalCall.execFunctionSignature
+  let extValue = event.params.externalCall.value
+  let extData = event.params.externalCall.data
+  let slicerProductId = slicerId + "-" + productId
+
+  let product = Product.load(slicerProductId)!
+
+  product.extAddress = extAddress
+  product.extCheckSig = extCheckSig
+  product.extExecSig = extExecSig
+  product.extValue = extValue
+  product.extData = extData
+
+  product.save()
 }
 
 export function handleERC721ListingChanged(
