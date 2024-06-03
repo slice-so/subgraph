@@ -162,6 +162,7 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   let extPaymentEth = price.ethExternalCall
   let extPaymentCurrency = price.currencyExternalCall
   let address0 = new Bytes(20)
+  let address0String = address0.toHexString()
   let slicerProductId = slicerId + "-" + productId
   let referrer = event.params.referrer
 
@@ -230,18 +231,20 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
 
   if (totalPaymentEth != BigInt.fromI32(0)) {
     let payeeSlicerCurrency = PayeeSlicerCurrency.load(
-      buyerAddress + "-" + slicerId + "-" + address0
+      buyerAddress + "-" + slicerId + "-" + address0String
     )
     if (!payeeSlicerCurrency) {
       payeeSlicerCurrency = new PayeeSlicerCurrency(
-        buyerAddress + "-" + slicerId + "-" + address0
+        buyerAddress + "-" + slicerId + "-" + address0String
       )
 
-      let payeeCurrency = PayeeCurrency.load(buyerAddress + "-" + address0)
+      let payeeCurrency = PayeeCurrency.load(
+        buyerAddress + "-" + address0String
+      )
       if (!payeeCurrency) {
-        payeeCurrency = new PayeeCurrency(buyerAddress + "-" + address0)
+        payeeCurrency = new PayeeCurrency(buyerAddress + "-" + address0String)
         payeeCurrency.payee = buyerAddress
-        payeeCurrency.currency = address0.toHexString()
+        payeeCurrency.currency = address0String
         payeeCurrency.toWithdraw = BigInt.fromI32(0)
         payeeCurrency.withdrawn = BigInt.fromI32(0)
         payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
@@ -250,8 +253,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       }
 
       payeeSlicerCurrency.payeeSlicer = buyerAddress + "-" + slicerId
-      payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + address0
-      payeeSlicerCurrency.currencySlicer = address0 + "-" + slicerId
+      payeeSlicerCurrency.payeeCurrency = buyerAddress + "-" + address0String
+      payeeSlicerCurrency.currencySlicer = address0String + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
     payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
