@@ -8,6 +8,8 @@ import {
   CurrencySlicer,
   PayeeCurrency,
   PayeeSlicerCurrency,
+  Order,
+  ExtraCost,
   TokenListing,
   PurchaseData
 } from "../../generated/schema"
@@ -24,10 +26,11 @@ import {
   ProductAdded as ProductAddedEventV2,
   StoreClosed as StoreClosedEvent,
   ProductInfoChanged as ProductInfoChangedEventV2,
+  ExtraCostPaid as ExtraPaidEvent,
   ProductPaid as ProductPaidEventV2,
   ProductExternalCallUpdated
 } from "../../generated/ProductsModuleV2/ProductsModule"
-import { BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 
 export function handleProductAddedV1(event: ProductAddedEventV1): void {
   let slicerId = event.params.slicerId.toHex()
@@ -61,6 +64,7 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
   product.data = data
   product.createdAtTimestamp = event.block.timestamp
   product.totalPurchases = BigInt.fromI32(0)
+  product.referralFeeProduct = BigInt.fromI32(0)
 
   if (externalCall.externalAddress != address0) {
     product.extAddress = externalCall.externalAddress
@@ -132,6 +136,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
   product.createdAtTimestamp = event.block.timestamp
   product.totalPurchases = BigInt.fromI32(0)
   product.availableUnits = isInfinite ? BigInt.fromI32(0) : availableUnits
+  product.referralFeeProduct = BigInt.fromI32(0)
 
   if (externalCall.externalAddress != address0) {
     product.extAddress = externalCall.externalAddress
@@ -290,7 +295,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   let currency = event.params.currency.toHexString()
   let paymentEth = event.params.paymentEth
   let paymentCurrency = event.params.paymentCurrency
-  let address0 = new Bytes(20).toHexString()
+  let address0 = new Bytes(20)
   let slicerProductId = slicerId + "-" + productId
 
   let product = Product.load(slicerProductId)!
@@ -393,8 +398,19 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   purchaseData.timestamp = event.block.timestamp
   purchaseData.paymentEth = totalPaymentEth
   purchaseData.paymentCurrency = paymentCurrency
+  purchaseData.referralEth = BigInt.fromI32(0)
+  purchaseData.referralCurrency = BigInt.fromI32(0)
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
+
+  let order = Order.load(event.transaction.hash.toHexString())
+  if (!order) {
+    order = new Order(event.transaction.hash.toHexString())
+    order.timestamp = event.block.timestamp
+    order.buyer = event.transaction.from
+    order.referrer = address0
+    order.save()
+  }
 
   purchaseData.save()
   pp.save()
@@ -411,7 +427,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   let paymentCurrency = price.currency
   let extPaymentEth = price.ethExternalCall
   let extPaymentCurrency = price.currencyExternalCall
-  let address0 = new Bytes(20).toHexString()
+  let address0 = new Bytes(20)
   let slicerProductId = slicerId + "-" + productId
 
   let product = Product.load(slicerProductId)!
@@ -490,7 +506,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       if (!payeeCurrency) {
         payeeCurrency = new PayeeCurrency(buyerAddress + "-" + address0)
         payeeCurrency.payee = buyerAddress
-        payeeCurrency.currency = address0
+        payeeCurrency.currency = address0.toHexString()
         payeeCurrency.toWithdraw = BigInt.fromI32(0)
         payeeCurrency.withdrawn = BigInt.fromI32(0)
         payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
@@ -520,9 +536,10 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     pp.totalPaymentCurrency = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
+    pp.totalQuantity = BigInt.fromI32(0)
   }
   pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
-  pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(paymentCurrency)
+  pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(totalPaymentCurrency)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -538,11 +555,25 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
-  purchaseData.paymentEth = totalPaymentEth
+  purchaseData.paymentEth = paymentEth
   purchaseData.paymentCurrency = paymentCurrency
+  purchaseData.externalPaymentEth = extPaymentEth
+  purchaseData.externalPaymentCurrency = extPaymentCurrency
+  purchaseData.referralEth = BigInt.fromI32(0)
+  purchaseData.referralCurrency = BigInt.fromI32(0)
   purchaseData.transactionHash = event.transaction.hash
+  purchaseData.order = event.transaction.hash.toHexString()
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
+
+  let order = Order.load(event.transaction.hash.toHexString())
+  if (!order) {
+    order = new Order(event.transaction.hash.toHexString())
+    order.timestamp = event.block.timestamp
+    order.buyer = event.transaction.from
+    order.referrer = address0
+    order.save()
+  }
 
   purchaseData.save()
   pp.save()

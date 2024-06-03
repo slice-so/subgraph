@@ -21,6 +21,7 @@ type Slicer @entity {
   controller: Payee!
   productsModuleBalance: BigInt!
   productsModuleReleased: BigInt!
+  referralFeeStore: BigInt!
   childrenSlicers: [Slicer!]!
   currencies: [CurrencySlicer!]! @derivedFrom(field: "slicer")
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
@@ -67,6 +68,7 @@ type Product @entity {
   extRelativePrice: Boolean!
   extPreferredToken: Boolean!
   totalPurchases: BigInt!
+  referralFeeProduct: BigInt!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
@@ -154,9 +156,33 @@ type PurchaseData @entity {
   quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
+  externalPaymentEth: BigInt!
+  externalPaymentCurrency: BigInt!
+  referralEth: BigInt!
+  referralCurrency: BigInt!
   startPurchaseId: BigInt!
+  timestamp: BigInt! # TODO: Replace with order on frontend before deprecating
+  transactionHash: Bytes! # TODO: Replace with order on frontend before deprecating
+  order: Order!
+}
+
+type Order @entity {
+  id: ID! # transactionHash
   timestamp: BigInt!
-  transactionHash: Bytes!
+  buyer: Bytes!
+  referrer: Bytes!
+  extraCosts: [ExtraCost!]! @derivedFrom(field: "order")
+  purchaseData: [PurchaseData!]! @derivedFrom(field: "order")
+}
+
+type ExtraCost @entity {
+  id: ID!
+  order: Order!
+  slicer: Slicer
+  recipient: Bytes!
+  currency: Currency!
+  amount: BigInt!
+  description: String!
 }
 
 # type TokenReceived @entity {
