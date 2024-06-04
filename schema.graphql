@@ -39,6 +39,8 @@ type Payee @entity {
   slicers: [PayeeSlicer!]! @derivedFrom(field: "payee")
   currencies: [PayeeCurrency!]! @derivedFrom(field: "payee")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyer")
+  orders: [Order!]! @derivedFrom(field: "payer")
+  referrals: [Order!]! @derivedFrom(field: "referrer")
 }
 
 type Currency @entity {
@@ -153,6 +155,7 @@ type PurchaseData @entity {
   slicer: Slicer!
   product: Product!
   productPurchase: ProductPurchase!
+  order: Order!
   quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
@@ -163,14 +166,13 @@ type PurchaseData @entity {
   startPurchaseId: BigInt!
   timestamp: BigInt! # TODO: Replace with order on frontend before deprecating
   transactionHash: Bytes! # TODO: Replace with order on frontend before deprecating
-  order: Order!
 }
 
 type Order @entity {
   id: ID! # transactionHash
   timestamp: BigInt!
-  buyer: Bytes!
-  referrer: Bytes!
+  payer: Payee!
+  referrer: Payee!
   extraCosts: [ExtraCost!]! @derivedFrom(field: "order")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "order")
 }

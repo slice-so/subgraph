@@ -318,10 +318,24 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
 
   let order = Order.load(event.transaction.hash.toHexString())
   if (!order) {
+    let payer = Payee.load(event.transaction.from.toHexString())
+    if (!payer) {
+      payer = new Payee(event.transaction.from.toHexString())
+      payer.save()
+    }
+
+    if (referrer != address0) {
+      let referrerPayee = Payee.load(referrer.toHexString())
+      if (!referrerPayee) {
+        referrerPayee = new Payee(referrer.toHexString())
+        referrerPayee.save()
+      }
+    }
+
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
-    order.buyer = event.transaction.from
-    order.referrer = referrer
+    order.payer = event.transaction.from.toHexString()
+    order.referrer = referrer.toHexString()
     order.save()
   }
 

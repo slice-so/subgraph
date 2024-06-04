@@ -408,8 +408,8 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   if (!order) {
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
-    order.buyer = event.transaction.from
-    order.referrer = address0
+    order.payer = event.transaction.from.toHexString()
+    order.referrer = address0String
     order.save()
   }
 
@@ -574,8 +574,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   if (!order) {
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
-    order.buyer = event.transaction.from
-    order.referrer = address0
+    order.payer = event.transaction.from.toHexString()
+    order.referrer = address0String
     order.save()
   }
 

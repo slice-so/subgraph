@@ -379,6 +379,24 @@ export class Payee extends Entity {
   set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
   }
+
+  get orders(): Array<string> {
+    let value = this.get("orders");
+    return value!.toStringArray();
+  }
+
+  set orders(value: Array<string>) {
+    this.set("orders", Value.fromStringArray(value));
+  }
+
+  get referrals(): Array<string> {
+    let value = this.get("referrals");
+    return value!.toStringArray();
+  }
+
+  set referrals(value: Array<string>) {
+    this.set("referrals", Value.fromStringArray(value));
+  }
 }
 
 export class Currency extends Entity {
@@ -1368,6 +1386,15 @@ export class PurchaseData extends Entity {
     this.set("productPurchase", Value.fromString(value));
   }
 
+  get order(): string {
+    let value = this.get("order");
+    return value!.toString();
+  }
+
+  set order(value: string) {
+    this.set("order", Value.fromString(value));
+  }
+
   get quantity(): BigInt {
     let value = this.get("quantity");
     return value!.toBigInt();
@@ -1457,15 +1484,6 @@ export class PurchaseData extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
-
-  get order(): string {
-    let value = this.get("order");
-    return value!.toString();
-  }
-
-  set order(value: string) {
-    this.set("order", Value.fromString(value));
-  }
 }
 
 export class Order extends Entity {
@@ -1508,22 +1526,22 @@ export class Order extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get buyer(): Bytes {
-    let value = this.get("buyer");
-    return value!.toBytes();
+  get payer(): string {
+    let value = this.get("payer");
+    return value!.toString();
   }
 
-  set buyer(value: Bytes) {
-    this.set("buyer", Value.fromBytes(value));
+  set payer(value: string) {
+    this.set("payer", Value.fromString(value));
   }
 
-  get referrer(): Bytes {
+  get referrer(): string {
     let value = this.get("referrer");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set referrer(value: Bytes) {
-    this.set("referrer", Value.fromBytes(value));
+  set referrer(value: string) {
+    this.set("referrer", Value.fromString(value));
   }
 
   get extraCosts(): Array<string> {
