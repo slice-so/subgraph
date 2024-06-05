@@ -494,6 +494,14 @@ export class ProductPaid__Params {
   get referrer(): Address {
     return this._event.parameters[6].value.toAddress();
   }
+
+  get parentSlicerId(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+
+  get parentProductId(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
+  }
 }
 
 export class ProductPaidPriceStruct extends ethereum.Tuple {
@@ -1115,32 +1123,6 @@ export class _setStoreConfigCall__Outputs {
   _call: _setStoreConfigCall;
 
   constructor(call: _setStoreConfigCall) {
-    this._call = call;
-  }
-}
-
-export class _togglePauseCall extends ethereum.Call {
-  get inputs(): _togglePauseCall__Inputs {
-    return new _togglePauseCall__Inputs(this);
-  }
-
-  get outputs(): _togglePauseCall__Outputs {
-    return new _togglePauseCall__Outputs(this);
-  }
-}
-
-export class _togglePauseCall__Inputs {
-  _call: _togglePauseCall;
-
-  constructor(call: _togglePauseCall) {
-    this._call = call;
-  }
-}
-
-export class _togglePauseCall__Outputs {
-  _call: _togglePauseCall;
-
-  constructor(call: _togglePauseCall) {
     this._call = call;
   }
 }

@@ -313,6 +313,12 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   purchaseData.externalPaymentCurrency = extPaymentCurrency
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
+  if (event.params.parentProductId != BigInt.fromI32(0)) {
+    purchaseData.parentProduct =
+      event.params.parentSlicerId.toHex() +
+      "-" +
+      event.params.parentProductId.toHex()
+  }
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
