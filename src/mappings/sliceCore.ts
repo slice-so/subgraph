@@ -103,6 +103,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+    currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.save()
   }
 
@@ -242,6 +243,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+    currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.save()
   }
 

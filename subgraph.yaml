@@ -300,6 +300,8 @@ templates:
       eventHandlers:
         - event: Released(indexed address,indexed address,uint256,uint256)
           handler: handleReleased
+        - event: Released(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleReleasedV2
         - event: CurrenciesAdded(address[])
           handler: handleCurrenciesAdded
         - event: ChildSlicerSet(indexed uint256,bool)

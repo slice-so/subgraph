@@ -95,6 +95,7 @@ export function handleProductAddedV3(event: ProductAddedEvent): void {
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+      currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -143,6 +144,7 @@ export function handleProductInfoChangedV3(
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+      currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -215,6 +217,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
         payeeCurrency.withdrawn = BigInt.fromI32(0)
         payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
         payeeCurrency.paidToProtocol = BigInt.fromI32(0)
+        payeeCurrency.totalReferralFees = BigInt.fromI32(0)
+        payeeCurrency.totalCreatorFees = BigInt.fromI32(0)
         payeeCurrency.save()
       }
 
@@ -249,6 +253,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
         payeeCurrency.withdrawn = BigInt.fromI32(0)
         payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
         payeeCurrency.paidToProtocol = BigInt.fromI32(0)
+        payeeCurrency.totalReferralFees = BigInt.fromI32(0)
+        payeeCurrency.totalCreatorFees = BigInt.fromI32(0)
         payeeCurrency.save()
       }
 
@@ -296,6 +302,40 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
     purchaseData.referralCurrency = paymentCurrency
       .times(referralFee)
       .div(BigInt.fromI32(10000))
+
+    let referrerPayee = Payee.load(referrer.toHexString())
+    if (!referrerPayee) {
+      referrerPayee = new Payee(referrer.toHexString())
+      referrerPayee.save()
+    }
+
+    let referrerCurrency = PayeeCurrency.load(
+      referrer.toHexString() + "-" + currency
+    )
+    const referralAmount =
+      currency === address0String
+        ? purchaseData.referralEth
+        : purchaseData.referralCurrency
+    if (!referrerCurrency) {
+      referrerCurrency = new PayeeCurrency(
+        referrer.toHexString() + "-" + currency
+      )
+      referrerCurrency.payee = referrer.toHexString()
+      referrerCurrency.currency = currency
+      referrerCurrency.toWithdraw = BigInt.fromI32(0)
+      referrerCurrency.toPayToProtocol = BigInt.fromI32(0)
+      referrerCurrency.withdrawn = BigInt.fromI32(0)
+      referrerCurrency.paidToProtocol = BigInt.fromI32(0)
+      // TODO: Technically not correct but should work for now
+      // In theory we should track referralFees for both currency and eth separately
+      referrerCurrency.totalReferralFees = referralAmount
+      referrerCurrency.totalCreatorFees = BigInt.fromI32(0)
+    } else {
+      referrerCurrency.totalReferralFees = referrerCurrency.totalReferralFees.plus(
+        referralAmount
+      )
+    }
+    referrerCurrency.save()
   } else {
     purchaseData.referralEth = BigInt.fromI32(0)
     purchaseData.referralCurrency = BigInt.fromI32(0)

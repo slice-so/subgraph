@@ -176,6 +176,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+      currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -258,6 +259,7 @@ export function handleProductInfoChangedV2(
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+      currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -481,6 +483,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
         payeeCurrency.withdrawn = BigInt.fromI32(0)
         payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
         payeeCurrency.paidToProtocol = BigInt.fromI32(0)
+        payeeCurrency.totalReferralFees = BigInt.fromI32(0)
+        payeeCurrency.totalCreatorFees = BigInt.fromI32(0)
         payeeCurrency.save()
       }
 
@@ -515,6 +519,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
         payeeCurrency.withdrawn = BigInt.fromI32(0)
         payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
         payeeCurrency.paidToProtocol = BigInt.fromI32(0)
+        payeeCurrency.totalReferralFees = BigInt.fromI32(0)
+        payeeCurrency.totalCreatorFees = BigInt.fromI32(0)
         payeeCurrency.save()
       }
 

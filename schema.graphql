@@ -95,6 +95,8 @@ type PayeeCurrency @entity {
   toPayToProtocol: BigInt!
   withdrawn: BigInt!
   paidToProtocol: BigInt!
+  totalCreatorFees: BigInt!
+  totalReferralFees: BigInt!
   slicerPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeCurrency")
 }
 
@@ -104,6 +106,7 @@ type CurrencySlicer @entity {
   slicer: Slicer!
   released: BigInt!
   releasedToProtocol: BigInt!
+  creatorFeePaid: BigInt!
   releaseEvents: [ReleaseEvent!]! @derivedFrom(field: "currencySlicer")
   payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")

@@ -868,6 +868,24 @@ export class PayeeCurrency extends Entity {
     this.set("paidToProtocol", Value.fromBigInt(value));
   }
 
+  get totalCreatorFees(): BigInt {
+    let value = this.get("totalCreatorFees");
+    return value!.toBigInt();
+  }
+
+  set totalCreatorFees(value: BigInt) {
+    this.set("totalCreatorFees", Value.fromBigInt(value));
+  }
+
+  get totalReferralFees(): BigInt {
+    let value = this.get("totalReferralFees");
+    return value!.toBigInt();
+  }
+
+  set totalReferralFees(value: BigInt) {
+    this.set("totalReferralFees", Value.fromBigInt(value));
+  }
+
   get slicerPayments(): Array<string> {
     let value = this.get("slicerPayments");
     return value!.toStringArray();
@@ -943,6 +961,15 @@ export class CurrencySlicer extends Entity {
 
   set releasedToProtocol(value: BigInt) {
     this.set("releasedToProtocol", Value.fromBigInt(value));
+  }
+
+  get creatorFeePaid(): BigInt {
+    let value = this.get("creatorFeePaid");
+    return value!.toBigInt();
+  }
+
+  set creatorFeePaid(value: BigInt) {
+    this.set("creatorFeePaid", Value.fromBigInt(value));
   }
 
   get releaseEvents(): Array<string> {
