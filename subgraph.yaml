@@ -273,7 +273,7 @@ dataSources:
           handler: handleProductPaidV3
         - event: StoreConfigChanged(indexed uint256,bool,uint256)
           handler: handleStoreConfigChanged
-      file: ./src/mappings/productsModule.ts
+      file: ./src/mappings/productsModuleV3.ts
 templates:
   - kind: ethereum/contract
     name: Slicer
