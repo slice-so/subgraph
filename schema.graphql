@@ -21,6 +21,7 @@ type Slicer @entity {
   controller: Payee!
   productsModuleBalance: BigInt!
   productsModuleReleased: BigInt!
+  referralFeeStore: BigInt!
   childrenSlicers: [Slicer!]!
   currencies: [CurrencySlicer!]! @derivedFrom(field: "slicer")
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
@@ -38,6 +39,8 @@ type Payee @entity {
   slicers: [PayeeSlicer!]! @derivedFrom(field: "payee")
   currencies: [PayeeCurrency!]! @derivedFrom(field: "payee")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyer")
+  orders: [Order!]! @derivedFrom(field: "payer")
+  referrals: [Order!]! @derivedFrom(field: "referrer")
 }
 
 type Currency @entity {
@@ -67,6 +70,7 @@ type Product @entity {
   extRelativePrice: Boolean!
   extPreferredToken: Boolean!
   totalPurchases: BigInt!
+  referralFeeProduct: BigInt!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
@@ -91,6 +95,8 @@ type PayeeCurrency @entity {
   toPayToProtocol: BigInt!
   withdrawn: BigInt!
   paidToProtocol: BigInt!
+  totalCreatorFees: BigInt!
+  totalReferralFees: BigInt!
   slicerPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeCurrency")
 }
 
@@ -100,6 +106,7 @@ type CurrencySlicer @entity {
   slicer: Slicer!
   released: BigInt!
   releasedToProtocol: BigInt!
+  creatorFeePaid: BigInt!
   releaseEvents: [ReleaseEvent!]! @derivedFrom(field: "currencySlicer")
   payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")
@@ -150,13 +157,38 @@ type PurchaseData @entity {
   id: ID!
   slicer: Slicer!
   product: Product!
+  parentProduct: Product
   productPurchase: ProductPurchase!
+  order: Order!
   quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
+  externalPaymentEth: BigInt!
+  externalPaymentCurrency: BigInt!
+  referralEth: BigInt!
+  referralCurrency: BigInt!
   startPurchaseId: BigInt!
+  timestamp: BigInt! # TODO: Replace with order on frontend before deprecating
+  transactionHash: Bytes! # TODO: Replace with order on frontend before deprecating
+}
+
+type Order @entity {
+  id: ID! # transactionHash
   timestamp: BigInt!
-  transactionHash: Bytes!
+  payer: Payee!
+  referrer: Payee!
+  extraCosts: [ExtraCost!]! @derivedFrom(field: "order")
+  purchaseData: [PurchaseData!]! @derivedFrom(field: "order")
+}
+
+type ExtraCost @entity {
+  id: ID!
+  order: Order!
+  slicer: Slicer
+  recipient: Bytes!
+  currency: Currency!
+  amount: BigInt!
+  description: String!
 }
 
 # type TokenReceived @entity {

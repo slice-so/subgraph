@@ -197,6 +197,8 @@ dataSources:
         - CurrencySlicer
         - PayeeCurrency
         - PayeeSlicerCurrency
+        - Order
+        - ExtraCost
         - TokenListing
       abis:
         - name: ProductsModule
@@ -212,6 +214,8 @@ dataSources:
           handler: handleStoreClosed
         - event: ProductExternalCallUpdated(indexed uint256,indexed uint256,(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductExternalCallUpdated
+        - event: ExtraCostPaid(indexed address,indexed address,indexed uint256,string)
+          handler: handleExtraCostPaid
         - event: ProductRemoved(indexed uint256,indexed uint256) # Only goerli
           handler: handleProductRemoved # Only goerli
         - event: ReleasedToSlicer(indexed uint256,uint256) # Only goerli
@@ -221,6 +225,55 @@ dataSources:
         - event: ERC1155ListingChanged(indexed uint256,indexed address,indexed uint256,uint256) # Only goerli
           handler: handleERC1155ListingChanged # Only goerli
       file: ./src/mappings/productsModule.ts
+  - kind: ethereum/contract
+    name: ProductsModuleV3
+    # network: mainnet
+    # network: goerli
+    # network: optimism
+    network: base
+    # network: base-testnet
+    source:
+      # address: "0x689Bba0e25c259b205ECe8e6152Ee1eAcF307f5F" # Mainnet
+      # startBlock: 15430294 # Mainnet
+      # address: "0x61bCd1ED11fC03C958A847A6687b1875f5eAcaaf" # OP
+      # startBlock: 107107189 # OP
+      address: "0xb9d5B99d5D0fA04dD7eb2b0CD7753317C2ea1a84" # BASE
+      startBlock: 15313686 # BASE
+      # address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d" # BASE Goerli (Testnet)
+      # startBlock: 7596864 # BASE Goerli (Testnet)
+      # address: "0xcA6b9D59849EC880e82210e9cb8237E1d0cAA69e" # Goerli (Testnet)
+      # startBlock: 7535839 # Goerli (Testnet)
+      # address: "0x0FD0d9aa44a05Ee158DDf6F01d7dcF503388781d" # Goerli (Staging)
+      # startBlock: 7535839 # Goerli (Staging)
+      abi: ProductsModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Slicer
+        - Payee
+        - Product
+        - PayeeSlicer
+        - ProductPurchase
+        - ProductPrices
+        - CurrencySlicer
+        - Order
+        - PayeeCurrency
+        - PayeeSlicerCurrency
+      abis:
+        - name: ProductsModule
+          file: ./abis/v3/ProductsModule.json
+      eventHandlers:
+        - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,address,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool,uint256),(bytes,uint256,address,bytes4,bytes4))
+          handler: handleProductAddedV3
+        - event: ProductInfoChanged(indexed uint256,indexed uint256,uint8,bool,bool,uint256,(uint248,bool,address,address)[],uint256)
+          handler: handleProductInfoChangedV3
+        - event: ProductPaid(indexed uint256,indexed uint256,uint256,indexed address,address,(uint256,uint256,uint256,uint256),address,uint256,uint256)
+          handler: handleProductPaidV3
+        - event: StoreConfigChanged(indexed uint256,bool,uint256)
+          handler: handleStoreConfigChanged
+      file: ./src/mappings/productsModuleV3.ts
 templates:
   - kind: ethereum/contract
     name: Slicer
@@ -247,6 +300,8 @@ templates:
       eventHandlers:
         - event: Released(indexed address,indexed address,uint256,uint256)
           handler: handleReleased
+        - event: Released(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleReleasedV2
         - event: CurrenciesAdded(address[])
           handler: handleCurrenciesAdded
         - event: ChildSlicerSet(indexed uint256,bool)

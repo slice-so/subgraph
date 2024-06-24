@@ -280,6 +280,10 @@ export class ProductAddedParamsStruct extends ethereum.Tuple {
   get isExternalCallPreferredToken(): boolean {
     return this[9].toBoolean();
   }
+
+  get referralFeeProduct(): BigInt {
+    return this[10].toBigInt();
+  }
 }
 
 export class ProductAddedParamsSubSlicerProductsStruct extends ethereum.Tuple {
@@ -424,6 +428,10 @@ export class ProductInfoChanged__Params {
       ProductInfoChangedCurrencyPricesStruct
     >();
   }
+
+  get referralFeeProduct(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
 }
 
 export class ProductInfoChangedCurrencyPricesStruct extends ethereum.Tuple {
@@ -481,6 +489,18 @@ export class ProductPaid__Params {
     return changetype<ProductPaidPriceStruct>(
       this._event.parameters[5].value.toTuple()
     );
+  }
+
+  get referrer(): Address {
+    return this._event.parameters[6].value.toAddress();
+  }
+
+  get parentSlicerId(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+
+  get parentProductId(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
   }
 }
 
@@ -546,16 +566,16 @@ export class ReleasedToSlicer__Params {
   }
 }
 
-export class StoreClosed extends ethereum.Event {
-  get params(): StoreClosed__Params {
-    return new StoreClosed__Params(this);
+export class StoreConfigChanged extends ethereum.Event {
+  get params(): StoreConfigChanged__Params {
+    return new StoreConfigChanged__Params(this);
   }
 }
 
-export class StoreClosed__Params {
-  _event: StoreClosed;
+export class StoreConfigChanged__Params {
+  _event: StoreConfigChanged;
 
-  constructor(event: StoreClosed) {
+  constructor(event: StoreConfigChanged) {
     this._event = event;
   }
 
@@ -565,6 +585,10 @@ export class StoreClosed__Params {
 
   get isStoreClosed(): boolean {
     return this._event.parameters[1].value.toBoolean();
+  }
+
+  get referralFeeStore(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -741,25 +765,6 @@ export class ProductsModule extends ethereum.SmartContract {
         value[1].toBoolean()
       )
     );
-  }
-
-  ethBalance(slicerId: BigInt): BigInt {
-    let result = super.call("ethBalance", "ethBalance(uint256):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(slicerId)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_ethBalance(slicerId: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("ethBalance", "ethBalance(uint256):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(slicerId)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   fundsModule(): Address {
@@ -1084,20 +1089,20 @@ export class ConstructorCall__Outputs {
   }
 }
 
-export class _setStoreClosedCall extends ethereum.Call {
-  get inputs(): _setStoreClosedCall__Inputs {
-    return new _setStoreClosedCall__Inputs(this);
+export class _setStoreConfigCall extends ethereum.Call {
+  get inputs(): _setStoreConfigCall__Inputs {
+    return new _setStoreConfigCall__Inputs(this);
   }
 
-  get outputs(): _setStoreClosedCall__Outputs {
-    return new _setStoreClosedCall__Outputs(this);
+  get outputs(): _setStoreConfigCall__Outputs {
+    return new _setStoreConfigCall__Outputs(this);
   }
 }
 
-export class _setStoreClosedCall__Inputs {
-  _call: _setStoreClosedCall;
+export class _setStoreConfigCall__Inputs {
+  _call: _setStoreConfigCall;
 
-  constructor(call: _setStoreClosedCall) {
+  constructor(call: _setStoreConfigCall) {
     this._call = call;
   }
 
@@ -1108,38 +1113,16 @@ export class _setStoreClosedCall__Inputs {
   get isClosed(): boolean {
     return this._call.inputValues[1].value.toBoolean();
   }
-}
 
-export class _setStoreClosedCall__Outputs {
-  _call: _setStoreClosedCall;
-
-  constructor(call: _setStoreClosedCall) {
-    this._call = call;
+  get referralFeeStore(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
-export class _togglePauseCall extends ethereum.Call {
-  get inputs(): _togglePauseCall__Inputs {
-    return new _togglePauseCall__Inputs(this);
-  }
+export class _setStoreConfigCall__Outputs {
+  _call: _setStoreConfigCall;
 
-  get outputs(): _togglePauseCall__Outputs {
-    return new _togglePauseCall__Outputs(this);
-  }
-}
-
-export class _togglePauseCall__Inputs {
-  _call: _togglePauseCall;
-
-  constructor(call: _togglePauseCall) {
-    this._call = call;
-  }
-}
-
-export class _togglePauseCall__Outputs {
-  _call: _togglePauseCall;
-
-  constructor(call: _togglePauseCall) {
+  constructor(call: _setStoreConfigCall) {
     this._call = call;
   }
 }
@@ -1225,6 +1208,10 @@ export class AddProductCallParamsStruct extends ethereum.Tuple {
 
   get isExternalCallPreferredToken(): boolean {
     return this[9].toBoolean();
+  }
+
+  get referralFeeProduct(): BigInt {
+    return this[10].toBigInt();
   }
 }
 
@@ -1331,6 +1318,10 @@ export class PayProductsCall__Inputs {
     return this._call.inputValues[1].value.toTupleArray<
       PayProductsCallExtraCostsStruct
     >();
+  }
+
+  get referrer(): Address {
+    return this._call.inputValues[2].value.toAddress();
   }
 }
 
@@ -1476,12 +1467,6 @@ export class PayWithAuthorizationCall__Inputs {
       this._call.inputValues[1].value.toTuple()
     );
   }
-
-  get extraCosts(): Array<PayWithAuthorizationCallExtraCostsStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      PayWithAuthorizationCallExtraCostsStruct
-    >();
-  }
 }
 
 export class PayWithAuthorizationCall__Outputs {
@@ -1552,28 +1537,6 @@ export class PayWithAuthorizationCallAuthorizationParamsStruct extends ethereum.
   }
 }
 
-export class PayWithAuthorizationCallExtraCostsStruct extends ethereum.Tuple {
-  get recipient(): Address {
-    return this[0].toAddress();
-  }
-
-  get slicerId(): BigInt {
-    return this[1].toBigInt();
-  }
-
-  get amount(): BigInt {
-    return this[2].toBigInt();
-  }
-
-  get currency(): Address {
-    return this[3].toAddress();
-  }
-
-  get description(): string {
-    return this[4].toString();
-  }
-}
-
 export class PayWithAuthorization1Call extends ethereum.Call {
   get inputs(): PayWithAuthorization1Call__Inputs {
     return new PayWithAuthorization1Call__Inputs(this);
@@ -1601,6 +1564,16 @@ export class PayWithAuthorization1Call__Inputs {
     return changetype<PayWithAuthorization1CallAuthorizationParamsStruct>(
       this._call.inputValues[1].value.toTuple()
     );
+  }
+
+  get extraCosts(): Array<PayWithAuthorization1CallExtraCostsStruct> {
+    return this._call.inputValues[2].value.toTupleArray<
+      PayWithAuthorization1CallExtraCostsStruct
+    >();
+  }
+
+  get referrer(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 }
 
@@ -1672,33 +1645,25 @@ export class PayWithAuthorization1CallAuthorizationParamsStruct extends ethereum
   }
 }
 
-export class ReleaseEthToSlicerCall extends ethereum.Call {
-  get inputs(): ReleaseEthToSlicerCall__Inputs {
-    return new ReleaseEthToSlicerCall__Inputs(this);
-  }
-
-  get outputs(): ReleaseEthToSlicerCall__Outputs {
-    return new ReleaseEthToSlicerCall__Outputs(this);
-  }
-}
-
-export class ReleaseEthToSlicerCall__Inputs {
-  _call: ReleaseEthToSlicerCall;
-
-  constructor(call: ReleaseEthToSlicerCall) {
-    this._call = call;
+export class PayWithAuthorization1CallExtraCostsStruct extends ethereum.Tuple {
+  get recipient(): Address {
+    return this[0].toAddress();
   }
 
   get slicerId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+    return this[1].toBigInt();
   }
-}
 
-export class ReleaseEthToSlicerCall__Outputs {
-  _call: ReleaseEthToSlicerCall;
+  get amount(): BigInt {
+    return this[2].toBigInt();
+  }
 
-  constructor(call: ReleaseEthToSlicerCall) {
-    this._call = call;
+  get currency(): Address {
+    return this[3].toAddress();
+  }
+
+  get description(): string {
+    return this[4].toString();
   }
 }
 
@@ -1762,68 +1727,6 @@ export class RenounceOwnershipCall__Outputs {
   }
 }
 
-export class SetProductExternalCallCall extends ethereum.Call {
-  get inputs(): SetProductExternalCallCall__Inputs {
-    return new SetProductExternalCallCall__Inputs(this);
-  }
-
-  get outputs(): SetProductExternalCallCall__Outputs {
-    return new SetProductExternalCallCall__Outputs(this);
-  }
-}
-
-export class SetProductExternalCallCall__Inputs {
-  _call: SetProductExternalCallCall;
-
-  constructor(call: SetProductExternalCallCall) {
-    this._call = call;
-  }
-
-  get slicerId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get productId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get externalCall_(): SetProductExternalCallCallExternalCall_Struct {
-    return changetype<SetProductExternalCallCallExternalCall_Struct>(
-      this._call.inputValues[2].value.toTuple()
-    );
-  }
-}
-
-export class SetProductExternalCallCall__Outputs {
-  _call: SetProductExternalCallCall;
-
-  constructor(call: SetProductExternalCallCall) {
-    this._call = call;
-  }
-}
-
-export class SetProductExternalCallCallExternalCall_Struct extends ethereum.Tuple {
-  get data(): Bytes {
-    return this[0].toBytes();
-  }
-
-  get value(): BigInt {
-    return this[1].toBigInt();
-  }
-
-  get externalAddress(): Address {
-    return this[2].toAddress();
-  }
-
-  get checkFunctionSignature(): Bytes {
-    return this[3].toBytes();
-  }
-
-  get execFunctionSignature(): Bytes {
-    return this[4].toBytes();
-  }
-}
-
 export class SetProductInfoCall extends ethereum.Call {
   get inputs(): SetProductInfoCall__Inputs {
     return new SetProductInfoCall__Inputs(this);
@@ -1865,10 +1768,20 @@ export class SetProductInfoCall__Inputs {
     return this._call.inputValues[5].value.toBigInt();
   }
 
+  get referralFeeProduct(): BigInt {
+    return this._call.inputValues[6].value.toBigInt();
+  }
+
   get currencyPrices(): Array<SetProductInfoCallCurrencyPricesStruct> {
-    return this._call.inputValues[6].value.toTupleArray<
+    return this._call.inputValues[7].value.toTupleArray<
       SetProductInfoCallCurrencyPricesStruct
     >();
+  }
+
+  get externalCall_(): SetProductInfoCallExternalCall_Struct {
+    return changetype<SetProductInfoCallExternalCall_Struct>(
+      this._call.inputValues[8].value.toTuple()
+    );
   }
 }
 
@@ -1895,6 +1808,28 @@ export class SetProductInfoCallCurrencyPricesStruct extends ethereum.Tuple {
 
   get currency(): Address {
     return this[3].toAddress();
+  }
+}
+
+export class SetProductInfoCallExternalCall_Struct extends ethereum.Tuple {
+  get data(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get value(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get externalAddress(): Address {
+    return this[2].toAddress();
+  }
+
+  get checkFunctionSignature(): Bytes {
+    return this[3].toBytes();
+  }
+
+  get execFunctionSignature(): Bytes {
+    return this[4].toBytes();
   }
 }
 

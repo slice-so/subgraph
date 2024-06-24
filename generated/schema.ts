@@ -231,6 +231,15 @@ export class Slicer extends Entity {
     this.set("productsModuleReleased", Value.fromBigInt(value));
   }
 
+  get referralFeeStore(): BigInt {
+    let value = this.get("referralFeeStore");
+    return value!.toBigInt();
+  }
+
+  set referralFeeStore(value: BigInt) {
+    this.set("referralFeeStore", Value.fromBigInt(value));
+  }
+
   get childrenSlicers(): Array<string> {
     let value = this.get("childrenSlicers");
     return value!.toStringArray();
@@ -369,6 +378,24 @@ export class Payee extends Entity {
 
   set purchases(value: Array<string>) {
     this.set("purchases", Value.fromStringArray(value));
+  }
+
+  get orders(): Array<string> {
+    let value = this.get("orders");
+    return value!.toStringArray();
+  }
+
+  set orders(value: Array<string>) {
+    this.set("orders", Value.fromStringArray(value));
+  }
+
+  get referrals(): Array<string> {
+    let value = this.get("referrals");
+    return value!.toStringArray();
+  }
+
+  set referrals(value: Array<string>) {
+    this.set("referrals", Value.fromStringArray(value));
   }
 }
 
@@ -624,6 +651,15 @@ export class Product extends Entity {
     this.set("totalPurchases", Value.fromBigInt(value));
   }
 
+  get referralFeeProduct(): BigInt {
+    let value = this.get("referralFeeProduct");
+    return value!.toBigInt();
+  }
+
+  set referralFeeProduct(value: BigInt) {
+    this.set("referralFeeProduct", Value.fromBigInt(value));
+  }
+
   get subProducts(): Array<string> {
     let value = this.get("subProducts");
     return value!.toStringArray();
@@ -832,6 +868,24 @@ export class PayeeCurrency extends Entity {
     this.set("paidToProtocol", Value.fromBigInt(value));
   }
 
+  get totalCreatorFees(): BigInt {
+    let value = this.get("totalCreatorFees");
+    return value!.toBigInt();
+  }
+
+  set totalCreatorFees(value: BigInt) {
+    this.set("totalCreatorFees", Value.fromBigInt(value));
+  }
+
+  get totalReferralFees(): BigInt {
+    let value = this.get("totalReferralFees");
+    return value!.toBigInt();
+  }
+
+  set totalReferralFees(value: BigInt) {
+    this.set("totalReferralFees", Value.fromBigInt(value));
+  }
+
   get slicerPayments(): Array<string> {
     let value = this.get("slicerPayments");
     return value!.toStringArray();
@@ -907,6 +961,15 @@ export class CurrencySlicer extends Entity {
 
   set releasedToProtocol(value: BigInt) {
     this.set("releasedToProtocol", Value.fromBigInt(value));
+  }
+
+  get creatorFeePaid(): BigInt {
+    let value = this.get("creatorFeePaid");
+    return value!.toBigInt();
+  }
+
+  set creatorFeePaid(value: BigInt) {
+    this.set("creatorFeePaid", Value.fromBigInt(value));
   }
 
   get releaseEvents(): Array<string> {
@@ -1341,6 +1404,23 @@ export class PurchaseData extends Entity {
     this.set("product", Value.fromString(value));
   }
 
+  get parentProduct(): string | null {
+    let value = this.get("parentProduct");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set parentProduct(value: string | null) {
+    if (!value) {
+      this.unset("parentProduct");
+    } else {
+      this.set("parentProduct", Value.fromString(<string>value));
+    }
+  }
+
   get productPurchase(): string {
     let value = this.get("productPurchase");
     return value!.toString();
@@ -1348,6 +1428,15 @@ export class PurchaseData extends Entity {
 
   set productPurchase(value: string) {
     this.set("productPurchase", Value.fromString(value));
+  }
+
+  get order(): string {
+    let value = this.get("order");
+    return value!.toString();
+  }
+
+  set order(value: string) {
+    this.set("order", Value.fromString(value));
   }
 
   get quantity(): BigInt {
@@ -1377,6 +1466,42 @@ export class PurchaseData extends Entity {
     this.set("paymentCurrency", Value.fromBigInt(value));
   }
 
+  get externalPaymentEth(): BigInt {
+    let value = this.get("externalPaymentEth");
+    return value!.toBigInt();
+  }
+
+  set externalPaymentEth(value: BigInt) {
+    this.set("externalPaymentEth", Value.fromBigInt(value));
+  }
+
+  get externalPaymentCurrency(): BigInt {
+    let value = this.get("externalPaymentCurrency");
+    return value!.toBigInt();
+  }
+
+  set externalPaymentCurrency(value: BigInt) {
+    this.set("externalPaymentCurrency", Value.fromBigInt(value));
+  }
+
+  get referralEth(): BigInt {
+    let value = this.get("referralEth");
+    return value!.toBigInt();
+  }
+
+  set referralEth(value: BigInt) {
+    this.set("referralEth", Value.fromBigInt(value));
+  }
+
+  get referralCurrency(): BigInt {
+    let value = this.get("referralCurrency");
+    return value!.toBigInt();
+  }
+
+  set referralCurrency(value: BigInt) {
+    this.set("referralCurrency", Value.fromBigInt(value));
+  }
+
   get startPurchaseId(): BigInt {
     let value = this.get("startPurchaseId");
     return value!.toBigInt();
@@ -1402,6 +1527,177 @@ export class PurchaseData extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
+export class Order extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Order entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Order must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Order", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Order | null {
+    return changetype<Order | null>(store.get("Order", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get payer(): string {
+    let value = this.get("payer");
+    return value!.toString();
+  }
+
+  set payer(value: string) {
+    this.set("payer", Value.fromString(value));
+  }
+
+  get referrer(): string {
+    let value = this.get("referrer");
+    return value!.toString();
+  }
+
+  set referrer(value: string) {
+    this.set("referrer", Value.fromString(value));
+  }
+
+  get extraCosts(): Array<string> {
+    let value = this.get("extraCosts");
+    return value!.toStringArray();
+  }
+
+  set extraCosts(value: Array<string>) {
+    this.set("extraCosts", Value.fromStringArray(value));
+  }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
+  }
+}
+
+export class ExtraCost extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ExtraCost entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ExtraCost must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ExtraCost", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ExtraCost | null {
+    return changetype<ExtraCost | null>(store.get("ExtraCost", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get order(): string {
+    let value = this.get("order");
+    return value!.toString();
+  }
+
+  set order(value: string) {
+    this.set("order", Value.fromString(value));
+  }
+
+  get slicer(): string | null {
+    let value = this.get("slicer");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set slicer(value: string | null) {
+    if (!value) {
+      this.unset("slicer");
+    } else {
+      this.set("slicer", Value.fromString(<string>value));
+    }
+  }
+
+  get recipient(): Bytes {
+    let value = this.get("recipient");
+    return value!.toBytes();
+  }
+
+  set recipient(value: Bytes) {
+    this.set("recipient", Value.fromBytes(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get description(): string {
+    let value = this.get("description");
+    return value!.toString();
+  }
+
+  set description(value: string) {
+    this.set("description", Value.fromString(value));
   }
 }
 

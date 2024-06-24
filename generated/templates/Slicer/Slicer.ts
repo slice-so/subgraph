@@ -210,6 +210,40 @@ export class Released__Params {
   }
 }
 
+export class Released1 extends ethereum.Event {
+  get params(): Released1__Params {
+    return new Released1__Params(this);
+  }
+}
+
+export class Released1__Params {
+  _event: Released1;
+
+  constructor(event: Released1) {
+    this._event = event;
+  }
+
+  get payee(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get currency(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get amountReleased(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get creatorPayment(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get protocolPayment(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+}
+
 export class Slicer___releaseFromFundsModuleResult {
   value0: BigInt;
   value1: BigInt;

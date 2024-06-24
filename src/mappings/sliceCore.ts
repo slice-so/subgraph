@@ -75,6 +75,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.transferWhileControlledAllowed = false
   slicer.childrenSlicers = []
   slicer.storeClosed = false
+  slicer.referralFeeStore = BigInt.fromI32(0)
 
   if (isControlled) {
     slicer.controller = creator
@@ -102,6 +103,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+    currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.save()
   }
 
@@ -195,6 +197,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.controller = controller
   slicer.childrenSlicers = []
   slicer.storeClosed = false
+  slicer.referralFeeStore = BigInt.fromI32(0)
 
   let controllerPayee = Payee.load(controller)
   if (!controllerPayee) {
@@ -240,6 +243,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+    currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.save()
   }
 

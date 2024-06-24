@@ -27,6 +27,8 @@ export function handleDeposited(event: DepositedEvent): void {
     payeeCurrency.withdrawn = BigInt.fromI32(0)
     payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
     payeeCurrency.paidToProtocol = BigInt.fromI32(0)
+    payeeCurrency.totalReferralFees = BigInt.fromI32(0)
+    payeeCurrency.totalCreatorFees = BigInt.fromI32(0)
   }
   payeeCurrency.toWithdraw = payeeCurrency.toWithdraw.plus(
     amount.minus(protocolAmount)
@@ -55,8 +57,12 @@ export function handleWithdrawn(event: WithdrawnEvent): void {
     payeeCurrency = new PayeeCurrency(account + "-" + currencyAddress)
     payeeCurrency.payee = account
     payeeCurrency.currency = currencyAddress
+    payeeCurrency.toWithdraw = BigInt.fromI32(0)
     payeeCurrency.withdrawn = BigInt.fromI32(0)
+    payeeCurrency.toPayToProtocol = BigInt.fromI32(0)
     payeeCurrency.paidToProtocol = BigInt.fromI32(0)
+    payeeCurrency.totalReferralFees = BigInt.fromI32(0)
+    payeeCurrency.totalCreatorFees = BigInt.fromI32(0)
   }
   payeeCurrency.withdrawn = payeeCurrency.withdrawn.plus(amount)
   payeeCurrency.paidToProtocol = payeeCurrency.paidToProtocol.plus(
