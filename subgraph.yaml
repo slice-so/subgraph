@@ -214,8 +214,6 @@ dataSources:
           handler: handleStoreClosed
         - event: ProductExternalCallUpdated(indexed uint256,indexed uint256,(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductExternalCallUpdated
-        - event: ExtraCostPaid(indexed address,indexed address,indexed uint256,string)
-          handler: handleExtraCostPaid
         - event: ProductRemoved(indexed uint256,indexed uint256) # Only goerli
           handler: handleProductRemoved # Only goerli
         - event: ReleasedToSlicer(indexed uint256,uint256) # Only goerli
@@ -259,6 +257,7 @@ dataSources:
         - ProductPrices
         - CurrencySlicer
         - Order
+        - ExtraCost
         - PayeeCurrency
         - PayeeSlicerCurrency
       abis:
@@ -273,6 +272,8 @@ dataSources:
           handler: handleProductPaidV3
         - event: StoreConfigChanged(indexed uint256,bool,uint256)
           handler: handleStoreConfigChanged
+        - event: ExtraCostPaid(indexed address,indexed address,indexed uint256,string)
+          handler: handleExtraCostPaid
       file: ./src/mappings/productsModuleV3.ts
 templates:
   - kind: ethereum/contract

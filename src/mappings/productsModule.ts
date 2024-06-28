@@ -9,7 +9,6 @@ import {
   PayeeCurrency,
   PayeeSlicerCurrency,
   Order,
-  ExtraCost,
   TokenListing,
   PurchaseData
 } from "../../generated/schema"
@@ -26,7 +25,6 @@ import {
   ProductAdded as ProductAddedEventV2,
   StoreClosed as StoreClosedEvent,
   ProductInfoChanged as ProductInfoChangedEventV2,
-  ExtraCostPaid as ExtraPaidEvent,
   ProductPaid as ProductPaidEventV2,
   ProductExternalCallUpdated
 } from "../../generated/ProductsModuleV2/ProductsModule"
