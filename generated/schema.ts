@@ -1647,23 +1647,6 @@ export class ExtraCost extends Entity {
     this.set("order", Value.fromString(value));
   }
 
-  get slicer(): string | null {
-    let value = this.get("slicer");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set slicer(value: string | null) {
-    if (!value) {
-      this.unset("slicer");
-    } else {
-      this.set("slicer", Value.fromString(<string>value));
-    }
-  }
-
   get recipient(): Bytes {
     let value = this.get("recipient");
     return value!.toBytes();

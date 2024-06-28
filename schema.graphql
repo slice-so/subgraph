@@ -183,8 +183,8 @@ type Order @entity {
 
 type ExtraCost @entity {
   id: ID!
+  # slicer: Slicer // TODO: Add relation to slicer
   order: Order!
-  slicer: Slicer
   recipient: Bytes!
   currency: Currency!
   amount: BigInt!

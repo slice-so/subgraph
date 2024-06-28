@@ -4,8 +4,10 @@ import {
   Product,
   PayeeSlicer,
   ProductPurchase,
+  Slicer,
   ProductPrices,
   CurrencySlicer,
+  ExtraCost,
   PayeeCurrency,
   PayeeSlicerCurrency,
   Order,
@@ -14,6 +16,7 @@ import {
 import {
   ProductAdded as ProductAddedEvent,
   StoreConfigChanged as StoreConfigChangedEvent,
+  ExtraCostPaid as ExtraCostPaidEvent,
   ProductInfoChanged as ProductInfoChangedEvent,
   ProductPaid as ProductPaidEvent
 } from "../../generated/ProductsModuleV3/ProductsModule"
@@ -387,6 +390,31 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
 
   purchaseData.save()
   pp.save()
+}
+
+export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
+  const txHash = event.transaction.hash.toHexString()
+  let currency = event.params.currency.toHex()
+  let amount = event.params.amount
+  let description = event.params.description
+  let recipient = event.params.recipient
+
+  const extraCostId =
+    txHash + "-" + currency + "-" + recipient.toHex() + "-" + description
+
+  let extraCost = ExtraCost.load(extraCostId)
+
+  if (!extraCost) {
+    extraCost = new ExtraCost(extraCostId)
+    extraCost.order = txHash
+    extraCost.recipient = recipient
+    extraCost.currency = currency
+    extraCost.amount = amount
+    extraCost.description = description
+  } else {
+    extraCost.amount = extraCost.amount.plus(amount)
+  }
+  extraCost.save()
 }
 
 export function handleStoreConfigChanged(event: StoreConfigChangedEvent): void {
