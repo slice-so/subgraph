@@ -19,6 +19,7 @@ import {
   // ERC1155BatchReceived as ERC1155BatchReceivedEvent
 } from "../../generated/templates/Slicer/Slicer"
 import { BigInt, dataSource } from "@graphprotocol/graph-ts"
+import { baseFee } from "./sliceCore"
 
 export function handleReleased(event: ReleasedEvent): void {
   let context = dataSource.context()
@@ -206,7 +207,7 @@ export function handleCustomFeeSet(event: CustomFeeSetEvent): void {
   if (customFeeActive) {
     slicer.protocolFee = customFee
   } else {
-    slicer.protocolFee = BigInt.fromI32(0)
+    slicer.protocolFee = BigInt.fromI32(baseFee)
   }
 
   slicer.save()

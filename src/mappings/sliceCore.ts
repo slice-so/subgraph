@@ -23,6 +23,8 @@ import {
 } from "@graphprotocol/graph-ts"
 import { Slicer } from "../../generated/templates"
 
+export const baseFee = 10
+
 export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   let slicerAddress = event.params.slicerAddress
   let slicerId = event.params.tokenId.toHex()
@@ -63,7 +65,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.transferableTimelock = transferableTimelock
   slicer.isImmutable = isImmutable
   slicer.creator = creator
-  slicer.protocolFee = BigInt.fromI32(0)
+  slicer.protocolFee = BigInt.fromI32(baseFee)
   slicer.royaltyPercentage = BigInt.fromI32(50)
   slicer.royaltyReceiver = creator
   slicer.productsModuleBalance = BigInt.fromI32(0)
@@ -191,7 +193,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.releaseTimelock = releaseTimelock
   slicer.transferableTimelock = transferableTimelock
   slicer.creator = creator
-  slicer.protocolFee = BigInt.fromI32(0)
+  slicer.protocolFee = BigInt.fromI32(baseFee)
   slicer.productsModuleBalance = BigInt.fromI32(0)
   slicer.productsModuleReleased = BigInt.fromI32(0)
   slicer.controller = controller
