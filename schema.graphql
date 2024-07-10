@@ -157,6 +157,7 @@ type PurchaseData @entity {
   id: ID!
   slicer: Slicer!
   product: Product!
+  parentSlicer: Slicer
   parentProduct: Product
   productPurchase: ProductPurchase!
   order: Order!
