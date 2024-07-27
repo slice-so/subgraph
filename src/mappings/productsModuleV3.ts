@@ -385,7 +385,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
 
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
-    order.payer = event.transaction.from.toHexString()
+    order.payer = event.transaction.from.toHexString() // TODO: Fix, this should be msg.sender not tx.origin
+    order.buyer = buyerAddress
     order.referrer = referrer.toHexString()
     order.save()
   }

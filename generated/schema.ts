@@ -1596,6 +1596,15 @@ export class Order extends Entity {
     this.set("payer", Value.fromString(value));
   }
 
+  get buyer(): string {
+    let value = this.get("buyer");
+    return value!.toString();
+  }
+
+  set buyer(value: string) {
+    this.set("buyer", Value.fromString(value));
+  }
+
   get referrer(): string {
     let value = this.get("referrer");
     return value!.toString();
