@@ -409,6 +409,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
     order.payer = event.transaction.from.toHexString()
+    order.buyer = buyerAddress
     order.referrer = address0String
     order.save()
   }
@@ -579,6 +580,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
     order.payer = event.transaction.from.toHexString()
+    order.buyer = buyerAddress
     order.referrer = address0String
     order.save()
   }

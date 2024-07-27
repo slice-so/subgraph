@@ -39,7 +39,7 @@ type Payee @entity {
   slicers: [PayeeSlicer!]! @derivedFrom(field: "payee")
   currencies: [PayeeCurrency!]! @derivedFrom(field: "payee")
   purchases: [ProductPurchase!]! @derivedFrom(field: "buyer")
-  orders: [Order!]! @derivedFrom(field: "payer")
+  orders: [Order!]! @derivedFrom(field: "buyer")
   referrals: [Order!]! @derivedFrom(field: "referrer")
 }
 
@@ -177,6 +177,7 @@ type Order @entity {
   id: ID! # transactionHash
   timestamp: BigInt!
   payer: Payee!
+  buyer: Payee!
   referrer: Payee!
   extraCosts: [ExtraCost!]! @derivedFrom(field: "order")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "order")
