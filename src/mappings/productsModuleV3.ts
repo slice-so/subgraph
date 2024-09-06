@@ -417,6 +417,23 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
   } else {
     extraCost.amount = extraCost.amount.plus(amount)
   }
+
+  let order = Order.load(event.transaction.hash.toHexString())
+  if (!order) {
+    let address0 = new Bytes(20)
+    let payer = Payee.load(event.transaction.from.toHexString())
+    if (!payer) {
+      payer = new Payee(event.transaction.from.toHexString())
+      payer.save()
+    }
+
+    order = new Order(event.transaction.hash.toHexString())
+    order.timestamp = event.block.timestamp
+    order.payer = event.transaction.from.toHexString() // TODO: Fix, this should be msg.sender not tx.origin
+    order.buyer = address0.toHexString()
+    order.referrer = address0.toHexString()
+    order.save()
+  }
   extraCost.save()
 }
 
