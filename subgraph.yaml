@@ -274,6 +274,8 @@ dataSources:
           handler: handleStoreConfigChanged
         - event: ExtraCostPaid(indexed address,indexed address,indexed uint256,string)
           handler: handleExtraCostPaid
+        - event: PurchaseMade(indexed address)
+          handler: handlePurchaseMade
       file: ./src/mappings/productsModuleV3.ts
 templates:
   - kind: ethereum/contract

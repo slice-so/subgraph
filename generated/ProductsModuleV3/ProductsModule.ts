@@ -544,6 +544,24 @@ export class ProductRemoved__Params {
   }
 }
 
+export class PurchaseMade extends ethereum.Event {
+  get params(): PurchaseMade__Params {
+    return new PurchaseMade__Params(this);
+  }
+}
+
+export class PurchaseMade__Params {
+  _event: PurchaseMade;
+
+  constructor(event: PurchaseMade) {
+    this._event = event;
+  }
+
+  get buyer(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class ReleasedToSlicer extends ethereum.Event {
   get params(): ReleasedToSlicer__Params {
     return new ReleasedToSlicer__Params(this);
@@ -1403,6 +1421,20 @@ export class PayProducts1Call__Inputs {
       PayProducts1CallPurchasesStruct
     >();
   }
+
+  get extraCosts(): Array<PayProducts1CallExtraCostsStruct> {
+    return this._call.inputValues[1].value.toTupleArray<
+      PayProducts1CallExtraCostsStruct
+    >();
+  }
+
+  get referrer(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get buyer(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
 }
 
 export class PayProducts1Call__Outputs {
@@ -1414,6 +1446,86 @@ export class PayProducts1Call__Outputs {
 }
 
 export class PayProducts1CallPurchasesStruct extends ethereum.Tuple {
+  get buyer(): Address {
+    return this[0].toAddress();
+  }
+
+  get slicerId(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get quantity(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
+  }
+
+  get productId(): BigInt {
+    return this[4].toBigInt();
+  }
+
+  get buyerCustomData(): Bytes {
+    return this[5].toBytes();
+  }
+}
+
+export class PayProducts1CallExtraCostsStruct extends ethereum.Tuple {
+  get recipient(): Address {
+    return this[0].toAddress();
+  }
+
+  get slicerId(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get amount(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
+  }
+
+  get description(): string {
+    return this[4].toString();
+  }
+}
+
+export class PayProducts2Call extends ethereum.Call {
+  get inputs(): PayProducts2Call__Inputs {
+    return new PayProducts2Call__Inputs(this);
+  }
+
+  get outputs(): PayProducts2Call__Outputs {
+    return new PayProducts2Call__Outputs(this);
+  }
+}
+
+export class PayProducts2Call__Inputs {
+  _call: PayProducts2Call;
+
+  constructor(call: PayProducts2Call) {
+    this._call = call;
+  }
+
+  get purchases(): Array<PayProducts2CallPurchasesStruct> {
+    return this._call.inputValues[0].value.toTupleArray<
+      PayProducts2CallPurchasesStruct
+    >();
+  }
+}
+
+export class PayProducts2Call__Outputs {
+  _call: PayProducts2Call;
+
+  constructor(call: PayProducts2Call) {
+    this._call = call;
+  }
+}
+
+export class PayProducts2CallPurchasesStruct extends ethereum.Tuple {
   get buyer(): Address {
     return this[0].toAddress();
   }

@@ -18,7 +18,8 @@ import {
   StoreConfigChanged as StoreConfigChangedEvent,
   ExtraCostPaid as ExtraCostPaidEvent,
   ProductInfoChanged as ProductInfoChangedEvent,
-  ProductPaid as ProductPaidEvent
+  ProductPaid as ProductPaidEvent,
+  PurchaseMade as PurchaseMadeEvent
 } from "../../generated/ProductsModuleV3/ProductsModule"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 
@@ -448,4 +449,21 @@ export function handleStoreConfigChanged(event: StoreConfigChangedEvent): void {
   slicer.referralFeeStore = referralFeeStore
 
   slicer.save()
+}
+
+export function handlePurchaseMade(event: PurchaseMadeEvent): void {
+  let address0 = new Bytes(20)
+
+  let order = Order.load(event.transaction.hash.toHexString())
+
+  // If the order has no buyer (ie open order), set the buyer using the PurchaseMade event
+  if (!!order && order.buyer == address0.toHexString()) {
+    let buyer = Payee.load(event.params.buyer.toHexString())
+    if (!buyer) {
+      buyer = new Payee(event.params.buyer.toHexString())
+      buyer.save()
+    }
+    order.buyer = buyer.id
+    order.save()
+  }
 }
