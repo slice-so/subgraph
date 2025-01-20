@@ -22,13 +22,120 @@ type Slicer @entity {
   productsModuleBalance: BigInt!
   productsModuleReleased: BigInt!
   referralFeeStore: BigInt!
+
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  releasedUsd: BigInt!
+  statsByDay: [SlicerStatsByDay!]! @derivedFrom(field: "slicer")
+  statsByWeek: [SlicerStatsByWeek!]! @derivedFrom(field: "slicer")
+  statsByMonth: [SlicerStatsByMonth!]! @derivedFrom(field: "slicer")
+  statsByYear: [SlicerStatsByYear!]! @derivedFrom(field: "slicer")
+
   childrenSlicers: [Slicer!]!
   currencies: [CurrencySlicer!]! @derivedFrom(field: "slicer")
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
   products: [Product!]! @derivedFrom(field: "slicer")
   TokenListings: [TokenListing!]! @derivedFrom(field: "slicer")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "slicer")
+  slicerOrders: [SlicerOrder!]! @derivedFrom(field: "slicer")
   # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
+}
+
+type SlicerAddress @entity {
+  id: ID!
+  slicer: Slicer!
+}
+
+type SlicerStatsByDay @entity {
+  id: ID!
+  slicer: Slicer!
+  day: BigInt!
+  week: SlicerStatsByWeek!
+  month: SlicerStatsByMonth!
+  year: SlicerStatsByYear!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerDay!]! @derivedFrom(field: "slicerDay")
+}
+
+type SlicerStatsByWeek @entity {
+  id: ID!
+  slicer: Slicer!
+  days: [SlicerStatsByDay!]! @derivedFrom(field: "week")
+  week: BigInt!
+  month: SlicerStatsByMonth!
+  year: SlicerStatsByYear!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerWeek!]!
+    @derivedFrom(field: "slicerWeek")
+}
+
+type SlicerStatsByMonth @entity {
+  id: ID!
+  slicer: Slicer!
+  days: [SlicerStatsByDay!]! @derivedFrom(field: "month")
+  weeks: [SlicerStatsByWeek!]! @derivedFrom(field: "month")
+  month: BigInt!
+  year: SlicerStatsByYear!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerMonth!]!
+    @derivedFrom(field: "slicerMonth")
+}
+
+type SlicerStatsByYear @entity {
+  id: ID!
+  slicer: Slicer!
+  days: [SlicerStatsByDay!]! @derivedFrom(field: "year")
+  weeks: [SlicerStatsByWeek!]! @derivedFrom(field: "year")
+  months: [SlicerStatsByMonth!]! @derivedFrom(field: "year")
+  year: BigInt!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerYear!]!
+    @derivedFrom(field: "slicerYear")
+}
+
+type CurrencySlicerDay @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerDay: SlicerStatsByDay!
+  totalEarned: BigInt!
+}
+
+type CurrencySlicerWeek @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerWeek: SlicerStatsByWeek!
+  totalEarned: BigInt!
+}
+
+type CurrencySlicerMonth @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerMonth: SlicerStatsByMonth!
+  totalEarned: BigInt!
+}
+
+type CurrencySlicerYear @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerYear: SlicerStatsByYear!
+  totalEarned: BigInt!
 }
 
 type Payee @entity {
@@ -92,9 +199,13 @@ type PayeeCurrency @entity {
   payee: Payee!
   currency: Currency!
   toWithdraw: BigInt!
+  # toWithdrawUsd: BigInt!
   toPayToProtocol: BigInt!
+  # toPayToProtocolUsd: BigInt!
   withdrawn: BigInt!
+  # withdrawnUsd: BigInt!
   paidToProtocol: BigInt!
+  # paidToProtocolUsd: BigInt!
   totalCreatorFees: BigInt!
   totalReferralFees: BigInt!
   slicerPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeCurrency")
@@ -105,8 +216,21 @@ type CurrencySlicer @entity {
   currency: Currency!
   slicer: Slicer!
   released: BigInt!
+  releasedUsd: BigInt!
   releasedToProtocol: BigInt!
+  # releasedToProtocolUsd: BigInt!
   creatorFeePaid: BigInt!
+  # creatorFeePaidUsd: BigInt!
+
+  totalEarned: BigInt!
+  totalEarnedByDay: [CurrencySlicerDay!]! @derivedFrom(field: "currencySlicer")
+  totalEarnedByWeek: [CurrencySlicerWeek!]!
+    @derivedFrom(field: "currencySlicer")
+  totalEarnedByMonth: [CurrencySlicerMonth!]!
+    @derivedFrom(field: "currencySlicer")
+  totalEarnedByYear: [CurrencySlicerYear!]!
+    @derivedFrom(field: "currencySlicer")
+
   releaseEvents: [ReleaseEvent!]! @derivedFrom(field: "currencySlicer")
   payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")
@@ -119,6 +243,7 @@ type ReleaseEvent @entity {
   payee: Payee!
   currencySlicer: CurrencySlicer!
   amountReleased: BigInt!
+  amountReleasedUsd: BigInt!
   timestamp: BigInt!
 }
 
@@ -147,6 +272,7 @@ type ProductPurchase @entity {
   buyer: Payee!
   totalPaymentEth: BigInt!
   totalPaymentCurrency: BigInt!
+  totalPaymentUsd: BigInt!
   lastPurchasedAtTimestamp: BigInt!
   totalQuantity: BigInt!
   totalPurchases: BigInt!
@@ -164,10 +290,13 @@ type PurchaseData @entity {
   quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
+  paymentUsd: BigInt!
   externalPaymentEth: BigInt!
   externalPaymentCurrency: BigInt!
+  externalPaymentUsd: BigInt!
   referralEth: BigInt!
   referralCurrency: BigInt!
+  referralUsd: BigInt!
   startPurchaseId: BigInt!
   timestamp: BigInt! # TODO: Replace with order on frontend before deprecating
   transactionHash: Bytes! # TODO: Replace with order on frontend before deprecating
@@ -179,17 +308,26 @@ type Order @entity {
   payer: Payee!
   buyer: Payee!
   referrer: Payee!
+  slicerOrders: [SlicerOrder!]! @derivedFrom(field: "order")
   extraCosts: [ExtraCost!]! @derivedFrom(field: "order")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "order")
 }
 
+type SlicerOrder @entity {
+  id: ID!
+  totalAmountUsd: BigInt!
+  slicer: Slicer!
+  order: Order!
+}
+
 type ExtraCost @entity {
   id: ID!
-  # slicer: Slicer // TODO: Add relation to slicer
+  slicer: Slicer
   order: Order!
   recipient: Bytes!
   currency: Currency!
   amount: BigInt!
+  amountUsd: BigInt!
   description: String!
 }
 

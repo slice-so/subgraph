@@ -3,7 +3,8 @@ import {
   Payee,
   PayeeSlicer,
   CurrencySlicer,
-  Currency
+  Currency,
+  SlicerAddress
 } from "../../generated/schema"
 import {
   TokenSliced as TokenSlicedEventV1,
@@ -39,21 +40,25 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   let totalSlices = BigInt.fromI32(0)
   let address0 = Address.fromBytes(new Bytes(20))
 
-  let network = dataSource.network()
-  let slxAddress: Address
-  if (network == "rinkeby") {
-    slxAddress = Address.fromString(
-      "0x4F6Ff17F5dCb4f413C5f1b7eC42D6c18666452B0"
-    )
-  } else {
-    slxAddress = Address.fromString(
-      "0x6fa5FF63B2752265c6Bd9350591f97A7dAd9e918"
-    )
-  }
+  // let network = dataSource.network()
+  // let slcAddress: Address
+  // if (network == "rinkeby") {
+  //   slcAddress = Address.fromString(
+  //     "0x4F6Ff17F5dCb4f413C5f1b7eC42D6c18666452B0"
+  //   )
+  // } else {
+  //   slcAddress = Address.fromString(
+  //     "0x32E840B5DB950003D796E02507B996b8bC0E5828"
+  //   )
+  // }
 
   let currencies = event.params.currencies
-  currencies.push(slxAddress)
+  // currencies.push(slcAddress)
   currencies.push(address0)
+
+  let slicerAddressEntity = new SlicerAddress(slicerAddress.toHexString())
+  slicerAddressEntity.slicer = slicerId
+  slicerAddressEntity.save()
 
   let slicer = new SlicerEntity(slicerId)
 
@@ -78,6 +83,11 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.childrenSlicers = []
   slicer.storeClosed = false
   slicer.referralFeeStore = BigInt.fromI32(0)
+  slicer.referralFeeStore = BigInt.fromI32(0)
+  slicer.totalOrders = BigInt.fromI32(0)
+  slicer.totalProductsPurchased = BigInt.fromI32(0)
+  slicer.totalEarnedUsd = BigInt.fromI32(0)
+  slicer.releasedUsd = BigInt.fromI32(0)
 
   if (isControlled) {
     slicer.controller = creator
@@ -104,8 +114,10 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
     currencySlicer.currency = currencyAddress
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedUsd = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+    currencySlicer.totalEarned = BigInt.fromI32(0)
     currencySlicer.save()
   }
 
@@ -168,21 +180,25 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
 
   let royaltyReceiver = creator
 
-  let network = dataSource.network()
-  let slxAddress: Address
-  if (network == "goerli") {
-    slxAddress = Address.fromString(
-      "0x1D3804fd06f09266153882bF391552BEFA2DBC05"
-    )
-  } else {
-    slxAddress = Address.fromString(
-      "0x6fa5FF63B2752265c6Bd9350591f97A7dAd9e918"
-    )
-  }
+  // let network = dataSource.network()
+  // let slcAddress: Address
+  // if (network == "goerli") {
+  //   slcAddress = Address.fromString(
+  //     "0x1D3804fd06f09266153882bF391552BEFA2DBC05"
+  //   )
+  // } else {
+  //   slcAddress = Address.fromString(
+  //     "0x32E840B5DB950003D796E02507B996b8bC0E5828"
+  //   )
+  // }
 
   let currencies = params.currencies
-  currencies.push(slxAddress)
+  // currencies.push(slcAddress)
   currencies.push(address0)
+
+  let slicerAddressEntity = new SlicerAddress(slicerAddress.toHexString())
+  slicerAddressEntity.slicer = slicerId
+  slicerAddressEntity.save()
 
   let slicer = new SlicerEntity(slicerId)
 
@@ -200,6 +216,10 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.childrenSlicers = []
   slicer.storeClosed = false
   slicer.referralFeeStore = BigInt.fromI32(0)
+  slicer.totalOrders = BigInt.fromI32(0)
+  slicer.totalProductsPurchased = BigInt.fromI32(0)
+  slicer.totalEarnedUsd = BigInt.fromI32(0)
+  slicer.releasedUsd = BigInt.fromI32(0)
 
   let controllerPayee = Payee.load(controller)
   if (!controllerPayee) {
@@ -244,8 +264,10 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     currencySlicer.currency = currencyAddress
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedUsd = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+    currencySlicer.totalEarned = BigInt.fromI32(0)
     currencySlicer.save()
   }
 

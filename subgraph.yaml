@@ -108,6 +108,8 @@ dataSources:
       abis:
         - name: FundsModule
           file: ./abis/v1/FundsModule.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: Deposited(indexed address,indexed address,uint256,uint256)
           handler: handleDeposited
@@ -148,6 +150,8 @@ dataSources:
       abis:
         - name: SliceCore
           file: ./abis/v2/SliceCore.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: TokenSliced(indexed address,indexed uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8),indexed uint256)
           handler: handleTokenSlicedV2
@@ -203,6 +207,8 @@ dataSources:
       abis:
         - name: ProductsModule
           file: ./abis/v2/ProductsModule.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,address,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool),(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductAddedV2
@@ -263,6 +269,8 @@ dataSources:
       abis:
         - name: ProductsModule
           file: ./abis/v3/ProductsModule.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,address,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool,uint256),(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductAddedV3
@@ -274,6 +282,8 @@ dataSources:
           handler: handleStoreConfigChanged
         - event: ExtraCostPaid(indexed address,indexed address,indexed uint256,string)
           handler: handleExtraCostPaid
+        - event: PurchaseMade(indexed address)
+          handler: handlePurchaseMade
       file: ./src/mappings/productsModuleV3.ts
 templates:
   - kind: ethereum/contract
@@ -298,6 +308,8 @@ templates:
       abis:
         - name: Slicer
           file: ./abis/v1/Slicer.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: Released(indexed address,indexed address,uint256,uint256)
           handler: handleReleased
