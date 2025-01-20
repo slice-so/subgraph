@@ -22,6 +22,15 @@ type Slicer @entity {
   productsModuleBalance: BigInt!
   productsModuleReleased: BigInt!
   referralFeeStore: BigInt!
+
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  statsByDay: [SlicerStatsByDay!]! @derivedFrom(field: "slicer")
+  statsByWeek: [SlicerStatsByWeek!]! @derivedFrom(field: "slicer")
+  statsByMonth: [SlicerStatsByMonth!]! @derivedFrom(field: "slicer")
+  statsByYear: [SlicerStatsByYear!]! @derivedFrom(field: "slicer")
+
   childrenSlicers: [Slicer!]!
   currencies: [CurrencySlicer!]! @derivedFrom(field: "slicer")
   payees: [PayeeSlicer!]! @derivedFrom(field: "slicer")
@@ -29,6 +38,91 @@ type Slicer @entity {
   TokenListings: [TokenListing!]! @derivedFrom(field: "slicer")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "slicer")
   # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
+}
+
+type SlicerStatsByDay @entity {
+  id: ID!
+  slicer: Slicer!
+  day: BigInt!
+  week: SlicerStatsByWeek!
+  month: SlicerStatsByMonth!
+  year: SlicerStatsByYear!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerDay!]! @derivedFrom(field: "slicerDay")
+}
+
+type SlicerStatsByWeek @entity {
+  id: ID!
+  slicer: Slicer!
+  week: BigInt!
+  month: SlicerStatsByMonth!
+  year: SlicerStatsByYear!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerWeek!]!
+    @derivedFrom(field: "slicerWeek")
+}
+
+type SlicerStatsByMonth @entity {
+  id: ID!
+  slicer: Slicer!
+  month: BigInt!
+  year: SlicerStatsByYear!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerMonth!]!
+    @derivedFrom(field: "slicerMonth")
+}
+
+type SlicerStatsByYear @entity {
+  id: ID!
+  slicer: Slicer!
+  year: BigInt!
+  totalOrders: BigInt!
+  totalProductsPurchased: BigInt!
+  totalEarnedUsd: BigInt!
+  totalEarnedByCurrency: [CurrencySlicerYear!]!
+    @derivedFrom(field: "slicerYear")
+}
+
+type CurrencySlicerDay @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerDay: SlicerStatsByDay!
+  totalEarned: BigInt!
+}
+
+type CurrencySlicerWeek @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerWeek: SlicerStatsByWeek!
+  totalEarned: BigInt!
+}
+
+type CurrencySlicerMonth @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerMonth: SlicerStatsByMonth!
+  totalEarned: BigInt!
+}
+
+type CurrencySlicerYear @entity {
+  id: ID!
+  slicer: Slicer!
+  currency: Currency!
+  currencySlicer: CurrencySlicer!
+  slicerYear: SlicerStatsByYear!
+  totalEarned: BigInt!
 }
 
 type Payee @entity {
@@ -107,6 +201,16 @@ type CurrencySlicer @entity {
   released: BigInt!
   releasedToProtocol: BigInt!
   creatorFeePaid: BigInt!
+
+  totalEarned: BigInt!
+  totalEarnedByDay: [CurrencySlicerDay!]! @derivedFrom(field: "currencySlicer")
+  totalEarnedByWeek: [CurrencySlicerWeek!]!
+    @derivedFrom(field: "currencySlicer")
+  totalEarnedByMonth: [CurrencySlicerMonth!]!
+    @derivedFrom(field: "currencySlicer")
+  totalEarnedByYear: [CurrencySlicerYear!]!
+    @derivedFrom(field: "currencySlicer")
+
   releaseEvents: [ReleaseEvent!]! @derivedFrom(field: "currencySlicer")
   payeePayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "currencySlicer")
   purchases: [ProductPurchase!]! @derivedFrom(field: "currencySlicer")

@@ -203,6 +203,8 @@ dataSources:
       abis:
         - name: ProductsModule
           file: ./abis/v2/ProductsModule.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,address,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool),(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductAddedV2
@@ -263,6 +265,8 @@ dataSources:
       abis:
         - name: ProductsModule
           file: ./abis/v3/ProductsModule.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: ProductAdded(indexed uint256,indexed uint256,indexed uint256,address,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool,uint256),(bytes,uint256,address,bytes4,bytes4))
           handler: handleProductAddedV3

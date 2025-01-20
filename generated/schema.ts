@@ -240,6 +240,69 @@ export class Slicer extends Entity {
     this.set("referralFeeStore", Value.fromBigInt(value));
   }
 
+  get totalOrders(): BigInt {
+    let value = this.get("totalOrders");
+    return value!.toBigInt();
+  }
+
+  set totalOrders(value: BigInt) {
+    this.set("totalOrders", Value.fromBigInt(value));
+  }
+
+  get totalProductsPurchased(): BigInt {
+    let value = this.get("totalProductsPurchased");
+    return value!.toBigInt();
+  }
+
+  set totalProductsPurchased(value: BigInt) {
+    this.set("totalProductsPurchased", Value.fromBigInt(value));
+  }
+
+  get totalEarnedUsdc(): BigInt {
+    let value = this.get("totalEarnedUsdc");
+    return value!.toBigInt();
+  }
+
+  set totalEarnedUsdc(value: BigInt) {
+    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  }
+
+  get statsByDay(): Array<string> {
+    let value = this.get("statsByDay");
+    return value!.toStringArray();
+  }
+
+  set statsByDay(value: Array<string>) {
+    this.set("statsByDay", Value.fromStringArray(value));
+  }
+
+  get statsByWeek(): Array<string> {
+    let value = this.get("statsByWeek");
+    return value!.toStringArray();
+  }
+
+  set statsByWeek(value: Array<string>) {
+    this.set("statsByWeek", Value.fromStringArray(value));
+  }
+
+  get statsByMonth(): Array<string> {
+    let value = this.get("statsByMonth");
+    return value!.toStringArray();
+  }
+
+  set statsByMonth(value: Array<string>) {
+    this.set("statsByMonth", Value.fromStringArray(value));
+  }
+
+  get statsByYear(): Array<string> {
+    let value = this.get("statsByYear");
+    return value!.toStringArray();
+  }
+
+  set statsByYear(value: Array<string>) {
+    this.set("statsByYear", Value.fromStringArray(value));
+  }
+
   get childrenSlicers(): Array<string> {
     let value = this.get("childrenSlicers");
     return value!.toStringArray();
@@ -292,6 +355,728 @@ export class Slicer extends Entity {
 
   set purchaseData(value: Array<string>) {
     this.set("purchaseData", Value.fromStringArray(value));
+  }
+}
+
+export class SlicerStatsByDay extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SlicerStatsByDay entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerStatsByDay must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerStatsByDay", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerStatsByDay | null {
+    return changetype<SlicerStatsByDay | null>(
+      store.get("SlicerStatsByDay", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get day(): BigInt {
+    let value = this.get("day");
+    return value!.toBigInt();
+  }
+
+  set day(value: BigInt) {
+    this.set("day", Value.fromBigInt(value));
+  }
+
+  get week(): string {
+    let value = this.get("week");
+    return value!.toString();
+  }
+
+  set week(value: string) {
+    this.set("week", Value.fromString(value));
+  }
+
+  get month(): string {
+    let value = this.get("month");
+    return value!.toString();
+  }
+
+  set month(value: string) {
+    this.set("month", Value.fromString(value));
+  }
+
+  get year(): string {
+    let value = this.get("year");
+    return value!.toString();
+  }
+
+  set year(value: string) {
+    this.set("year", Value.fromString(value));
+  }
+
+  get totalOrders(): BigInt {
+    let value = this.get("totalOrders");
+    return value!.toBigInt();
+  }
+
+  set totalOrders(value: BigInt) {
+    this.set("totalOrders", Value.fromBigInt(value));
+  }
+
+  get totalProductsPurchased(): BigInt {
+    let value = this.get("totalProductsPurchased");
+    return value!.toBigInt();
+  }
+
+  set totalProductsPurchased(value: BigInt) {
+    this.set("totalProductsPurchased", Value.fromBigInt(value));
+  }
+
+  get totalEarnedUsdc(): BigInt {
+    let value = this.get("totalEarnedUsdc");
+    return value!.toBigInt();
+  }
+
+  set totalEarnedUsdc(value: BigInt) {
+    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  }
+
+  get totalEarnedByCurrency(): Array<string> {
+    let value = this.get("totalEarnedByCurrency");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByCurrency(value: Array<string>) {
+    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  }
+}
+
+export class SlicerStatsByWeek extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SlicerStatsByWeek entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerStatsByWeek must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerStatsByWeek", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerStatsByWeek | null {
+    return changetype<SlicerStatsByWeek | null>(
+      store.get("SlicerStatsByWeek", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get week(): BigInt {
+    let value = this.get("week");
+    return value!.toBigInt();
+  }
+
+  set week(value: BigInt) {
+    this.set("week", Value.fromBigInt(value));
+  }
+
+  get month(): string {
+    let value = this.get("month");
+    return value!.toString();
+  }
+
+  set month(value: string) {
+    this.set("month", Value.fromString(value));
+  }
+
+  get year(): string {
+    let value = this.get("year");
+    return value!.toString();
+  }
+
+  set year(value: string) {
+    this.set("year", Value.fromString(value));
+  }
+
+  get totalOrders(): BigInt {
+    let value = this.get("totalOrders");
+    return value!.toBigInt();
+  }
+
+  set totalOrders(value: BigInt) {
+    this.set("totalOrders", Value.fromBigInt(value));
+  }
+
+  get totalProductsPurchased(): BigInt {
+    let value = this.get("totalProductsPurchased");
+    return value!.toBigInt();
+  }
+
+  set totalProductsPurchased(value: BigInt) {
+    this.set("totalProductsPurchased", Value.fromBigInt(value));
+  }
+
+  get totalEarnedUsdc(): BigInt {
+    let value = this.get("totalEarnedUsdc");
+    return value!.toBigInt();
+  }
+
+  set totalEarnedUsdc(value: BigInt) {
+    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  }
+
+  get totalEarnedByCurrency(): Array<string> {
+    let value = this.get("totalEarnedByCurrency");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByCurrency(value: Array<string>) {
+    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  }
+}
+
+export class SlicerStatsByMonth extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SlicerStatsByMonth entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerStatsByMonth must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerStatsByMonth", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerStatsByMonth | null {
+    return changetype<SlicerStatsByMonth | null>(
+      store.get("SlicerStatsByMonth", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get month(): BigInt {
+    let value = this.get("month");
+    return value!.toBigInt();
+  }
+
+  set month(value: BigInt) {
+    this.set("month", Value.fromBigInt(value));
+  }
+
+  get year(): string {
+    let value = this.get("year");
+    return value!.toString();
+  }
+
+  set year(value: string) {
+    this.set("year", Value.fromString(value));
+  }
+
+  get totalOrders(): BigInt {
+    let value = this.get("totalOrders");
+    return value!.toBigInt();
+  }
+
+  set totalOrders(value: BigInt) {
+    this.set("totalOrders", Value.fromBigInt(value));
+  }
+
+  get totalProductsPurchased(): BigInt {
+    let value = this.get("totalProductsPurchased");
+    return value!.toBigInt();
+  }
+
+  set totalProductsPurchased(value: BigInt) {
+    this.set("totalProductsPurchased", Value.fromBigInt(value));
+  }
+
+  get totalEarnedUsdc(): BigInt {
+    let value = this.get("totalEarnedUsdc");
+    return value!.toBigInt();
+  }
+
+  set totalEarnedUsdc(value: BigInt) {
+    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  }
+
+  get totalEarnedByCurrency(): Array<string> {
+    let value = this.get("totalEarnedByCurrency");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByCurrency(value: Array<string>) {
+    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  }
+}
+
+export class SlicerStatsByYear extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SlicerStatsByYear entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerStatsByYear must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerStatsByYear", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerStatsByYear | null {
+    return changetype<SlicerStatsByYear | null>(
+      store.get("SlicerStatsByYear", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get year(): BigInt {
+    let value = this.get("year");
+    return value!.toBigInt();
+  }
+
+  set year(value: BigInt) {
+    this.set("year", Value.fromBigInt(value));
+  }
+
+  get totalOrders(): BigInt {
+    let value = this.get("totalOrders");
+    return value!.toBigInt();
+  }
+
+  set totalOrders(value: BigInt) {
+    this.set("totalOrders", Value.fromBigInt(value));
+  }
+
+  get totalProductsPurchased(): BigInt {
+    let value = this.get("totalProductsPurchased");
+    return value!.toBigInt();
+  }
+
+  set totalProductsPurchased(value: BigInt) {
+    this.set("totalProductsPurchased", Value.fromBigInt(value));
+  }
+
+  get totalEarnedUsdc(): BigInt {
+    let value = this.get("totalEarnedUsdc");
+    return value!.toBigInt();
+  }
+
+  set totalEarnedUsdc(value: BigInt) {
+    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  }
+
+  get totalEarnedByCurrency(): Array<string> {
+    let value = this.get("totalEarnedByCurrency");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByCurrency(value: Array<string>) {
+    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  }
+}
+
+export class CurrencySlicerDay extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CurrencySlicerDay entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CurrencySlicerDay must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CurrencySlicerDay", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CurrencySlicerDay | null {
+    return changetype<CurrencySlicerDay | null>(
+      store.get("CurrencySlicerDay", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get currencySlicer(): string {
+    let value = this.get("currencySlicer");
+    return value!.toString();
+  }
+
+  set currencySlicer(value: string) {
+    this.set("currencySlicer", Value.fromString(value));
+  }
+
+  get slicerDay(): string {
+    let value = this.get("slicerDay");
+    return value!.toString();
+  }
+
+  set slicerDay(value: string) {
+    this.set("slicerDay", Value.fromString(value));
+  }
+
+  get totalEarned(): BigInt {
+    let value = this.get("totalEarned");
+    return value!.toBigInt();
+  }
+
+  set totalEarned(value: BigInt) {
+    this.set("totalEarned", Value.fromBigInt(value));
+  }
+}
+
+export class CurrencySlicerWeek extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CurrencySlicerWeek entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CurrencySlicerWeek must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CurrencySlicerWeek", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CurrencySlicerWeek | null {
+    return changetype<CurrencySlicerWeek | null>(
+      store.get("CurrencySlicerWeek", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get currencySlicer(): string {
+    let value = this.get("currencySlicer");
+    return value!.toString();
+  }
+
+  set currencySlicer(value: string) {
+    this.set("currencySlicer", Value.fromString(value));
+  }
+
+  get slicerWeek(): string {
+    let value = this.get("slicerWeek");
+    return value!.toString();
+  }
+
+  set slicerWeek(value: string) {
+    this.set("slicerWeek", Value.fromString(value));
+  }
+
+  get totalEarned(): BigInt {
+    let value = this.get("totalEarned");
+    return value!.toBigInt();
+  }
+
+  set totalEarned(value: BigInt) {
+    this.set("totalEarned", Value.fromBigInt(value));
+  }
+}
+
+export class CurrencySlicerMonth extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CurrencySlicerMonth entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CurrencySlicerMonth must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CurrencySlicerMonth", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CurrencySlicerMonth | null {
+    return changetype<CurrencySlicerMonth | null>(
+      store.get("CurrencySlicerMonth", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get currencySlicer(): string {
+    let value = this.get("currencySlicer");
+    return value!.toString();
+  }
+
+  set currencySlicer(value: string) {
+    this.set("currencySlicer", Value.fromString(value));
+  }
+
+  get slicerMonth(): string {
+    let value = this.get("slicerMonth");
+    return value!.toString();
+  }
+
+  set slicerMonth(value: string) {
+    this.set("slicerMonth", Value.fromString(value));
+  }
+
+  get totalEarned(): BigInt {
+    let value = this.get("totalEarned");
+    return value!.toBigInt();
+  }
+
+  set totalEarned(value: BigInt) {
+    this.set("totalEarned", Value.fromBigInt(value));
+  }
+}
+
+export class CurrencySlicerYear extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CurrencySlicerYear entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CurrencySlicerYear must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CurrencySlicerYear", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CurrencySlicerYear | null {
+    return changetype<CurrencySlicerYear | null>(
+      store.get("CurrencySlicerYear", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get currencySlicer(): string {
+    let value = this.get("currencySlicer");
+    return value!.toString();
+  }
+
+  set currencySlicer(value: string) {
+    this.set("currencySlicer", Value.fromString(value));
+  }
+
+  get slicerYear(): string {
+    let value = this.get("slicerYear");
+    return value!.toString();
+  }
+
+  set slicerYear(value: string) {
+    this.set("slicerYear", Value.fromString(value));
+  }
+
+  get totalEarned(): BigInt {
+    let value = this.get("totalEarned");
+    return value!.toBigInt();
+  }
+
+  set totalEarned(value: BigInt) {
+    this.set("totalEarned", Value.fromBigInt(value));
   }
 }
 
@@ -970,6 +1755,51 @@ export class CurrencySlicer extends Entity {
 
   set creatorFeePaid(value: BigInt) {
     this.set("creatorFeePaid", Value.fromBigInt(value));
+  }
+
+  get totalEarned(): BigInt {
+    let value = this.get("totalEarned");
+    return value!.toBigInt();
+  }
+
+  set totalEarned(value: BigInt) {
+    this.set("totalEarned", Value.fromBigInt(value));
+  }
+
+  get totalEarnedByDay(): Array<string> {
+    let value = this.get("totalEarnedByDay");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByDay(value: Array<string>) {
+    this.set("totalEarnedByDay", Value.fromStringArray(value));
+  }
+
+  get totalEarnedByWeek(): Array<string> {
+    let value = this.get("totalEarnedByWeek");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByWeek(value: Array<string>) {
+    this.set("totalEarnedByWeek", Value.fromStringArray(value));
+  }
+
+  get totalEarnedByMonth(): Array<string> {
+    let value = this.get("totalEarnedByMonth");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByMonth(value: Array<string>) {
+    this.set("totalEarnedByMonth", Value.fromStringArray(value));
+  }
+
+  get totalEarnedByYear(): Array<string> {
+    let value = this.get("totalEarnedByYear");
+    return value!.toStringArray();
+  }
+
+  set totalEarnedByYear(value: Array<string>) {
+    this.set("totalEarnedByYear", Value.fromStringArray(value));
   }
 
   get releaseEvents(): Array<string> {

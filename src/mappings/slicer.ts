@@ -37,6 +37,7 @@ export function handleReleased(event: ReleasedEvent): void {
     currencySlicer.released = amountReleased
     currencySlicer.releasedToProtocol = protocolPayment
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+    currencySlicer.totalEarned = BigInt.fromI32(0)
   } else {
     currencySlicer.released = currencySlicer.released.plus(amountReleased)
     currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
@@ -83,6 +84,7 @@ export function handleReleasedV2(event: ReleasedEventV2): void {
     currencySlicer.released = amountReleased
     currencySlicer.releasedToProtocol = protocolPayment
     currencySlicer.creatorFeePaid = creatorPayment
+    currencySlicer.totalEarned = BigInt.fromI32(0)
   } else {
     currencySlicer.released = currencySlicer.released.plus(amountReleased)
     currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
@@ -163,6 +165,7 @@ export function handleCurrenciesAdded(event: CurrenciesAddedEvent): void {
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+      currencySlicer.totalEarned = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }

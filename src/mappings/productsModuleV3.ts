@@ -4,7 +4,6 @@ import {
   Product,
   PayeeSlicer,
   ProductPurchase,
-  Slicer,
   ProductPrices,
   CurrencySlicer,
   ExtraCost,
@@ -22,6 +21,10 @@ import {
   PurchaseMade as PurchaseMadeEvent
 } from "../../generated/ProductsModuleV3/ProductsModule"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
+import {
+  updateSlicerStats,
+  updateSlicerStatsTotalOrders
+} from "../helpers/updateSlicerStats"
 
 export function handleProductAddedV3(event: ProductAddedEvent): void {
   let slicerId = event.params.slicerId.toHex()
@@ -100,6 +103,7 @@ export function handleProductAddedV3(event: ProductAddedEvent): void {
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+      currencySlicer.totalEarned = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -149,6 +153,7 @@ export function handleProductInfoChangedV3(
       currencySlicer.released = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+      currencySlicer.totalEarned = BigInt.fromI32(0)
       currencySlicer.save()
     }
   }
@@ -204,6 +209,14 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   }
 
   if (totalPaymentCurrency != BigInt.fromI32(0)) {
+    updateSlicerStats(
+      slicerId,
+      currency,
+      totalPaymentCurrency,
+      quantity,
+      event.block.timestamp
+    )
+
     let payeeSlicerCurrency = PayeeSlicerCurrency.load(
       buyerAddress + "-" + slicerId + "-" + currency
     )
@@ -238,6 +251,15 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   }
 
   if (totalPaymentEth != BigInt.fromI32(0)) {
+    updateSlicerStats(
+      slicerId,
+      address0.toHexString(),
+      totalPaymentEth,
+      // If there is a payment in currency, we don't want to count the quantity twice
+      totalPaymentCurrency != BigInt.fromI32(0) ? BigInt.fromI32(0) : quantity,
+      event.block.timestamp
+    )
+
     let payeeSlicerCurrency = PayeeSlicerCurrency.load(
       buyerAddress + "-" + slicerId + "-" + address0String
     )
@@ -383,6 +405,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
         referrerPayee.save()
       }
     }
+
+    updateSlicerStatsTotalOrders(slicerId, event.block.timestamp)
 
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
