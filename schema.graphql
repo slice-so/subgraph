@@ -56,6 +56,7 @@ type SlicerStatsByDay @entity {
 type SlicerStatsByWeek @entity {
   id: ID!
   slicer: Slicer!
+  days: [SlicerStatsByDay!]! @derivedFrom(field: "week")
   week: BigInt!
   month: SlicerStatsByMonth!
   year: SlicerStatsByYear!
@@ -69,6 +70,8 @@ type SlicerStatsByWeek @entity {
 type SlicerStatsByMonth @entity {
   id: ID!
   slicer: Slicer!
+  days: [SlicerStatsByDay!]! @derivedFrom(field: "month")
+  weeks: [SlicerStatsByWeek!]! @derivedFrom(field: "month")
   month: BigInt!
   year: SlicerStatsByYear!
   totalOrders: BigInt!
@@ -81,6 +84,9 @@ type SlicerStatsByMonth @entity {
 type SlicerStatsByYear @entity {
   id: ID!
   slicer: Slicer!
+  days: [SlicerStatsByDay!]! @derivedFrom(field: "year")
+  weeks: [SlicerStatsByWeek!]! @derivedFrom(field: "year")
+  months: [SlicerStatsByMonth!]! @derivedFrom(field: "year")
   year: BigInt!
   totalOrders: BigInt!
   totalProductsPurchased: BigInt!
@@ -186,9 +192,13 @@ type PayeeCurrency @entity {
   payee: Payee!
   currency: Currency!
   toWithdraw: BigInt!
+  # toWithdrawUsd: BigInt!
   toPayToProtocol: BigInt!
+  # toPayToProtocolUsd: BigInt!
   withdrawn: BigInt!
+  # withdrawnUsd: BigInt!
   paidToProtocol: BigInt!
+  # paidToProtocolUsd: BigInt!
   totalCreatorFees: BigInt!
   totalReferralFees: BigInt!
   slicerPayments: [PayeeSlicerCurrency!]! @derivedFrom(field: "payeeCurrency")
@@ -199,8 +209,11 @@ type CurrencySlicer @entity {
   currency: Currency!
   slicer: Slicer!
   released: BigInt!
+  # releasedUsd: BigInt!
   releasedToProtocol: BigInt!
+  # releasedToProtocolUsd: BigInt!
   creatorFeePaid: BigInt!
+  # creatorFeePaidUsd: BigInt!
 
   totalEarned: BigInt!
   totalEarnedByDay: [CurrencySlicerDay!]! @derivedFrom(field: "currencySlicer")
