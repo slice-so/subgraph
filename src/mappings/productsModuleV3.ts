@@ -10,7 +10,8 @@ import {
   PayeeCurrency,
   PayeeSlicerCurrency,
   Order,
-  PurchaseData
+  PurchaseData,
+  SlicerOrder
 } from "../../generated/schema"
 import {
   ProductAdded as ProductAddedEvent,
@@ -418,14 +419,26 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       }
     }
 
-    updateSlicerStatsTotalOrders(slicerId, event.block.timestamp)
-
     order = new Order(event.transaction.hash.toHexString())
     order.timestamp = event.block.timestamp
     order.payer = event.transaction.from.toHexString() // TODO: Fix, this should be msg.sender not tx.origin
     order.buyer = buyerAddress
     order.referrer = referrer.toHexString()
     order.save()
+  }
+
+  let slicerOrder = SlicerOrder.load(
+    slicerId + "-" + event.transaction.hash.toHexString()
+  )
+  if (!slicerOrder) {
+    updateSlicerStatsTotalOrders(slicerId, event.block.timestamp)
+
+    slicerOrder = new SlicerOrder(
+      slicerId + "-" + event.transaction.hash.toHexString()
+    )
+    slicerOrder.slicer = slicerId
+    slicerOrder.order = event.transaction.hash.toHexString()
+    slicerOrder.save()
   }
 
   purchaseData.save()

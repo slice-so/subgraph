@@ -6,7 +6,9 @@ const usdcAddress = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
 const eurcAddress = "0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42"
 
 export function getUsdcAmount(currencyAddress: string, amount: BigInt): BigInt {
-  if (currencyAddress.toLowerCase() === usdcAddress.toLowerCase()) {
+  if (amount.isZero()) {
+    return BigInt.fromI32(0)
+  } else if (currencyAddress.toLowerCase() === usdcAddress.toLowerCase()) {
     return amount
   } else if (
     currencyAddress === address0.toHexString() ||

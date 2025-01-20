@@ -1,4 +1,5 @@
 import {
+  Slicer,
   CurrencySlicer,
   SlicerStatsByDay,
   SlicerStatsByWeek,
@@ -42,6 +43,13 @@ export function updateSlicerStats(
   const currentWeek = datesValues.currentWeek
   const currentDay = datesValues.currentDay
 
+  const usdcAmount = getUsdcAmount(currency, totalPaymentAmount)
+
+  let slicer = Slicer.load(slicerId)!
+  slicer.totalProductsPurchased = slicer.totalProductsPurchased.plus(quantity)
+  slicer.totalEarnedUsd = slicer.totalEarnedUsd.plus(usdcAmount)
+  slicer.save()
+
   const currencySlicerId = currency + "-" + slicerId
   let currencySlicer = CurrencySlicer.load(currencySlicerId)
 
@@ -60,8 +68,6 @@ export function updateSlicerStats(
     totalPaymentAmount
   )
   currencySlicer.save()
-
-  const usdcAmount = getUsdcAmount(currency, totalPaymentAmount)
 
   let slicerStatsByYear = SlicerStatsByYear.load(
     slicerId + "-" + currentYear.toHex()
@@ -242,6 +248,10 @@ export function updateSlicerStatsTotalOrders(
   const currentMonth = datesValues.currentMonth
   const currentWeek = datesValues.currentWeek
   const currentDay = datesValues.currentDay
+
+  let slicer = Slicer.load(slicerId)!
+  slicer.totalOrders = slicer.totalOrders.plus(BigInt.fromI32(1))
+  slicer.save()
 
   let slicerStatsByYear = SlicerStatsByYear.load(
     slicerId + "-" + currentYear.toHex()

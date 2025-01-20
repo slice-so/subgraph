@@ -365,6 +365,15 @@ export class Slicer extends Entity {
   set purchaseData(value: Array<string>) {
     this.set("purchaseData", Value.fromStringArray(value));
   }
+
+  get slicerOrders(): Array<string> {
+    let value = this.get("slicerOrders");
+    return value!.toStringArray();
+  }
+
+  set slicerOrders(value: Array<string>) {
+    this.set("slicerOrders", Value.fromStringArray(value));
+  }
 }
 
 export class SlicerStatsByDay extends Entity {
@@ -2561,6 +2570,15 @@ export class Order extends Entity {
     this.set("referrer", Value.fromString(value));
   }
 
+  get slicerOrders(): Array<string> {
+    let value = this.get("slicerOrders");
+    return value!.toStringArray();
+  }
+
+  set slicerOrders(value: Array<string>) {
+    this.set("slicerOrders", Value.fromStringArray(value));
+  }
+
   get extraCosts(): Array<string> {
     let value = this.get("extraCosts");
     return value!.toStringArray();
@@ -2577,6 +2595,56 @@ export class Order extends Entity {
 
   set purchaseData(value: Array<string>) {
     this.set("purchaseData", Value.fromStringArray(value));
+  }
+}
+
+export class SlicerOrder extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SlicerOrder entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerOrder must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerOrder", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerOrder | null {
+    return changetype<SlicerOrder | null>(store.get("SlicerOrder", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get order(): string {
+    let value = this.get("order");
+    return value!.toString();
+  }
+
+  set order(value: string) {
+    this.set("order", Value.fromString(value));
   }
 }
 

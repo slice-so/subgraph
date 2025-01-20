@@ -38,6 +38,7 @@ type Slicer @entity {
   products: [Product!]! @derivedFrom(field: "slicer")
   TokenListings: [TokenListing!]! @derivedFrom(field: "slicer")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "slicer")
+  slicerOrders: [SlicerOrder!]! @derivedFrom(field: "slicer")
   # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
@@ -299,8 +300,15 @@ type Order @entity {
   payer: Payee!
   buyer: Payee!
   referrer: Payee!
+  slicerOrders: [SlicerOrder!]! @derivedFrom(field: "order")
   extraCosts: [ExtraCost!]! @derivedFrom(field: "order")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "order")
+}
+
+type SlicerOrder @entity {
+  id: ID!
+  slicer: Slicer!
+  order: Order!
 }
 
 type ExtraCost @entity {
