@@ -11,7 +11,9 @@ import {
   PayeeSlicerCurrency,
   Order,
   PurchaseData,
-  SlicerOrder
+  SlicerOrder,
+  Slicer,
+  SlicerAddress
 } from "../../generated/schema"
 import {
   ProductAdded as ProductAddedEvent,
@@ -319,9 +321,10 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
     currency,
     totalPaymentCurrency
   )
-  pp.totalPaymentUsd = pp.totalPaymentUsd.plus(
-    totalPaymentUsdFromEth.plus(totalPaymentUsdFromCurrency)
+  const totalPaymentUsd = totalPaymentUsdFromEth.plus(
+    totalPaymentUsdFromCurrency
   )
+  pp.totalPaymentUsd = pp.totalPaymentUsd.plus(totalPaymentUsd)
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -437,9 +440,14 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       slicerId + "-" + event.transaction.hash.toHexString()
     )
     slicerOrder.slicer = slicerId
+    slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
-    slicerOrder.save()
+  } else {
+    slicerOrder.totalAmountUsd = slicerOrder.totalAmountUsd.plus(
+      totalPaymentUsd
+    )
   }
+  slicerOrder.save()
 
   purchaseData.save()
   pp.save()
@@ -486,6 +494,29 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
     order.buyer = address0.toHexString()
     order.referrer = address0.toHexString()
     order.save()
+  }
+
+  let slicer = SlicerAddress.load(recipient.toHexString())
+
+  if (slicer) {
+    let slicerId = slicer.slicer
+    let slicerOrder = SlicerOrder.load(
+      slicerId + "-" + event.transaction.hash.toHexString()
+    )
+
+    if (!slicerOrder) {
+      updateSlicerStatsTotalOrders(slicerId, event.block.timestamp)
+
+      slicerOrder = new SlicerOrder(
+        slicerId + "-" + event.transaction.hash.toHexString()
+      )
+      slicerOrder.slicer = slicerId
+      slicerOrder.totalAmountUsd = amountUsd
+      slicerOrder.order = event.transaction.hash.toHexString()
+    } else {
+      slicerOrder.totalAmountUsd = slicerOrder.totalAmountUsd.plus(amountUsd)
+    }
+    slicerOrder.save()
   }
   extraCost.save()
 }

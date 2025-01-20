@@ -376,6 +376,47 @@ export class Slicer extends Entity {
   }
 }
 
+export class SlicerAddress extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SlicerAddress entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerAddress must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerAddress", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerAddress | null {
+    return changetype<SlicerAddress | null>(store.get("SlicerAddress", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+}
+
 export class SlicerStatsByDay extends Entity {
   constructor(id: string) {
     super();
@@ -2629,6 +2670,15 @@ export class SlicerOrder extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get totalAmountUsd(): BigInt {
+    let value = this.get("totalAmountUsd");
+    return value!.toBigInt();
+  }
+
+  set totalAmountUsd(value: BigInt) {
+    this.set("totalAmountUsd", Value.fromBigInt(value));
+  }
+
   get slicer(): string {
     let value = this.get("slicer");
     return value!.toString();
@@ -2677,6 +2727,23 @@ export class ExtraCost extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string | null {
+    let value = this.get("slicer");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set slicer(value: string | null) {
+    if (!value) {
+      this.unset("slicer");
+    } else {
+      this.set("slicer", Value.fromString(<string>value));
+    }
   }
 
   get order(): string {

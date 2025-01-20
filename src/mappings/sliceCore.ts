@@ -3,7 +3,8 @@ import {
   Payee,
   PayeeSlicer,
   CurrencySlicer,
-  Currency
+  Currency,
+  SlicerAddress
 } from "../../generated/schema"
 import {
   TokenSliced as TokenSlicedEventV1,
@@ -54,6 +55,10 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   let currencies = event.params.currencies
   // currencies.push(slcAddress)
   currencies.push(address0)
+
+  let slicerAddressEntity = new SlicerAddress(slicerAddress.toHexString())
+  slicerAddressEntity.slicer = slicerId
+  slicerAddressEntity.save()
 
   let slicer = new SlicerEntity(slicerId)
 
@@ -190,6 +195,10 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   let currencies = params.currencies
   // currencies.push(slcAddress)
   currencies.push(address0)
+
+  let slicerAddressEntity = new SlicerAddress(slicerAddress.toHexString())
+  slicerAddressEntity.slicer = slicerId
+  slicerAddressEntity.save()
 
   let slicer = new SlicerEntity(slicerId)
 

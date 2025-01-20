@@ -42,6 +42,11 @@ type Slicer @entity {
   # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
+type SlicerAddress @entity {
+  id: ID!
+  slicer: Slicer!
+}
+
 type SlicerStatsByDay @entity {
   id: ID!
   slicer: Slicer!
@@ -307,13 +312,14 @@ type Order @entity {
 
 type SlicerOrder @entity {
   id: ID!
+  totalAmountUsd: BigInt!
   slicer: Slicer!
   order: Order!
 }
 
 type ExtraCost @entity {
   id: ID!
-  # slicer: Slicer // TODO: Add relation to slicer
+  slicer: Slicer
   order: Order!
   recipient: Bytes!
   currency: Currency!
