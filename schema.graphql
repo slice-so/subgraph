@@ -318,6 +318,7 @@ type ExtraCost @entity {
   recipient: Bytes!
   currency: Currency!
   amount: BigInt!
+  amountUsd: BigInt!
   description: String!
 }
 

@@ -449,6 +449,7 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
   const txHash = event.transaction.hash.toHexString()
   let currency = event.params.currency.toHex()
   let amount = event.params.amount
+  let amountUsd = getUsdcAmount(currency, amount)
   let description = event.params.description
   let recipient = event.params.recipient
 
@@ -463,9 +464,11 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
     extraCost.recipient = recipient
     extraCost.currency = currency
     extraCost.amount = amount
+    extraCost.amountUsd = amountUsd
     extraCost.description = description
   } else {
     extraCost.amount = extraCost.amount.plus(amount)
+    extraCost.amountUsd = extraCost.amountUsd.plus(amountUsd)
   }
 
   let order = Order.load(event.transaction.hash.toHexString())
