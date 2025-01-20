@@ -33,6 +33,7 @@ import {
   updateSlicerStats,
   updateSlicerStatsTotalOrders
 } from "../helpers/updateSlicerStats"
+import { getUsdcAmount } from "../helpers/getUsdcAmount"
 
 export function handleProductAddedV1(event: ProductAddedEventV1): void {
   let slicerId = event.params.slicerId.toHex()
@@ -402,11 +403,17 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     pp.buyer = buyerAddress
     pp.totalPaymentEth = BigInt.fromI32(0)
     pp.totalPaymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentUsd = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
   pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
   pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(paymentCurrency)
+  const paymentUsdFromEth = getUsdcAmount(currency, totalPaymentEth)
+  const paymentUsdFromCurrency = getUsdcAmount(currency, paymentCurrency)
+  pp.totalPaymentUsd = pp.totalPaymentUsd.plus(
+    paymentUsdFromEth.plus(paymentUsdFromCurrency)
+  )
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
@@ -587,12 +594,21 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     pp.buyer = buyerAddress
     pp.totalPaymentEth = BigInt.fromI32(0)
     pp.totalPaymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentUsd = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
   pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
   pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(totalPaymentCurrency)
+  const totalPaymentUsdFromEth = getUsdcAmount(currency, totalPaymentEth)
+  const totalPaymentUsdFromCurrency = getUsdcAmount(
+    currency,
+    totalPaymentCurrency
+  )
+  pp.totalPaymentUsd = pp.totalPaymentUsd.plus(
+    totalPaymentUsdFromEth.plus(totalPaymentUsdFromCurrency)
+  )
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))

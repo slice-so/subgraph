@@ -266,6 +266,7 @@ type ProductPurchase @entity {
   buyer: Payee!
   totalPaymentEth: BigInt!
   totalPaymentCurrency: BigInt!
+  totalPaymentUsd: BigInt!
   lastPurchasedAtTimestamp: BigInt!
   totalQuantity: BigInt!
   totalPurchases: BigInt!

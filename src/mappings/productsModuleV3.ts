@@ -25,6 +25,7 @@ import {
   updateSlicerStats,
   updateSlicerStatsTotalOrders
 } from "../helpers/updateSlicerStats"
+import { getUsdcAmount } from "../helpers/getUsdcAmount"
 
 export function handleProductAddedV3(event: ProductAddedEvent): void {
   let slicerId = event.params.slicerId.toHex()
@@ -306,11 +307,20 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
     pp.buyer = buyerAddress
     pp.totalPaymentEth = BigInt.fromI32(0)
     pp.totalPaymentCurrency = BigInt.fromI32(0)
+    pp.totalPaymentUsd = BigInt.fromI32(0)
     pp.totalPurchases = BigInt.fromI32(0)
     pp.totalQuantity = BigInt.fromI32(0)
   }
   pp.totalPaymentEth = pp.totalPaymentEth.plus(totalPaymentEth)
   pp.totalPaymentCurrency = pp.totalPaymentCurrency.plus(totalPaymentCurrency)
+  const totalPaymentUsdFromEth = getUsdcAmount(currency, totalPaymentEth)
+  const totalPaymentUsdFromCurrency = getUsdcAmount(
+    currency,
+    totalPaymentCurrency
+  )
+  pp.totalPaymentUsd = pp.totalPaymentUsd.plus(
+    totalPaymentUsdFromEth.plus(totalPaymentUsdFromCurrency)
+  )
   pp.lastPurchasedAtTimestamp = event.block.timestamp
 
   let totalPurchases = pp.totalPurchases.plus(BigInt.fromI32(1))
