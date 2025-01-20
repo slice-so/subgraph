@@ -431,9 +431,10 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   purchaseData.timestamp = event.block.timestamp
   purchaseData.paymentEth = totalPaymentEth
   purchaseData.paymentCurrency = paymentCurrency
+  purchaseData.paymentUsd = totalPaymentUsd
   purchaseData.referralEth = BigInt.fromI32(0)
   purchaseData.referralCurrency = BigInt.fromI32(0)
-
+  purchaseData.referralUsd = BigInt.fromI32(0)
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
   let order = Order.load(event.transaction.hash.toHexString())
@@ -644,10 +645,24 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   purchaseData.timestamp = event.block.timestamp
   purchaseData.paymentEth = paymentEth
   purchaseData.paymentCurrency = paymentCurrency
+  const paymentUsdFromEth = getUsdcAmount(currency, paymentEth)
+  const paymentUsdFromCurrency = getUsdcAmount(currency, paymentCurrency)
+  const paymentUsd = paymentUsdFromEth.plus(paymentUsdFromCurrency)
+  purchaseData.paymentUsd = paymentUsd
   purchaseData.externalPaymentEth = extPaymentEth
   purchaseData.externalPaymentCurrency = extPaymentCurrency
+  const externalPaymentUsdFromEth = getUsdcAmount(currency, extPaymentEth)
+  const externalPaymentUsdFromCurrency = getUsdcAmount(
+    currency,
+    extPaymentCurrency
+  )
+  const externalPaymentUsd = externalPaymentUsdFromEth.plus(
+    externalPaymentUsdFromCurrency
+  )
+  purchaseData.externalPaymentUsd = externalPaymentUsd
   purchaseData.referralEth = BigInt.fromI32(0)
   purchaseData.referralCurrency = BigInt.fromI32(0)
+  purchaseData.referralUsd = BigInt.fromI32(0)
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
 

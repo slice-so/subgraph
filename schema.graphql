@@ -290,10 +290,13 @@ type PurchaseData @entity {
   quantity: BigInt!
   paymentEth: BigInt!
   paymentCurrency: BigInt!
+  paymentUsd: BigInt!
   externalPaymentEth: BigInt!
   externalPaymentCurrency: BigInt!
+  externalPaymentUsd: BigInt!
   referralEth: BigInt!
   referralCurrency: BigInt!
+  referralUsd: BigInt!
   startPurchaseId: BigInt!
   timestamp: BigInt! # TODO: Replace with order on frontend before deprecating
   transactionHash: Bytes! # TODO: Replace with order on frontend before deprecating

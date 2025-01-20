@@ -338,12 +338,25 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
     const referralFee =
       product.referralFeeProduct || slicer.referralFeeStore || BigInt.fromI32(0)
 
-    purchaseData.referralEth = paymentEth
+    const referralAmountEth = paymentEth
       .times(referralFee)
       .div(BigInt.fromI32(10000))
-    purchaseData.referralCurrency = paymentCurrency
+    purchaseData.referralEth = referralAmountEth
+
+    const referralAmountCurrency = paymentCurrency
       .times(referralFee)
       .div(BigInt.fromI32(10000))
+    purchaseData.referralCurrency = referralAmountCurrency
+
+    const referralAmountUsdFromEth = getUsdcAmount(currency, referralAmountEth)
+    const referralAmountUsdFromCurrency = getUsdcAmount(
+      currency,
+      referralAmountCurrency
+    )
+    const referralAmountUsd = referralAmountUsdFromEth.plus(
+      referralAmountUsdFromCurrency
+    )
+    purchaseData.referralUsd = referralAmountUsd
 
     let referrerPayee = Payee.load(referrer.toHexString())
     if (!referrerPayee) {
@@ -391,8 +404,21 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   purchaseData.timestamp = event.block.timestamp
   purchaseData.paymentEth = paymentEth
   purchaseData.paymentCurrency = paymentCurrency
+  const paymentUsdFromEth = getUsdcAmount(currency, paymentEth)
+  const paymentUsdFromCurrency = getUsdcAmount(currency, paymentCurrency)
+  const paymentUsd = paymentUsdFromEth.plus(paymentUsdFromCurrency)
+  purchaseData.paymentUsd = paymentUsd
   purchaseData.externalPaymentEth = extPaymentEth
   purchaseData.externalPaymentCurrency = extPaymentCurrency
+  const externalPaymentUsdFromEth = getUsdcAmount(currency, extPaymentEth)
+  const externalPaymentUsdFromCurrency = getUsdcAmount(
+    currency,
+    extPaymentCurrency
+  )
+  const externalPaymentUsd = externalPaymentUsdFromEth.plus(
+    externalPaymentUsdFromCurrency
+  )
+  purchaseData.externalPaymentUsd = externalPaymentUsd
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
   if (event.params.parentProductId != BigInt.fromI32(0)) {
