@@ -108,6 +108,8 @@ dataSources:
       abis:
         - name: FundsModule
           file: ./abis/v1/FundsModule.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: Deposited(indexed address,indexed address,uint256,uint256)
           handler: handleDeposited
@@ -148,6 +150,8 @@ dataSources:
       abis:
         - name: SliceCore
           file: ./abis/v2/SliceCore.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: TokenSliced(indexed address,indexed uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8),indexed uint256)
           handler: handleTokenSlicedV2
@@ -304,6 +308,8 @@ templates:
       abis:
         - name: Slicer
           file: ./abis/v1/Slicer.json
+        - name: AggregatorV3Interface
+          file: ./abis/v3/AggregatorV3Interface.json
       eventHandlers:
         - event: Released(indexed address,indexed address,uint256,uint256)
           handler: handleReleased

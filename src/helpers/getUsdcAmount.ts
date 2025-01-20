@@ -8,14 +8,14 @@ const eurcAddress = "0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42"
 export function getUsdcAmount(currencyAddress: string, amount: BigInt): BigInt {
   if (amount.isZero()) {
     return BigInt.fromI32(0)
-  } else if (currencyAddress.toLowerCase() === usdcAddress.toLowerCase()) {
+  } else if (currencyAddress.toLowerCase() == usdcAddress.toLowerCase()) {
     return amount
   } else if (
-    currencyAddress === address0.toHexString() ||
-    currencyAddress.toLowerCase() === eurcAddress.toLowerCase()
+    currencyAddress.toLowerCase() == address0.toHexString().toLowerCase() ||
+    currencyAddress.toLowerCase() == eurcAddress.toLowerCase()
   ) {
     const priceFeedAddress = Address.fromString(
-      currencyAddress === address0.toHexString()
+      currencyAddress == address0.toHexString()
         ? "0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70"
         : "0xDAe398520e2B67cd3f27aeF9Cf14D93D927f8250"
     )
@@ -34,8 +34,13 @@ export function getUsdcAmount(currencyAddress: string, amount: BigInt): BigInt {
     // Convert amount to USDC (6 decimals)
     // price is in USD with 8 decimals, we need to:
     // 1. Multiply amount by price
-    // 2. Divide by 10^2 to convert from 8 decimals to 6 decimals (USDC)
-    return amount.times(price).div(BigInt.fromI32(100))
+    // 2. Divide by 10 ** decimals
+    // 3. Divide by further 10^2 to convert from 8 decimals to 6 decimals (USDC)
+    return amount.times(price).div(
+      currencyAddress.toLowerCase() == address0.toHexString().toLowerCase()
+        ? BigInt.fromI32(10).pow(20) // 18 + 2 decimals
+        : BigInt.fromI32(10).pow(8) // 6 + 2 decimals
+    )
   } else {
     // TODO: Implement price feed
     // const priceFeedAddress = Address.fromString("")
