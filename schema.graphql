@@ -26,6 +26,7 @@ type Slicer @entity {
   totalOrders: BigInt!
   totalProductsPurchased: BigInt!
   totalEarnedUsd: BigInt!
+  releasedUsd: BigInt!
   statsByDay: [SlicerStatsByDay!]! @derivedFrom(field: "slicer")
   statsByWeek: [SlicerStatsByWeek!]! @derivedFrom(field: "slicer")
   statsByMonth: [SlicerStatsByMonth!]! @derivedFrom(field: "slicer")
@@ -209,7 +210,7 @@ type CurrencySlicer @entity {
   currency: Currency!
   slicer: Slicer!
   released: BigInt!
-  # releasedUsd: BigInt!
+  releasedUsd: BigInt!
   releasedToProtocol: BigInt!
   # releasedToProtocolUsd: BigInt!
   creatorFeePaid: BigInt!
@@ -236,6 +237,7 @@ type ReleaseEvent @entity {
   payee: Payee!
   currencySlicer: CurrencySlicer!
   amountReleased: BigInt!
+  amountReleasedUsd: BigInt!
   timestamp: BigInt!
 }
 

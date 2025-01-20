@@ -50,6 +50,7 @@ export function updateSlicerStats(
     currencySlicer.currency = currency
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedUsd = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.totalEarned = BigInt.fromI32(0)
@@ -73,12 +74,12 @@ export function updateSlicerStats(
     slicerStatsByYear.year = currentYear
     slicerStatsByYear.totalOrders = BigInt.fromI32(0)
     slicerStatsByYear.totalProductsPurchased = quantity
-    slicerStatsByYear.totalEarnedUsdc = usdcAmount
+    slicerStatsByYear.totalEarnedUsd = usdcAmount
   } else {
     slicerStatsByYear.totalProductsPurchased = slicerStatsByYear.totalProductsPurchased.plus(
       quantity
     )
-    slicerStatsByYear.totalEarnedUsdc = slicerStatsByYear.totalEarnedUsdc.plus(
+    slicerStatsByYear.totalEarnedUsd = slicerStatsByYear.totalEarnedUsd.plus(
       usdcAmount
     )
   }
@@ -96,12 +97,12 @@ export function updateSlicerStats(
     slicerStatsByMonth.year = slicerId + "-" + currentYear.toHex()
     slicerStatsByMonth.totalOrders = BigInt.fromI32(0)
     slicerStatsByMonth.totalProductsPurchased = quantity
-    slicerStatsByMonth.totalEarnedUsdc = usdcAmount
+    slicerStatsByMonth.totalEarnedUsd = usdcAmount
   } else {
     slicerStatsByMonth.totalProductsPurchased = slicerStatsByMonth.totalProductsPurchased.plus(
       quantity
     )
-    slicerStatsByMonth.totalEarnedUsdc = slicerStatsByMonth.totalEarnedUsdc.plus(
+    slicerStatsByMonth.totalEarnedUsd = slicerStatsByMonth.totalEarnedUsd.plus(
       usdcAmount
     )
   }
@@ -120,12 +121,12 @@ export function updateSlicerStats(
     slicerStatsByWeek.year = slicerId + "-" + currentYear.toHex()
     slicerStatsByWeek.totalOrders = BigInt.fromI32(0)
     slicerStatsByWeek.totalProductsPurchased = quantity
-    slicerStatsByWeek.totalEarnedUsdc = usdcAmount
+    slicerStatsByWeek.totalEarnedUsd = usdcAmount
   } else {
     slicerStatsByWeek.totalProductsPurchased = slicerStatsByWeek.totalProductsPurchased.plus(
       quantity
     )
-    slicerStatsByWeek.totalEarnedUsdc = slicerStatsByWeek.totalEarnedUsdc.plus(
+    slicerStatsByWeek.totalEarnedUsd = slicerStatsByWeek.totalEarnedUsd.plus(
       usdcAmount
     )
   }
@@ -143,12 +144,12 @@ export function updateSlicerStats(
     slicerStatsByDay.year = slicerId + "-" + currentYear.toHex()
     slicerStatsByDay.totalOrders = BigInt.fromI32(0)
     slicerStatsByDay.totalProductsPurchased = quantity
-    slicerStatsByDay.totalEarnedUsdc = usdcAmount
+    slicerStatsByDay.totalEarnedUsd = usdcAmount
   } else {
     slicerStatsByDay.totalProductsPurchased = slicerStatsByDay.totalProductsPurchased.plus(
       quantity
     )
-    slicerStatsByDay.totalEarnedUsdc = slicerStatsByDay.totalEarnedUsdc.plus(
+    slicerStatsByDay.totalEarnedUsd = slicerStatsByDay.totalEarnedUsd.plus(
       usdcAmount
     )
   }
@@ -253,7 +254,7 @@ export function updateSlicerStatsTotalOrders(
     slicerStatsByYear.slicer = slicerId
     slicerStatsByYear.year = currentYear
     slicerStatsByYear.totalProductsPurchased = BigInt.fromI32(0)
-    slicerStatsByYear.totalEarnedUsdc = BigInt.fromI32(0)
+    slicerStatsByYear.totalEarnedUsd = BigInt.fromI32(0)
     slicerStatsByYear.totalOrders = BigInt.fromI32(1)
   } else {
     slicerStatsByYear.totalOrders = slicerStatsByYear.totalOrders.plus(
@@ -273,7 +274,7 @@ export function updateSlicerStatsTotalOrders(
     slicerStatsByMonth.month = currentMonth
     slicerStatsByMonth.year = slicerId + "-" + currentYear.toHex()
     slicerStatsByMonth.totalProductsPurchased = BigInt.fromI32(0)
-    slicerStatsByMonth.totalEarnedUsdc = BigInt.fromI32(0)
+    slicerStatsByMonth.totalEarnedUsd = BigInt.fromI32(0)
     slicerStatsByMonth.totalOrders = BigInt.fromI32(1)
   } else {
     slicerStatsByMonth.totalOrders = slicerStatsByMonth.totalOrders.plus(
@@ -294,7 +295,7 @@ export function updateSlicerStatsTotalOrders(
     slicerStatsByWeek.month = slicerId + "-" + currentMonth.toHex()
     slicerStatsByWeek.year = slicerId + "-" + currentYear.toHex()
     slicerStatsByWeek.totalProductsPurchased = BigInt.fromI32(0)
-    slicerStatsByWeek.totalEarnedUsdc = BigInt.fromI32(0)
+    slicerStatsByWeek.totalEarnedUsd = BigInt.fromI32(0)
     slicerStatsByWeek.totalOrders = BigInt.fromI32(1)
   } else {
     slicerStatsByWeek.totalOrders = slicerStatsByWeek.totalOrders.plus(
@@ -314,7 +315,7 @@ export function updateSlicerStatsTotalOrders(
     slicerStatsByDay.month = slicerId + "-" + currentMonth.toHex()
     slicerStatsByDay.year = slicerId + "-" + currentYear.toHex()
     slicerStatsByDay.totalProductsPurchased = BigInt.fromI32(0)
-    slicerStatsByDay.totalEarnedUsdc = BigInt.fromI32(0)
+    slicerStatsByDay.totalEarnedUsd = BigInt.fromI32(0)
     slicerStatsByDay.totalOrders = BigInt.fromI32(1)
   } else {
     slicerStatsByDay.totalOrders = slicerStatsByDay.totalOrders.plus(

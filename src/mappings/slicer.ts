@@ -20,6 +20,7 @@ import {
 } from "../../generated/templates/Slicer/Slicer"
 import { BigInt, dataSource } from "@graphprotocol/graph-ts"
 import { baseFee } from "./sliceCore"
+import { getUsdcAmount } from "../helpers/getUsdcAmount"
 
 export function handleReleased(event: ReleasedEvent): void {
   let context = dataSource.context()
@@ -27,7 +28,12 @@ export function handleReleased(event: ReleasedEvent): void {
   let payee = event.params.payee.toHexString()
   let currency = event.params.currency.toHexString()
   let amountReleased = event.params.amountReleased
+  let amountReleasedUsd = getUsdcAmount(currency, amountReleased)
   let protocolPayment = event.params.protocolPayment
+
+  let slicer = SlicerEntity.load(slicerId)!
+  slicer.releasedUsd = slicer.releasedUsd.plus(amountReleasedUsd)
+  slicer.save()
 
   let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
   if (!currencySlicer) {
@@ -35,11 +41,15 @@ export function handleReleased(event: ReleasedEvent): void {
     currencySlicer.currency = currency
     currencySlicer.slicer = slicerId
     currencySlicer.released = amountReleased
+    currencySlicer.releasedUsd = amountReleasedUsd
     currencySlicer.releasedToProtocol = protocolPayment
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.totalEarned = BigInt.fromI32(0)
   } else {
     currencySlicer.released = currencySlicer.released.plus(amountReleased)
+    currencySlicer.releasedUsd = currencySlicer.releasedUsd.plus(
+      amountReleasedUsd
+    )
     currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
       protocolPayment
     )
@@ -62,6 +72,7 @@ export function handleReleased(event: ReleasedEvent): void {
   releaseEvent.payee = payee
   releaseEvent.currencySlicer = currency + "-" + slicerId
   releaseEvent.amountReleased = amountReleased
+  releaseEvent.amountReleasedUsd = amountReleasedUsd
   releaseEvent.timestamp = event.block.timestamp
 
   releaseEvent.save()
@@ -73,8 +84,13 @@ export function handleReleasedV2(event: ReleasedEventV2): void {
   let payee = event.params.payee.toHexString()
   let currency = event.params.currency.toHexString()
   let amountReleased = event.params.amountReleased
+  let amountReleasedUsd = getUsdcAmount(currency, amountReleased)
   let protocolPayment = event.params.protocolPayment
   let creatorPayment = event.params.creatorPayment
+
+  let slicer = SlicerEntity.load(slicerId)!
+  slicer.releasedUsd = slicer.releasedUsd.plus(amountReleasedUsd)
+  slicer.save()
 
   let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
   if (!currencySlicer) {
@@ -82,11 +98,15 @@ export function handleReleasedV2(event: ReleasedEventV2): void {
     currencySlicer.currency = currency
     currencySlicer.slicer = slicerId
     currencySlicer.released = amountReleased
+    currencySlicer.releasedUsd = amountReleasedUsd
     currencySlicer.releasedToProtocol = protocolPayment
     currencySlicer.creatorFeePaid = creatorPayment
     currencySlicer.totalEarned = BigInt.fromI32(0)
   } else {
     currencySlicer.released = currencySlicer.released.plus(amountReleased)
+    currencySlicer.releasedUsd = currencySlicer.releasedUsd.plus(
+      amountReleasedUsd
+    )
     currencySlicer.releasedToProtocol = currencySlicer.releasedToProtocol.plus(
       protocolPayment
     )
@@ -137,6 +157,7 @@ export function handleReleasedV2(event: ReleasedEventV2): void {
   releaseEvent.payee = payee
   releaseEvent.currencySlicer = currency + "-" + slicerId
   releaseEvent.amountReleased = amountReleased
+  releaseEvent.amountReleasedUsd = amountReleasedUsd
   releaseEvent.timestamp = event.block.timestamp
 
   releaseEvent.save()
@@ -163,6 +184,7 @@ export function handleCurrenciesAdded(event: CurrenciesAddedEvent): void {
       currencySlicer.currency = currencyAddress
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
+      currencySlicer.releasedUsd = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.totalEarned = BigInt.fromI32(0)

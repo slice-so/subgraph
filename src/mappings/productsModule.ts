@@ -177,6 +177,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
       currencySlicer.currency = currency
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
+      currencySlicer.releasedUsd = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.totalEarned = BigInt.fromI32(0)
@@ -261,6 +262,7 @@ export function handleProductInfoChangedV2(
       currencySlicer.currency = currency
       currencySlicer.slicer = slicerId
       currencySlicer.released = BigInt.fromI32(0)
+      currencySlicer.releasedUsd = BigInt.fromI32(0)
       currencySlicer.releasedToProtocol = BigInt.fromI32(0)
       currencySlicer.creatorFeePaid = BigInt.fromI32(0)
       currencySlicer.totalEarned = BigInt.fromI32(0)

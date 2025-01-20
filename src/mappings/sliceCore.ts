@@ -81,6 +81,8 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
   slicer.referralFeeStore = BigInt.fromI32(0)
   slicer.totalOrders = BigInt.fromI32(0)
   slicer.totalProductsPurchased = BigInt.fromI32(0)
+  slicer.totalEarnedUsd = BigInt.fromI32(0)
+  slicer.releasedUsd = BigInt.fromI32(0)
 
   if (isControlled) {
     slicer.controller = creator
@@ -107,6 +109,7 @@ export function handleTokenSlicedV1(event: TokenSlicedEventV1): void {
     currencySlicer.currency = currencyAddress
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedUsd = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.totalEarned = BigInt.fromI32(0)
@@ -206,7 +209,8 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
   slicer.referralFeeStore = BigInt.fromI32(0)
   slicer.totalOrders = BigInt.fromI32(0)
   slicer.totalProductsPurchased = BigInt.fromI32(0)
-  slicer.totalEarnedUsdc = BigInt.fromI32(0)
+  slicer.totalEarnedUsd = BigInt.fromI32(0)
+  slicer.releasedUsd = BigInt.fromI32(0)
 
   let controllerPayee = Payee.load(controller)
   if (!controllerPayee) {
@@ -251,6 +255,7 @@ export function handleTokenSlicedV2(event: TokenSlicedEventV2): void {
     currencySlicer.currency = currencyAddress
     currencySlicer.slicer = slicerId
     currencySlicer.released = BigInt.fromI32(0)
+    currencySlicer.releasedUsd = BigInt.fromI32(0)
     currencySlicer.releasedToProtocol = BigInt.fromI32(0)
     currencySlicer.creatorFeePaid = BigInt.fromI32(0)
     currencySlicer.totalEarned = BigInt.fromI32(0)

@@ -258,13 +258,22 @@ export class Slicer extends Entity {
     this.set("totalProductsPurchased", Value.fromBigInt(value));
   }
 
-  get totalEarnedUsdc(): BigInt {
-    let value = this.get("totalEarnedUsdc");
+  get totalEarnedUsd(): BigInt {
+    let value = this.get("totalEarnedUsd");
     return value!.toBigInt();
   }
 
-  set totalEarnedUsdc(value: BigInt) {
-    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  set totalEarnedUsd(value: BigInt) {
+    this.set("totalEarnedUsd", Value.fromBigInt(value));
+  }
+
+  get releasedUsd(): BigInt {
+    let value = this.get("releasedUsd");
+    return value!.toBigInt();
+  }
+
+  set releasedUsd(value: BigInt) {
+    this.set("releasedUsd", Value.fromBigInt(value));
   }
 
   get statsByDay(): Array<string> {
@@ -454,13 +463,13 @@ export class SlicerStatsByDay extends Entity {
     this.set("totalProductsPurchased", Value.fromBigInt(value));
   }
 
-  get totalEarnedUsdc(): BigInt {
-    let value = this.get("totalEarnedUsdc");
+  get totalEarnedUsd(): BigInt {
+    let value = this.get("totalEarnedUsd");
     return value!.toBigInt();
   }
 
-  set totalEarnedUsdc(value: BigInt) {
-    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  set totalEarnedUsd(value: BigInt) {
+    this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
   get totalEarnedByCurrency(): Array<string> {
@@ -515,6 +524,15 @@ export class SlicerStatsByWeek extends Entity {
     this.set("slicer", Value.fromString(value));
   }
 
+  get days(): Array<string> {
+    let value = this.get("days");
+    return value!.toStringArray();
+  }
+
+  set days(value: Array<string>) {
+    this.set("days", Value.fromStringArray(value));
+  }
+
   get week(): BigInt {
     let value = this.get("week");
     return value!.toBigInt();
@@ -560,13 +578,13 @@ export class SlicerStatsByWeek extends Entity {
     this.set("totalProductsPurchased", Value.fromBigInt(value));
   }
 
-  get totalEarnedUsdc(): BigInt {
-    let value = this.get("totalEarnedUsdc");
+  get totalEarnedUsd(): BigInt {
+    let value = this.get("totalEarnedUsd");
     return value!.toBigInt();
   }
 
-  set totalEarnedUsdc(value: BigInt) {
-    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  set totalEarnedUsd(value: BigInt) {
+    this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
   get totalEarnedByCurrency(): Array<string> {
@@ -621,6 +639,24 @@ export class SlicerStatsByMonth extends Entity {
     this.set("slicer", Value.fromString(value));
   }
 
+  get days(): Array<string> {
+    let value = this.get("days");
+    return value!.toStringArray();
+  }
+
+  set days(value: Array<string>) {
+    this.set("days", Value.fromStringArray(value));
+  }
+
+  get weeks(): Array<string> {
+    let value = this.get("weeks");
+    return value!.toStringArray();
+  }
+
+  set weeks(value: Array<string>) {
+    this.set("weeks", Value.fromStringArray(value));
+  }
+
   get month(): BigInt {
     let value = this.get("month");
     return value!.toBigInt();
@@ -657,13 +693,13 @@ export class SlicerStatsByMonth extends Entity {
     this.set("totalProductsPurchased", Value.fromBigInt(value));
   }
 
-  get totalEarnedUsdc(): BigInt {
-    let value = this.get("totalEarnedUsdc");
+  get totalEarnedUsd(): BigInt {
+    let value = this.get("totalEarnedUsd");
     return value!.toBigInt();
   }
 
-  set totalEarnedUsdc(value: BigInt) {
-    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  set totalEarnedUsd(value: BigInt) {
+    this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
   get totalEarnedByCurrency(): Array<string> {
@@ -718,6 +754,33 @@ export class SlicerStatsByYear extends Entity {
     this.set("slicer", Value.fromString(value));
   }
 
+  get days(): Array<string> {
+    let value = this.get("days");
+    return value!.toStringArray();
+  }
+
+  set days(value: Array<string>) {
+    this.set("days", Value.fromStringArray(value));
+  }
+
+  get weeks(): Array<string> {
+    let value = this.get("weeks");
+    return value!.toStringArray();
+  }
+
+  set weeks(value: Array<string>) {
+    this.set("weeks", Value.fromStringArray(value));
+  }
+
+  get months(): Array<string> {
+    let value = this.get("months");
+    return value!.toStringArray();
+  }
+
+  set months(value: Array<string>) {
+    this.set("months", Value.fromStringArray(value));
+  }
+
   get year(): BigInt {
     let value = this.get("year");
     return value!.toBigInt();
@@ -745,13 +808,13 @@ export class SlicerStatsByYear extends Entity {
     this.set("totalProductsPurchased", Value.fromBigInt(value));
   }
 
-  get totalEarnedUsdc(): BigInt {
-    let value = this.get("totalEarnedUsdc");
+  get totalEarnedUsd(): BigInt {
+    let value = this.get("totalEarnedUsd");
     return value!.toBigInt();
   }
 
-  set totalEarnedUsdc(value: BigInt) {
-    this.set("totalEarnedUsdc", Value.fromBigInt(value));
+  set totalEarnedUsd(value: BigInt) {
+    this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
   get totalEarnedByCurrency(): Array<string> {
@@ -1739,6 +1802,15 @@ export class CurrencySlicer extends Entity {
     this.set("released", Value.fromBigInt(value));
   }
 
+  get releasedUsd(): BigInt {
+    let value = this.get("releasedUsd");
+    return value!.toBigInt();
+  }
+
+  set releasedUsd(value: BigInt) {
+    this.set("releasedUsd", Value.fromBigInt(value));
+  }
+
   get releasedToProtocol(): BigInt {
     let value = this.get("releasedToProtocol");
     return value!.toBigInt();
@@ -1904,6 +1976,15 @@ export class ReleaseEvent extends Entity {
 
   set amountReleased(value: BigInt) {
     this.set("amountReleased", Value.fromBigInt(value));
+  }
+
+  get amountReleasedUsd(): BigInt {
+    let value = this.get("amountReleasedUsd");
+    return value!.toBigInt();
+  }
+
+  set amountReleasedUsd(value: BigInt) {
+    this.set("amountReleasedUsd", Value.fromBigInt(value));
   }
 
   get timestamp(): BigInt {
@@ -2148,6 +2229,15 @@ export class ProductPurchase extends Entity {
     this.set("totalPaymentCurrency", Value.fromBigInt(value));
   }
 
+  get totalPaymentUsd(): BigInt {
+    let value = this.get("totalPaymentUsd");
+    return value!.toBigInt();
+  }
+
+  set totalPaymentUsd(value: BigInt) {
+    this.set("totalPaymentUsd", Value.fromBigInt(value));
+  }
+
   get lastPurchasedAtTimestamp(): BigInt {
     let value = this.get("lastPurchasedAtTimestamp");
     return value!.toBigInt();
@@ -2313,6 +2403,15 @@ export class PurchaseData extends Entity {
     this.set("paymentCurrency", Value.fromBigInt(value));
   }
 
+  get paymentUsd(): BigInt {
+    let value = this.get("paymentUsd");
+    return value!.toBigInt();
+  }
+
+  set paymentUsd(value: BigInt) {
+    this.set("paymentUsd", Value.fromBigInt(value));
+  }
+
   get externalPaymentEth(): BigInt {
     let value = this.get("externalPaymentEth");
     return value!.toBigInt();
@@ -2331,6 +2430,15 @@ export class PurchaseData extends Entity {
     this.set("externalPaymentCurrency", Value.fromBigInt(value));
   }
 
+  get externalPaymentUsd(): BigInt {
+    let value = this.get("externalPaymentUsd");
+    return value!.toBigInt();
+  }
+
+  set externalPaymentUsd(value: BigInt) {
+    this.set("externalPaymentUsd", Value.fromBigInt(value));
+  }
+
   get referralEth(): BigInt {
     let value = this.get("referralEth");
     return value!.toBigInt();
@@ -2347,6 +2455,15 @@ export class PurchaseData extends Entity {
 
   set referralCurrency(value: BigInt) {
     this.set("referralCurrency", Value.fromBigInt(value));
+  }
+
+  get referralUsd(): BigInt {
+    let value = this.get("referralUsd");
+    return value!.toBigInt();
+  }
+
+  set referralUsd(value: BigInt) {
+    this.set("referralUsd", Value.fromBigInt(value));
   }
 
   get startPurchaseId(): BigInt {
@@ -2528,6 +2645,15 @@ export class ExtraCost extends Entity {
 
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
+  }
+
+  get amountUsd(): BigInt {
+    let value = this.get("amountUsd");
+    return value!.toBigInt();
+  }
+
+  set amountUsd(value: BigInt) {
+    this.set("amountUsd", Value.fromBigInt(value));
   }
 
   get description(): string {
