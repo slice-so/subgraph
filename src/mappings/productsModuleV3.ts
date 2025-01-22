@@ -26,6 +26,7 @@ import {
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import {
   updateSlicerStats,
+  updateSlicerStatsQuantity,
   updateSlicerStatsTotalOrders
 } from "../helpers/updateSlicerStats"
 import { getUsdcAmount } from "../helpers/getUsdcAmount"
@@ -214,12 +215,13 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
     payeeSlicer.save()
   }
 
+  updateSlicerStatsQuantity(slicerId, quantity, event.block.timestamp)
+
   if (totalPaymentCurrency != BigInt.fromI32(0)) {
     updateSlicerStats(
       slicerId,
       currency,
       totalPaymentCurrency,
-      quantity,
       event.block.timestamp
     )
 
@@ -261,8 +263,6 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       slicerId,
       address0.toHexString(),
       totalPaymentEth,
-      // If there is a payment in currency, we don't want to count the quantity twice
-      totalPaymentCurrency != BigInt.fromI32(0) ? BigInt.fromI32(0) : quantity,
       event.block.timestamp
     )
 
@@ -394,6 +394,7 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   } else {
     purchaseData.referralEth = BigInt.fromI32(0)
     purchaseData.referralCurrency = BigInt.fromI32(0)
+    purchaseData.referralUsd = BigInt.fromI32(0)
   }
 
   purchaseData.slicer = slicerId
