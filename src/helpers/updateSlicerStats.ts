@@ -29,11 +29,107 @@ class Dates {
   }
 }
 
+export function updateSlicerStatsQuantity(
+  slicerId: string,
+  quantity: BigInt,
+  timestamp: BigInt
+): void {
+  const datesValues = getDates(timestamp)
+
+  const currentYear = datesValues.currentYear
+  const currentMonth = datesValues.currentMonth
+  const currentWeek = datesValues.currentWeek
+  const currentDay = datesValues.currentDay
+
+  let slicer = Slicer.load(slicerId)!
+  slicer.totalProductsPurchased = slicer.totalProductsPurchased.plus(quantity)
+  slicer.save()
+
+  let slicerStatsByYear = SlicerStatsByYear.load(
+    slicerId + "-" + currentYear.toHex()
+  )
+  if (!slicerStatsByYear) {
+    slicerStatsByYear = new SlicerStatsByYear(
+      slicerId + "-" + currentYear.toHex()
+    )
+    slicerStatsByYear.slicer = slicerId
+    slicerStatsByYear.year = currentYear
+    slicerStatsByYear.totalOrders = BigInt.fromI32(0)
+    slicerStatsByYear.totalProductsPurchased = quantity
+    slicerStatsByYear.totalEarnedUsd = BigInt.fromI32(0)
+  } else {
+    slicerStatsByYear.totalProductsPurchased = slicerStatsByYear.totalProductsPurchased.plus(
+      quantity
+    )
+  }
+  slicerStatsByYear.save()
+
+  let slicerStatsByMonth = SlicerStatsByMonth.load(
+    slicerId + "-" + currentMonth.toHex()
+  )
+  if (!slicerStatsByMonth) {
+    slicerStatsByMonth = new SlicerStatsByMonth(
+      slicerId + "-" + currentMonth.toHex()
+    )
+    slicerStatsByMonth.slicer = slicerId
+    slicerStatsByMonth.month = currentMonth
+    slicerStatsByMonth.year = slicerId + "-" + currentYear.toHex()
+    slicerStatsByMonth.totalOrders = BigInt.fromI32(0)
+    slicerStatsByMonth.totalProductsPurchased = quantity
+    slicerStatsByMonth.totalEarnedUsd = BigInt.fromI32(0)
+  } else {
+    slicerStatsByMonth.totalProductsPurchased = slicerStatsByMonth.totalProductsPurchased.plus(
+      quantity
+    )
+  }
+  slicerStatsByMonth.save()
+
+  let slicerStatsByWeek = SlicerStatsByWeek.load(
+    slicerId + "-" + currentWeek.toHex()
+  )
+  if (!slicerStatsByWeek) {
+    slicerStatsByWeek = new SlicerStatsByWeek(
+      slicerId + "-" + currentWeek.toHex()
+    )
+    slicerStatsByWeek.slicer = slicerId
+    slicerStatsByWeek.week = currentWeek
+    slicerStatsByWeek.month = slicerId + "-" + currentMonth.toHex()
+    slicerStatsByWeek.year = slicerId + "-" + currentYear.toHex()
+    slicerStatsByWeek.totalOrders = BigInt.fromI32(0)
+    slicerStatsByWeek.totalProductsPurchased = quantity
+    slicerStatsByWeek.totalEarnedUsd = BigInt.fromI32(0)
+  } else {
+    slicerStatsByWeek.totalProductsPurchased = slicerStatsByWeek.totalProductsPurchased.plus(
+      quantity
+    )
+  }
+  slicerStatsByWeek.save()
+
+  let slicerStatsByDay = SlicerStatsByDay.load(
+    slicerId + "-" + currentDay.toHex()
+  )
+  if (!slicerStatsByDay) {
+    slicerStatsByDay = new SlicerStatsByDay(slicerId + "-" + currentDay.toHex())
+    slicerStatsByDay.slicer = slicerId
+    slicerStatsByDay.day = currentDay
+    slicerStatsByDay.week = slicerId + "-" + currentWeek.toHex()
+    slicerStatsByDay.month = slicerId + "-" + currentMonth.toHex()
+    slicerStatsByDay.year = slicerId + "-" + currentYear.toHex()
+    slicerStatsByDay.totalOrders = BigInt.fromI32(0)
+    slicerStatsByDay.totalProductsPurchased = quantity
+    slicerStatsByDay.totalEarnedUsd = BigInt.fromI32(0)
+  } else {
+    slicerStatsByDay.totalProductsPurchased = slicerStatsByDay.totalProductsPurchased.plus(
+      quantity
+    )
+  }
+  slicerStatsByDay.save()
+}
+
 export function updateSlicerStats(
   slicerId: string,
   currency: string,
   totalPaymentAmount: BigInt,
-  quantity: BigInt,
   timestamp: BigInt
 ): void {
   const datesValues = getDates(timestamp)
@@ -46,7 +142,6 @@ export function updateSlicerStats(
   const usdcAmount = getUsdcAmount(currency, totalPaymentAmount)
 
   let slicer = Slicer.load(slicerId)!
-  slicer.totalProductsPurchased = slicer.totalProductsPurchased.plus(quantity)
   slicer.totalEarnedUsd = slicer.totalEarnedUsd.plus(usdcAmount)
   slicer.save()
 
@@ -71,94 +166,34 @@ export function updateSlicerStats(
 
   let slicerStatsByYear = SlicerStatsByYear.load(
     slicerId + "-" + currentYear.toHex()
+  )!
+  slicerStatsByYear.totalEarnedUsd = slicerStatsByYear.totalEarnedUsd.plus(
+    usdcAmount
   )
-  if (!slicerStatsByYear) {
-    slicerStatsByYear = new SlicerStatsByYear(
-      slicerId + "-" + currentYear.toHex()
-    )
-    slicerStatsByYear.slicer = slicerId
-    slicerStatsByYear.year = currentYear
-    slicerStatsByYear.totalOrders = BigInt.fromI32(0)
-    slicerStatsByYear.totalProductsPurchased = quantity
-    slicerStatsByYear.totalEarnedUsd = usdcAmount
-  } else {
-    slicerStatsByYear.totalProductsPurchased = slicerStatsByYear.totalProductsPurchased.plus(
-      quantity
-    )
-    slicerStatsByYear.totalEarnedUsd = slicerStatsByYear.totalEarnedUsd.plus(
-      usdcAmount
-    )
-  }
   slicerStatsByYear.save()
 
   let slicerStatsByMonth = SlicerStatsByMonth.load(
     slicerId + "-" + currentMonth.toHex()
+  )!
+  slicerStatsByMonth.totalEarnedUsd = slicerStatsByMonth.totalEarnedUsd.plus(
+    usdcAmount
   )
-  if (!slicerStatsByMonth) {
-    slicerStatsByMonth = new SlicerStatsByMonth(
-      slicerId + "-" + currentMonth.toHex()
-    )
-    slicerStatsByMonth.slicer = slicerId
-    slicerStatsByMonth.month = currentMonth
-    slicerStatsByMonth.year = slicerId + "-" + currentYear.toHex()
-    slicerStatsByMonth.totalOrders = BigInt.fromI32(0)
-    slicerStatsByMonth.totalProductsPurchased = quantity
-    slicerStatsByMonth.totalEarnedUsd = usdcAmount
-  } else {
-    slicerStatsByMonth.totalProductsPurchased = slicerStatsByMonth.totalProductsPurchased.plus(
-      quantity
-    )
-    slicerStatsByMonth.totalEarnedUsd = slicerStatsByMonth.totalEarnedUsd.plus(
-      usdcAmount
-    )
-  }
   slicerStatsByMonth.save()
 
   let slicerStatsByWeek = SlicerStatsByWeek.load(
     slicerId + "-" + currentWeek.toHex()
+  )!
+  slicerStatsByWeek.totalEarnedUsd = slicerStatsByWeek.totalEarnedUsd.plus(
+    usdcAmount
   )
-  if (!slicerStatsByWeek) {
-    slicerStatsByWeek = new SlicerStatsByWeek(
-      slicerId + "-" + currentWeek.toHex()
-    )
-    slicerStatsByWeek.slicer = slicerId
-    slicerStatsByWeek.week = currentWeek
-    slicerStatsByWeek.month = slicerId + "-" + currentMonth.toHex()
-    slicerStatsByWeek.year = slicerId + "-" + currentYear.toHex()
-    slicerStatsByWeek.totalOrders = BigInt.fromI32(0)
-    slicerStatsByWeek.totalProductsPurchased = quantity
-    slicerStatsByWeek.totalEarnedUsd = usdcAmount
-  } else {
-    slicerStatsByWeek.totalProductsPurchased = slicerStatsByWeek.totalProductsPurchased.plus(
-      quantity
-    )
-    slicerStatsByWeek.totalEarnedUsd = slicerStatsByWeek.totalEarnedUsd.plus(
-      usdcAmount
-    )
-  }
   slicerStatsByWeek.save()
 
   let slicerStatsByDay = SlicerStatsByDay.load(
     slicerId + "-" + currentDay.toHex()
+  )!
+  slicerStatsByDay.totalEarnedUsd = slicerStatsByDay.totalEarnedUsd.plus(
+    usdcAmount
   )
-  if (!slicerStatsByDay) {
-    slicerStatsByDay = new SlicerStatsByDay(slicerId + "-" + currentDay.toHex())
-    slicerStatsByDay.slicer = slicerId
-    slicerStatsByDay.day = currentDay
-    slicerStatsByDay.week = slicerId + "-" + currentWeek.toHex()
-    slicerStatsByDay.month = slicerId + "-" + currentMonth.toHex()
-    slicerStatsByDay.year = slicerId + "-" + currentYear.toHex()
-    slicerStatsByDay.totalOrders = BigInt.fromI32(0)
-    slicerStatsByDay.totalProductsPurchased = quantity
-    slicerStatsByDay.totalEarnedUsd = usdcAmount
-  } else {
-    slicerStatsByDay.totalProductsPurchased = slicerStatsByDay.totalProductsPurchased.plus(
-      quantity
-    )
-    slicerStatsByDay.totalEarnedUsd = slicerStatsByDay.totalEarnedUsd.plus(
-      usdcAmount
-    )
-  }
   slicerStatsByDay.save()
 
   let currencySlicerDay = CurrencySlicerDay.load(

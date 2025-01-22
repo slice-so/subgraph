@@ -32,6 +32,7 @@ import {
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import {
   updateSlicerStats,
+  updateSlicerStatsQuantity,
   updateSlicerStatsTotalOrders
 } from "../helpers/updateSlicerStats"
 import { getUsdcAmount } from "../helpers/getUsdcAmount"
@@ -340,12 +341,13 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     payeeSlicer.save()
   }
 
+  updateSlicerStatsQuantity(slicerId, quantity, event.block.timestamp)
+
   if (paymentCurrency != BigInt.fromI32(0)) {
     updateSlicerStats(
       slicerId,
       currency,
       paymentCurrency,
-      quantity,
       event.block.timestamp
     )
 
@@ -372,8 +374,6 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       slicerId,
       address0.toHexString(),
       totalPaymentEth,
-      // If there is a payment in currency, we don't want to count the quantity twice
-      paymentCurrency != BigInt.fromI32(0) ? BigInt.fromI32(0) : quantity,
       event.block.timestamp
     )
 
@@ -516,12 +516,13 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     payeeSlicer.save()
   }
 
+  updateSlicerStatsQuantity(slicerId, quantity, event.block.timestamp)
+
   if (totalPaymentCurrency != BigInt.fromI32(0)) {
     updateSlicerStats(
       slicerId,
       currency,
       totalPaymentCurrency,
-      quantity,
       event.block.timestamp
     )
 
@@ -563,8 +564,6 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       slicerId,
       address0.toHexString(),
       totalPaymentEth,
-      // If there is a payment in currency, we don't want to count the quantity twice
-      totalPaymentCurrency != BigInt.fromI32(0) ? BigInt.fromI32(0) : quantity,
       event.block.timestamp
     )
 
