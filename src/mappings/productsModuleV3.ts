@@ -9,6 +9,7 @@ import {
   ExtraCost,
   PayeeCurrency,
   PayeeSlicerCurrency,
+  SlicerOrderTotalAmountCurrency,
   Order,
   PurchaseData,
   SlicerOrder,
@@ -422,6 +423,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   purchaseData.externalPaymentUsd = externalPaymentUsd
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
+  purchaseData.slicerOrder =
+    slicerId + "-" + event.transaction.hash.toHexString()
   if (event.params.parentProductId != BigInt.fromI32(0)) {
     purchaseData.parentSlicer = event.params.parentSlicerId.toHex()
 
@@ -467,6 +470,7 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       slicerId + "-" + event.transaction.hash.toHexString()
     )
     slicerOrder.slicer = slicerId
+    slicerOrder.timestamp = event.block.timestamp
     slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
   } else {
@@ -474,6 +478,23 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       totalPaymentUsd
     )
   }
+
+  if (totalPaymentEth != BigInt.fromI32(0)) {
+    updateSlicerOrderTotalAmountCurrency(
+      slicerOrder,
+      address0.toHexString(),
+      totalPaymentEth
+    )
+  }
+
+  if (totalPaymentCurrency != BigInt.fromI32(0)) {
+    updateSlicerOrderTotalAmountCurrency(
+      slicerOrder,
+      currency,
+      totalPaymentCurrency
+    )
+  }
+
   slicerOrder.save()
 
   purchaseData.save()
@@ -481,6 +502,7 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
 }
 
 export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
+  const address0 = new Bytes(20)
   const txHash = event.transaction.hash.toHexString()
   let currency = event.params.currency.toHex()
   let amount = event.params.amount
@@ -508,7 +530,6 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
 
   let order = Order.load(event.transaction.hash.toHexString())
   if (!order) {
-    let address0 = new Bytes(20)
     let payer = Payee.load(event.transaction.from.toHexString())
     if (!payer) {
       payer = new Payee(event.transaction.from.toHexString())
@@ -538,14 +559,45 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
         slicerId + "-" + event.transaction.hash.toHexString()
       )
       slicerOrder.slicer = slicerId
+      slicerOrder.timestamp = event.block.timestamp
       slicerOrder.totalAmountUsd = amountUsd
       slicerOrder.order = event.transaction.hash.toHexString()
     } else {
       slicerOrder.totalAmountUsd = slicerOrder.totalAmountUsd.plus(amountUsd)
     }
+
+    if (amount != BigInt.fromI32(0)) {
+      updateSlicerOrderTotalAmountCurrency(slicerOrder, currency, amount)
+    }
+
     slicerOrder.save()
   }
   extraCost.save()
+}
+
+export function updateSlicerOrderTotalAmountCurrency(
+  slicerOrder: SlicerOrder,
+  currency: string,
+  amount: BigInt
+): void {
+  let totalAmountCurrency = SlicerOrderTotalAmountCurrency.load(
+    slicerOrder.id + "-" + currency
+  )
+
+  if (!totalAmountCurrency) {
+    totalAmountCurrency = new SlicerOrderTotalAmountCurrency(
+      slicerOrder.id + "-" + currency
+    )
+    totalAmountCurrency.slicerOrder = slicerOrder.id
+    totalAmountCurrency.currency = currency
+    totalAmountCurrency.totalAmount = amount
+  } else {
+    totalAmountCurrency.totalAmount = totalAmountCurrency.totalAmount.plus(
+      amount
+    )
+  }
+
+  totalAmountCurrency.save()
 }
 
 export function handleStoreConfigChanged(event: StoreConfigChangedEvent): void {
