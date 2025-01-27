@@ -2688,13 +2688,13 @@ export class SlicerOrder extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get totalAmountCurrency(): Array<string> {
-    let value = this.get("totalAmountCurrency");
+  get totalAmountCurrencies(): Array<string> {
+    let value = this.get("totalAmountCurrencies");
     return value!.toStringArray();
   }
 
-  set totalAmountCurrency(value: Array<string>) {
-    this.set("totalAmountCurrency", Value.fromStringArray(value));
+  set totalAmountCurrencies(value: Array<string>) {
+    this.set("totalAmountCurrencies", Value.fromStringArray(value));
   }
 
   get totalAmountUsd(): BigInt {
@@ -2731,6 +2731,15 @@ export class SlicerOrder extends Entity {
 
   set purchaseData(value: Array<string>) {
     this.set("purchaseData", Value.fromStringArray(value));
+  }
+
+  get extraCosts(): Array<string> {
+    let value = this.get("extraCosts");
+    return value!.toStringArray();
+  }
+
+  set extraCosts(value: Array<string>) {
+    this.set("extraCosts", Value.fromStringArray(value));
   }
 }
 
@@ -2853,6 +2862,23 @@ export class ExtraCost extends Entity {
 
   set order(value: string) {
     this.set("order", Value.fromString(value));
+  }
+
+  get slicerOrder(): string | null {
+    let value = this.get("slicerOrder");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set slicerOrder(value: string | null) {
+    if (!value) {
+      this.unset("slicerOrder");
+    } else {
+      this.set("slicerOrder", Value.fromString(<string>value));
+    }
   }
 
   get recipient(): Bytes {

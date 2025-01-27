@@ -570,6 +570,9 @@ export function handleExtraCostPaid(event: ExtraCostPaidEvent): void {
       updateSlicerOrderTotalAmountCurrency(slicerOrder, currency, amount)
     }
 
+    extraCost.slicerOrder =
+      slicerId + "-" + event.transaction.hash.toHexString()
+
     slicerOrder.save()
   }
   extraCost.save()
