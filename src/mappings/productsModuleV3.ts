@@ -423,6 +423,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   purchaseData.externalPaymentUsd = externalPaymentUsd
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
+  purchaseData.slicerOrder =
+    slicerId + "-" + event.transaction.hash.toHexString()
   if (event.params.parentProductId != BigInt.fromI32(0)) {
     purchaseData.parentSlicer = event.params.parentSlicerId.toHex()
 

@@ -437,6 +437,9 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   purchaseData.referralCurrency = BigInt.fromI32(0)
   purchaseData.referralUsd = BigInt.fromI32(0)
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
+  purchaseData.order = event.transaction.hash.toHexString()
+  purchaseData.slicerOrder =
+    slicerId + "-" + event.transaction.hash.toHexString()
 
   let order = Order.load(event.transaction.hash.toHexString())
   if (!order) {
@@ -679,6 +682,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   purchaseData.referralUsd = BigInt.fromI32(0)
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
+  purchaseData.slicerOrder =
+    slicerId + "-" + event.transaction.hash.toHexString()
 
   pp.totalQuantity = pp.totalQuantity.plus(quantity)
 
