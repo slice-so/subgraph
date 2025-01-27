@@ -2417,6 +2417,15 @@ export class PurchaseData extends Entity {
     this.set("productPurchase", Value.fromString(value));
   }
 
+  get slicerOrder(): string {
+    let value = this.get("slicerOrder");
+    return value!.toString();
+  }
+
+  set slicerOrder(value: string) {
+    this.set("slicerOrder", Value.fromString(value));
+  }
+
   get order(): string {
     let value = this.get("order");
     return value!.toString();
@@ -2670,6 +2679,24 @@ export class SlicerOrder extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get totalAmountCurrency(): Array<string> {
+    let value = this.get("totalAmountCurrency");
+    return value!.toStringArray();
+  }
+
+  set totalAmountCurrency(value: Array<string>) {
+    this.set("totalAmountCurrency", Value.fromStringArray(value));
+  }
+
   get totalAmountUsd(): BigInt {
     let value = this.get("totalAmountUsd");
     return value!.toBigInt();
@@ -2695,6 +2722,79 @@ export class SlicerOrder extends Entity {
 
   set order(value: string) {
     this.set("order", Value.fromString(value));
+  }
+
+  get purchaseData(): Array<string> {
+    let value = this.get("purchaseData");
+    return value!.toStringArray();
+  }
+
+  set purchaseData(value: Array<string>) {
+    this.set("purchaseData", Value.fromStringArray(value));
+  }
+}
+
+export class SlicerOrderTotalAmountCurrency extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save SlicerOrderTotalAmountCurrency entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SlicerOrderTotalAmountCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SlicerOrderTotalAmountCurrency", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SlicerOrderTotalAmountCurrency | null {
+    return changetype<SlicerOrderTotalAmountCurrency | null>(
+      store.get("SlicerOrderTotalAmountCurrency", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicerOrder(): string {
+    let value = this.get("slicerOrder");
+    return value!.toString();
+  }
+
+  set slicerOrder(value: string) {
+    this.set("slicerOrder", Value.fromString(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
+  }
+
+  get totalAmount(): BigInt {
+    let value = this.get("totalAmount");
+    return value!.toBigInt();
+  }
+
+  set totalAmount(value: BigInt) {
+    this.set("totalAmount", Value.fromBigInt(value));
   }
 }
 

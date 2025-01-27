@@ -36,6 +36,7 @@ import {
   updateSlicerStatsTotalOrders
 } from "../helpers/updateSlicerStats"
 import { getUsdcAmount } from "../helpers/getUsdcAmount"
+import { updateSlicerOrderTotalAmountCurrency } from "./productsModuleV3"
 
 export function handleProductAddedV1(event: ProductAddedEventV1): void {
   let slicerId = event.params.slicerId.toHex()
@@ -457,6 +458,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       slicerId + "-" + event.transaction.hash.toHexString()
     )
     slicerOrder.slicer = slicerId
+    slicerOrder.timestamp = event.block.timestamp
     slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
   } else {
@@ -464,6 +466,19 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       totalPaymentUsd
     )
   }
+
+  if (totalPaymentEth != BigInt.fromI32(0)) {
+    updateSlicerOrderTotalAmountCurrency(
+      slicerOrder,
+      address0.toHexString(),
+      totalPaymentEth
+    )
+  }
+
+  if (paymentCurrency != BigInt.fromI32(0)) {
+    updateSlicerOrderTotalAmountCurrency(slicerOrder, currency, paymentCurrency)
+  }
+
   slicerOrder.save()
 
   purchaseData.save()
@@ -687,6 +702,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       slicerId + "-" + event.transaction.hash.toHexString()
     )
     slicerOrder.slicer = slicerId
+    slicerOrder.timestamp = event.block.timestamp
     slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
   } else {
@@ -694,6 +710,23 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       totalPaymentUsd
     )
   }
+
+  if (totalPaymentEth != BigInt.fromI32(0)) {
+    updateSlicerOrderTotalAmountCurrency(
+      slicerOrder,
+      address0.toHexString(),
+      totalPaymentEth
+    )
+  }
+
+  if (totalPaymentCurrency != BigInt.fromI32(0)) {
+    updateSlicerOrderTotalAmountCurrency(
+      slicerOrder,
+      currency,
+      totalPaymentCurrency
+    )
+  }
+
   slicerOrder.save()
 
   purchaseData.save()

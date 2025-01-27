@@ -286,6 +286,7 @@ type PurchaseData @entity {
   parentSlicer: Slicer
   parentProduct: Product
   productPurchase: ProductPurchase!
+  slicerOrder: SlicerOrder!
   order: Order!
   quantity: BigInt!
   paymentEth: BigInt!
@@ -315,9 +316,20 @@ type Order @entity {
 
 type SlicerOrder @entity {
   id: ID!
+  timestamp: BigInt!
+  totalAmountCurrency: [SlicerOrderTotalAmountCurrency!]!
+    @derivedFrom(field: "slicerOrder")
   totalAmountUsd: BigInt!
   slicer: Slicer!
   order: Order!
+  purchaseData: [PurchaseData!]! @derivedFrom(field: "slicerOrder")
+}
+
+type SlicerOrderTotalAmountCurrency @entity {
+  id: ID!
+  slicerOrder: SlicerOrder!
+  currency: Currency!
+  totalAmount: BigInt!
 }
 
 type ExtraCost @entity {
