@@ -317,7 +317,7 @@ type Order @entity {
 type SlicerOrder @entity {
   id: ID!
   timestamp: BigInt!
-  totalAmountCurrency: [SlicerOrderTotalAmountCurrency!]!
+  totalAmountCurrencies: [SlicerOrderTotalAmountCurrency!]!
     @derivedFrom(field: "slicerOrder")
   totalAmountUsd: BigInt!
   slicer: Slicer!
