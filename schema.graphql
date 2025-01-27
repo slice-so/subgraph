@@ -323,6 +323,7 @@ type SlicerOrder @entity {
   slicer: Slicer!
   order: Order!
   purchaseData: [PurchaseData!]! @derivedFrom(field: "slicerOrder")
+  extraCosts: [ExtraCost!]! @derivedFrom(field: "slicerOrder")
 }
 
 type SlicerOrderTotalAmountCurrency @entity {
@@ -336,6 +337,7 @@ type ExtraCost @entity {
   id: ID!
   slicer: Slicer
   order: Order!
+  slicerOrder: SlicerOrder
   recipient: Bytes!
   currency: Currency!
   amount: BigInt!
