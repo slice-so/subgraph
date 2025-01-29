@@ -41,7 +41,7 @@ import { updateSlicerOrderTotalAmountCurrency } from "./productsModuleV3"
 export function handleProductAddedV1(event: ProductAddedEventV1): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
-  let categoryIndex = event.params.categoryIndex
+  let categoryIndex = event.params.categoryIndex.toHexString()
   let isFree = event.params.isFree
   let maxUnitsPerBuyer = event.params.maxUnitsPerBuyer
   let isInfinite = event.params.isInfinite
@@ -58,7 +58,8 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
   let product = new Product(slicerProductId)
 
   product.slicer = slicerId
-  product.categoryIndex = categoryIndex
+  product.category = categoryIndex
+  product.subCategory = "0x0-0x0"
   product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
@@ -110,7 +111,7 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
 export function handleProductAddedV2(event: ProductAddedEventV2): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
-  let categoryIndex = event.params.categoryIndex
+  let categoryIndex = event.params.categoryIndex.toHexString()
   let creator = event.params.creator
   let params = event.params.params
   let subSlicerProducts = params.subSlicerProducts
@@ -130,7 +131,8 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
   let product = new Product(slicerProductId)
 
   product.slicer = slicerId
-  product.categoryIndex = categoryIndex
+  product.category = categoryIndex
+  product.subCategory = "0x0-0x0"
   product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
@@ -284,7 +286,8 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
   let product = Product.load(slicerId + "-" + productId)!
 
   product.isRemoved = true
-  product.categoryIndex = BigInt.fromI32(0)
+  product.category = "0x0"
+  product.subCategory = "0x0-0x0"
   product.isFree = false
   product.isInfinite = false
   product.maxUnitsPerBuyer = BigInt.fromI32(0)

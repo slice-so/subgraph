@@ -35,7 +35,7 @@ import { getUsdcAmount } from "../helpers/getUsdcAmount"
 export function handleProductAddedV3(event: ProductAddedEvent): void {
   let slicerId = event.params.slicerId.toHex()
   let productId = event.params.productId.toHex()
-  let categoryIndex = event.params.categoryIndex
+  let categoryIndex = event.params.categoryIndex.toHexString()
   let creator = event.params.creator
   let params = event.params.params
   let subSlicerProducts = params.subSlicerProducts
@@ -56,7 +56,8 @@ export function handleProductAddedV3(event: ProductAddedEvent): void {
   let product = new Product(slicerProductId)
 
   product.slicer = slicerId
-  product.categoryIndex = categoryIndex
+  product.category = categoryIndex
+  product.subCategory = "0x0-0x0"
   product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite

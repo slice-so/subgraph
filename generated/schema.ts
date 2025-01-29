@@ -1396,15 +1396,6 @@ export class Product extends Entity {
     this.set("slicer", Value.fromString(value));
   }
 
-  get categoryIndex(): BigInt {
-    let value = this.get("categoryIndex");
-    return value!.toBigInt();
-  }
-
-  set categoryIndex(value: BigInt) {
-    this.set("categoryIndex", Value.fromBigInt(value));
-  }
-
   get isRemoved(): boolean {
     let value = this.get("isRemoved");
     return value!.toBoolean();
@@ -1558,6 +1549,24 @@ export class Product extends Entity {
     this.set("referralFeeProduct", Value.fromBigInt(value));
   }
 
+  get category(): string {
+    let value = this.get("category");
+    return value!.toString();
+  }
+
+  set category(value: string) {
+    this.set("category", Value.fromString(value));
+  }
+
+  get subCategory(): string {
+    let value = this.get("subCategory");
+    return value!.toString();
+  }
+
+  set subCategory(value: string) {
+    this.set("subCategory", Value.fromString(value));
+  }
+
   get subProducts(): Array<string> {
     let value = this.get("subProducts");
     return value!.toStringArray();
@@ -1592,6 +1601,133 @@ export class Product extends Entity {
 
   set purchaseData(value: Array<string>) {
     this.set("purchaseData", Value.fromStringArray(value));
+  }
+}
+
+export class Category extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Category entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Category must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Category", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Category | null {
+    return changetype<Category | null>(store.get("Category", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get subCategories(): Array<string> {
+    let value = this.get("subCategories");
+    return value!.toStringArray();
+  }
+
+  set subCategories(value: Array<string>) {
+    this.set("subCategories", Value.fromStringArray(value));
+  }
+
+  get products(): Array<string> {
+    let value = this.get("products");
+    return value!.toStringArray();
+  }
+
+  set products(value: Array<string>) {
+    this.set("products", Value.fromStringArray(value));
+  }
+}
+
+export class SubCategory extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SubCategory entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SubCategory must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SubCategory", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SubCategory | null {
+    return changetype<SubCategory | null>(store.get("SubCategory", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get category(): string {
+    let value = this.get("category");
+    return value!.toString();
+  }
+
+  set category(value: string) {
+    this.set("category", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get products(): Array<string> {
+    let value = this.get("products");
+    return value!.toStringArray();
+  }
+
+  set products(value: Array<string>) {
+    this.set("products", Value.fromStringArray(value));
   }
 }
 

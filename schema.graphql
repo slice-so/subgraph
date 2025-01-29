@@ -160,7 +160,6 @@ type Currency @entity {
 type Product @entity {
   id: ID!
   slicer: Slicer!
-  categoryIndex: BigInt!
   isRemoved: Boolean!
   isFree: Boolean!
   isInfinite: Boolean!
@@ -178,10 +177,27 @@ type Product @entity {
   extPreferredToken: Boolean!
   totalPurchases: BigInt!
   referralFeeProduct: BigInt!
+  category: Category!
+  subCategory: SubCategory!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "product")
+}
+
+type Category @entity {
+  id: ID!
+  slicer: Slicer!
+  name: String!
+  subCategories: [SubCategory!]! @derivedFrom(field: "category")
+  products: [Product!]! @derivedFrom(field: "category")
+}
+
+type SubCategory @entity {
+  id: ID!
+  category: Category!
+  name: String!
+  products: [Product!]! @derivedFrom(field: "subCategory")
 }
 
 type PayeeSlicer @entity {
