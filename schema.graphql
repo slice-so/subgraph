@@ -187,7 +187,6 @@ type Product @entity {
 
 type Category @entity {
   id: ID!
-  slicer: Slicer!
   name: String!
   subCategories: [SubCategory!]! @derivedFrom(field: "category")
   products: [Product!]! @derivedFrom(field: "category")
