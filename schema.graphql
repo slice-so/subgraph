@@ -194,8 +194,8 @@ type Category @entity {
 
 type SubCategory @entity {
   id: ID!
-  category: Category!
   name: String!
+  category: Category!
   products: [Product!]! @derivedFrom(field: "subCategory")
 }
 

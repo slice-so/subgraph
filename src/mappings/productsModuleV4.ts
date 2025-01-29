@@ -183,6 +183,7 @@ export function handleSubCategorySet(event: SubCategorySetEvent): void {
     subCategory = new SubCategory(categoryId + "-" + subCategoryId)
   }
 
+  subCategory.category = categoryId
   subCategory.name = subCategoryName
 
   subCategory.save()
