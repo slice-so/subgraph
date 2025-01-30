@@ -1558,15 +1558,6 @@ export class Product extends Entity {
     this.set("category", Value.fromString(value));
   }
 
-  get subCategory(): string {
-    let value = this.get("subCategory");
-    return value!.toString();
-  }
-
-  set subCategory(value: string) {
-    this.set("subCategory", Value.fromString(value));
-  }
-
   get subProducts(): Array<string> {
     let value = this.get("subProducts");
     return value!.toStringArray();
@@ -1604,7 +1595,7 @@ export class Product extends Entity {
   }
 }
 
-export class Category extends Entity {
+export class ProductCategory extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1612,18 +1603,18 @@ export class Category extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Category entity without an ID");
+    assert(id != null, "Cannot save ProductCategory entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Category must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProductCategory must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Category", id.toString(), this);
+      store.set("ProductCategory", id.toString(), this);
     }
   }
 
-  static load(id: string): Category | null {
-    return changetype<Category | null>(store.get("Category", id));
+  static load(id: string): ProductCategory | null {
+    return changetype<ProductCategory | null>(store.get("ProductCategory", id));
   }
 
   get id(): string {
@@ -1635,15 +1626,6 @@ export class Category extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get slicer(): string {
-    let value = this.get("slicer");
-    return value!.toString();
-  }
-
-  set slicer(value: string) {
-    this.set("slicer", Value.fromString(value));
-  }
-
   get name(): string {
     let value = this.get("name");
     return value!.toString();
@@ -1651,6 +1633,23 @@ export class Category extends Entity {
 
   set name(value: string) {
     this.set("name", Value.fromString(value));
+  }
+
+  get parentCategory(): string | null {
+    let value = this.get("parentCategory");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set parentCategory(value: string | null) {
+    if (!value) {
+      this.unset("parentCategory");
+    } else {
+      this.set("parentCategory", Value.fromString(<string>value));
+    }
   }
 
   get subCategories(): Array<string> {
@@ -1670,9 +1669,27 @@ export class Category extends Entity {
   set products(value: Array<string>) {
     this.set("products", Value.fromStringArray(value));
   }
+
+  get ancestors(): Array<string> {
+    let value = this.get("ancestors");
+    return value!.toStringArray();
+  }
+
+  set ancestors(value: Array<string>) {
+    this.set("ancestors", Value.fromStringArray(value));
+  }
+
+  get descendants(): Array<string> {
+    let value = this.get("descendants");
+    return value!.toStringArray();
+  }
+
+  set descendants(value: Array<string>) {
+    this.set("descendants", Value.fromStringArray(value));
+  }
 }
 
-export class SubCategory extends Entity {
+export class ProductCategoryHierarchy extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1680,18 +1697,23 @@ export class SubCategory extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save SubCategory entity without an ID");
+    assert(
+      id != null,
+      "Cannot save ProductCategoryHierarchy entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SubCategory must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProductCategoryHierarchy must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("SubCategory", id.toString(), this);
+      store.set("ProductCategoryHierarchy", id.toString(), this);
     }
   }
 
-  static load(id: string): SubCategory | null {
-    return changetype<SubCategory | null>(store.get("SubCategory", id));
+  static load(id: string): ProductCategoryHierarchy | null {
+    return changetype<ProductCategoryHierarchy | null>(
+      store.get("ProductCategoryHierarchy", id)
+    );
   }
 
   get id(): string {
@@ -1703,31 +1725,31 @@ export class SubCategory extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get category(): string {
-    let value = this.get("category");
+  get ancestor(): string {
+    let value = this.get("ancestor");
     return value!.toString();
   }
 
-  set category(value: string) {
-    this.set("category", Value.fromString(value));
+  set ancestor(value: string) {
+    this.set("ancestor", Value.fromString(value));
   }
 
-  get name(): string {
-    let value = this.get("name");
+  get descendant(): string {
+    let value = this.get("descendant");
     return value!.toString();
   }
 
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
+  set descendant(value: string) {
+    this.set("descendant", Value.fromString(value));
   }
 
-  get products(): Array<string> {
-    let value = this.get("products");
-    return value!.toStringArray();
+  get depth(): BigInt {
+    let value = this.get("depth");
+    return value!.toBigInt();
   }
 
-  set products(value: Array<string>) {
-    this.set("products", Value.fromStringArray(value));
+  set depth(value: BigInt) {
+    this.set("depth", Value.fromBigInt(value));
   }
 }
 

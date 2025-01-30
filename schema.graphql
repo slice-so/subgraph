@@ -177,26 +177,30 @@ type Product @entity {
   extPreferredToken: Boolean!
   totalPurchases: BigInt!
   referralFeeProduct: BigInt!
-  category: Category!
-  subCategory: SubCategory!
+  category: ProductCategory!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "product")
 }
 
-type Category @entity {
+type ProductCategory @entity {
   id: ID!
   name: String!
-  subCategories: [SubCategory!]! @derivedFrom(field: "category")
+  parentCategory: ProductCategory
+  subCategories: [ProductCategory!]! @derivedFrom(field: "parentCategory")
   products: [Product!]! @derivedFrom(field: "category")
+
+  # Hierarchy relationships
+  ancestors: [ProductCategoryHierarchy!]! @derivedFrom(field: "descendant")
+  descendants: [ProductCategoryHierarchy!]! @derivedFrom(field: "ancestor")
 }
 
-type SubCategory @entity {
-  id: ID!
-  name: String!
-  category: Category!
-  products: [Product!]! @derivedFrom(field: "subCategory")
+type ProductCategoryHierarchy @entity {
+  id: ID! # Set as ${ancestor.id}-${descendant.id}
+  ancestor: ProductCategory!
+  descendant: ProductCategory!
+  depth: BigInt!
 }
 
 type PayeeSlicer @entity {

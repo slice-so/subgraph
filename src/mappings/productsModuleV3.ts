@@ -57,7 +57,6 @@ export function handleProductAddedV3(event: ProductAddedEvent): void {
 
   product.slicer = slicerId
   product.category = categoryIndex
-  product.subCategory = "0x0-0x0"
   product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
