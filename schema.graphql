@@ -39,6 +39,7 @@ type Slicer @entity {
   TokenListings: [TokenListing!]! @derivedFrom(field: "slicer")
   purchaseData: [PurchaseData!]! @derivedFrom(field: "slicer")
   slicerOrders: [SlicerOrder!]! @derivedFrom(field: "slicer")
+  productTypes: [ProductType!]! @derivedFrom(field: "slicer")
   # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
@@ -178,6 +179,7 @@ type Product @entity {
   totalPurchases: BigInt!
   referralFeeProduct: BigInt!
   category: ProductCategory!
+  productType: ProductType!
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
@@ -200,6 +202,26 @@ type ProductCategoryHierarchy @entity {
   id: ID! # Set as ${ancestor.id}-${descendant.id}
   ancestor: ProductCategory!
   descendant: ProductCategory!
+  depth: BigInt!
+}
+
+type ProductType @entity {
+  id: ID!
+  name: String!
+  parentProductType: ProductType
+  slicer: Slicer!
+  subProductTypes: [ProductType!]! @derivedFrom(field: "parentProductType")
+  products: [Product!]! @derivedFrom(field: "productType")
+
+  # Hierarchy relationships
+  ancestors: [ProductTypeHierarchy!]! @derivedFrom(field: "descendant")
+  descendants: [ProductTypeHierarchy!]! @derivedFrom(field: "ancestor")
+}
+
+type ProductTypeHierarchy @entity {
+  id: ID! # Set as ${ancestor.id}-${descendant.id}
+  ancestor: ProductType!
+  descendant: ProductType!
   depth: BigInt!
 }
 

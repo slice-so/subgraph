@@ -374,6 +374,15 @@ export class Slicer extends Entity {
   set slicerOrders(value: Array<string>) {
     this.set("slicerOrders", Value.fromStringArray(value));
   }
+
+  get productTypes(): Array<string> {
+    let value = this.get("productTypes");
+    return value!.toStringArray();
+  }
+
+  set productTypes(value: Array<string>) {
+    this.set("productTypes", Value.fromStringArray(value));
+  }
 }
 
 export class SlicerAddress extends Entity {
@@ -1558,6 +1567,15 @@ export class Product extends Entity {
     this.set("category", Value.fromString(value));
   }
 
+  get productType(): string {
+    let value = this.get("productType");
+    return value!.toString();
+  }
+
+  set productType(value: string) {
+    this.set("productType", Value.fromString(value));
+  }
+
   get subProducts(): Array<string> {
     let value = this.get("subProducts");
     return value!.toStringArray();
@@ -1713,6 +1731,170 @@ export class ProductCategoryHierarchy extends Entity {
   static load(id: string): ProductCategoryHierarchy | null {
     return changetype<ProductCategoryHierarchy | null>(
       store.get("ProductCategoryHierarchy", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get ancestor(): string {
+    let value = this.get("ancestor");
+    return value!.toString();
+  }
+
+  set ancestor(value: string) {
+    this.set("ancestor", Value.fromString(value));
+  }
+
+  get descendant(): string {
+    let value = this.get("descendant");
+    return value!.toString();
+  }
+
+  set descendant(value: string) {
+    this.set("descendant", Value.fromString(value));
+  }
+
+  get depth(): BigInt {
+    let value = this.get("depth");
+    return value!.toBigInt();
+  }
+
+  set depth(value: BigInt) {
+    this.set("depth", Value.fromBigInt(value));
+  }
+}
+
+export class ProductType extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProductType entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ProductType must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ProductType", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ProductType | null {
+    return changetype<ProductType | null>(store.get("ProductType", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get parentProductType(): string | null {
+    let value = this.get("parentProductType");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set parentProductType(value: string | null) {
+    if (!value) {
+      this.unset("parentProductType");
+    } else {
+      this.set("parentProductType", Value.fromString(<string>value));
+    }
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    return value!.toString();
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get subProductTypes(): Array<string> {
+    let value = this.get("subProductTypes");
+    return value!.toStringArray();
+  }
+
+  set subProductTypes(value: Array<string>) {
+    this.set("subProductTypes", Value.fromStringArray(value));
+  }
+
+  get products(): Array<string> {
+    let value = this.get("products");
+    return value!.toStringArray();
+  }
+
+  set products(value: Array<string>) {
+    this.set("products", Value.fromStringArray(value));
+  }
+
+  get ancestors(): Array<string> {
+    let value = this.get("ancestors");
+    return value!.toStringArray();
+  }
+
+  set ancestors(value: Array<string>) {
+    this.set("ancestors", Value.fromStringArray(value));
+  }
+
+  get descendants(): Array<string> {
+    let value = this.get("descendants");
+    return value!.toStringArray();
+  }
+
+  set descendants(value: Array<string>) {
+    this.set("descendants", Value.fromStringArray(value));
+  }
+}
+
+export class ProductTypeHierarchy extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProductTypeHierarchy entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ProductTypeHierarchy must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ProductTypeHierarchy", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ProductTypeHierarchy | null {
+    return changetype<ProductTypeHierarchy | null>(
+      store.get("ProductTypeHierarchy", id)
     );
   }
 
