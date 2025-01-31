@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class ChildSlicerSet extends ethereum.Event {
@@ -283,7 +283,7 @@ export class Slicer__slicerInfoResult {
     value2: Address,
     value3: boolean,
     value4: boolean,
-    value5: Array<Address>
+    value5: Array<Address>,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -336,34 +336,34 @@ export class Slicer extends ethereum.SmartContract {
 
   _releaseFromFundsModule(
     account: Address,
-    currency: Address
+    currency: Address,
   ): Slicer___releaseFromFundsModuleResult {
     let result = super.call(
       "_releaseFromFundsModule",
       "_releaseFromFundsModule(address,address):(uint256,uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(currency)
-      ]
+        ethereum.Value.fromAddress(currency),
+      ],
     );
 
     return new Slicer___releaseFromFundsModuleResult(
       result[0].toBigInt(),
-      result[1].toBigInt()
+      result[1].toBigInt(),
     );
   }
 
   try__releaseFromFundsModule(
     account: Address,
-    currency: Address
+    currency: Address,
   ): ethereum.CallResult<Slicer___releaseFromFundsModuleResult> {
     let result = super.tryCall(
       "_releaseFromFundsModule",
       "_releaseFromFundsModule(address,address):(uint256,uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(currency)
-      ]
+        ethereum.Value.fromAddress(currency),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -372,8 +372,8 @@ export class Slicer extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new Slicer___releaseFromFundsModuleResult(
         value[0].toBigInt(),
-        value[1].toBigInt()
-      )
+        value[1].toBigInt(),
+      ),
     );
   }
 
@@ -381,7 +381,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.call(
       "acceptsCurrency",
       "acceptsCurrency(address):(bool)",
-      [ethereum.Value.fromAddress(currency)]
+      [ethereum.Value.fromAddress(currency)],
     );
 
     return result[0].toBoolean();
@@ -391,7 +391,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.tryCall(
       "acceptsCurrency",
       "acceptsCurrency(address):(bool)",
-      [ethereum.Value.fromAddress(currency)]
+      [ethereum.Value.fromAddress(currency)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -419,7 +419,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.call(
       "isPayeeAllowed",
       "isPayeeAllowed(address):(bool)",
-      [ethereum.Value.fromAddress(payee)]
+      [ethereum.Value.fromAddress(payee)],
     );
 
     return result[0].toBoolean();
@@ -429,7 +429,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.tryCall(
       "isPayeeAllowed",
       "isPayeeAllowed(address):(bool)",
-      [ethereum.Value.fromAddress(payee)]
+      [ethereum.Value.fromAddress(payee)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -443,7 +443,7 @@ export class Slicer extends ethereum.SmartContract {
     from: Address,
     tokenIds: Array<BigInt>,
     amounts: Array<BigInt>,
-    param4: Bytes
+    param4: Bytes,
   ): Bytes {
     let result = super.call(
       "onERC1155BatchReceived",
@@ -453,8 +453,8 @@ export class Slicer extends ethereum.SmartContract {
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigIntArray(tokenIds),
         ethereum.Value.fromUnsignedBigIntArray(amounts),
-        ethereum.Value.fromBytes(param4)
-      ]
+        ethereum.Value.fromBytes(param4),
+      ],
     );
 
     return result[0].toBytes();
@@ -465,7 +465,7 @@ export class Slicer extends ethereum.SmartContract {
     from: Address,
     tokenIds: Array<BigInt>,
     amounts: Array<BigInt>,
-    param4: Bytes
+    param4: Bytes,
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
       "onERC1155BatchReceived",
@@ -475,8 +475,8 @@ export class Slicer extends ethereum.SmartContract {
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigIntArray(tokenIds),
         ethereum.Value.fromUnsignedBigIntArray(amounts),
-        ethereum.Value.fromBytes(param4)
-      ]
+        ethereum.Value.fromBytes(param4),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -490,7 +490,7 @@ export class Slicer extends ethereum.SmartContract {
     from: Address,
     tokenId: BigInt,
     amount: BigInt,
-    param4: Bytes
+    param4: Bytes,
   ): Bytes {
     let result = super.call(
       "onERC1155Received",
@@ -500,8 +500,8 @@ export class Slicer extends ethereum.SmartContract {
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromUnsignedBigInt(amount),
-        ethereum.Value.fromBytes(param4)
-      ]
+        ethereum.Value.fromBytes(param4),
+      ],
     );
 
     return result[0].toBytes();
@@ -512,7 +512,7 @@ export class Slicer extends ethereum.SmartContract {
     from: Address,
     tokenId: BigInt,
     amount: BigInt,
-    param4: Bytes
+    param4: Bytes,
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
       "onERC1155Received",
@@ -522,8 +522,8 @@ export class Slicer extends ethereum.SmartContract {
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromUnsignedBigInt(amount),
-        ethereum.Value.fromBytes(param4)
-      ]
+        ethereum.Value.fromBytes(param4),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -536,7 +536,7 @@ export class Slicer extends ethereum.SmartContract {
     param0: Address,
     from: Address,
     tokenId: BigInt,
-    param3: Bytes
+    param3: Bytes,
   ): Bytes {
     let result = super.call(
       "onERC721Received",
@@ -545,8 +545,8 @@ export class Slicer extends ethereum.SmartContract {
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromBytes(param3)
-      ]
+        ethereum.Value.fromBytes(param3),
+      ],
     );
 
     return result[0].toBytes();
@@ -556,7 +556,7 @@ export class Slicer extends ethereum.SmartContract {
     param0: Address,
     from: Address,
     tokenId: BigInt,
-    param3: Bytes
+    param3: Bytes,
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
       "onERC721Received",
@@ -565,8 +565,8 @@ export class Slicer extends ethereum.SmartContract {
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromBytes(param3)
-      ]
+        ethereum.Value.fromBytes(param3),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -579,7 +579,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.call(
       "slicerInfo",
       "slicerInfo():(uint256,uint256,address,bool,bool,address[])",
-      []
+      [],
     );
 
     return new Slicer__slicerInfoResult(
@@ -588,7 +588,7 @@ export class Slicer extends ethereum.SmartContract {
       result[2].toAddress(),
       result[3].toBoolean(),
       result[4].toBoolean(),
-      result[5].toAddressArray()
+      result[5].toAddressArray(),
     );
   }
 
@@ -596,7 +596,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.tryCall(
       "slicerInfo",
       "slicerInfo():(uint256,uint256,address,bool,bool,address[])",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -609,8 +609,8 @@ export class Slicer extends ethereum.SmartContract {
         value[2].toAddress(),
         value[3].toBoolean(),
         value[4].toBoolean(),
-        value[5].toAddressArray()
-      )
+        value[5].toAddressArray(),
+      ),
     );
   }
 
@@ -618,7 +618,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -628,7 +628,7 @@ export class Slicer extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -643,8 +643,8 @@ export class Slicer extends ethereum.SmartContract {
       "unreleased(address,address):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(currency)
-      ]
+        ethereum.Value.fromAddress(currency),
+      ],
     );
 
     return result[0].toBigInt();
@@ -652,15 +652,15 @@ export class Slicer extends ethereum.SmartContract {
 
   try_unreleased(
     account: Address,
-    currency: Address
+    currency: Address,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "unreleased",
       "unreleased(address,address):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(currency)
-      ]
+        ethereum.Value.fromAddress(currency),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

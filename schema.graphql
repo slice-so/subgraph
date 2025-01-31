@@ -40,6 +40,7 @@ type Slicer @entity {
   purchaseData: [PurchaseData!]! @derivedFrom(field: "slicer")
   slicerOrders: [SlicerOrder!]! @derivedFrom(field: "slicer")
   productTypes: [ProductType!]! @derivedFrom(field: "slicer")
+  productTypeHierarchies: [ProductTypeHierarchy!]! @derivedFrom(field: "slicer")
   # TokensReceived: [TokenReceived!]! @derivedFrom(field: "slicer")
 }
 
@@ -220,6 +221,7 @@ type ProductType @entity {
 
 type ProductTypeHierarchy @entity {
   id: ID! # Set as ${ancestor.id}-${descendant.id}
+  slicer: Slicer!
   ancestor: ProductType!
   descendant: ProductType!
   depth: BigInt!

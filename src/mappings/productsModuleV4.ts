@@ -3,14 +3,23 @@ import {
   ProductPrices,
   CurrencySlicer,
   ProductCategory,
-  ProductCategoryHierarchy
+  ProductCategoryHierarchy,
+  ProductType,
+  ProductTypeHierarchy
 } from "../../generated/schema"
 import {
   ProductAdded as ProductAddedEvent,
   ProductInfoChanged as ProductInfoChangedEvent,
-  CategorySet as CategorySetEvent
+  CategorySet as CategorySetEvent,
+  ProductTypeSet as ProductTypeSetEvent
 } from "../../generated/ProductsModuleV4/ProductsModule"
 import { BigInt, Bytes, store } from "@graphprotocol/graph-ts"
+import { clearCategoryHierarchy } from "../helpers/updateCategoryHierarchy"
+import { updateCategoryHierarchy } from "../helpers/updateCategoryHierarchy"
+import {
+  clearProductTypeHierarchy,
+  updateProductTypeHierarchy
+} from "../helpers/updateProductTypeHierarchy"
 
 export function handleProductAddedV4(event: ProductAddedEvent): void {
   let slicerId = event.params.slicerId.toHex()
@@ -209,96 +218,78 @@ export function handleCategorySet(event: CategorySetEvent): void {
     //    - category with parent (depth 1)
     //    - category with ancestors (depth 2+)
     //    - descendants with ancestors (depth 2+)
-    let newParentCategory = isParentCategoryNull
-      ? null
-      : ProductCategory.load(parentCategoryId)!
-    updateCategoryHierarchy(newParentCategory || null, category)
+    let newParentCategory = ProductCategory.load(
+      isParentCategoryNull ? "null" : parentCategoryId
+    )
+    updateCategoryHierarchy(newParentCategory, category)
   }
 
   category.name = categoryName
   category.save()
 }
 
-function updateCategoryHierarchy(
-  parent: ProductCategory | null, // eg 3
-  category: ProductCategory // eg 4
-): void {
-  let parentAncestors: string[] = []
-  if (parent) {
-    parentAncestors = parent.ancestors
+export function handleProductTypeSet(event: ProductTypeSetEvent): void {
+  let productTypeId = event.params.productTypeId.toHexString()
+  let slicerId = event.params.slicerId.toHexString()
+  let parentProductTypeId = BigInt.fromI32(
+    event.params.parentProductTypeId
+  ).toHexString()
+  let productTypeName = event.params.name
+  let selfId = `${productTypeId}-${productTypeId}`
+
+  let productType = ProductType.load(productTypeId)
+
+  if (!productType) {
+    // Create new productType
+    productType = new ProductType(productTypeId)
+
+    // Create self-reference (depth 0)
+    let selfHierarchy = new ProductTypeHierarchy(selfId)
+    selfHierarchy.ancestor = productTypeId
+    selfHierarchy.descendant = productTypeId
+    selfHierarchy.depth = BigInt.fromI32(0)
+    selfHierarchy.slicer = slicerId
+    selfHierarchy.save()
+
+    if (parentProductTypeId != "0x0") {
+      let parentProductType = ProductType.load(parentProductTypeId)!
+      productType.parentProductType = parentProductTypeId
+
+      // 1. Add direct parent relationship (depth 1)
+      // 2. Add new relationships for each ancestor (depth 2+)
+      updateProductTypeHierarchy(parentProductType, productType)
+    }
+  } else if (parentProductTypeId != productType.parentProductType) {
+    // edit productType when parent productType changes
+
+    // 1. Clear hierarchies (skip if without parent)
+    //    - productType with ancestors (except self) (depth 1+)
+    //    - descendants with ancestors (depth 2+)
+    if (productType.parentProductType) {
+      let currentParentProductType = ProductType.load(
+        productType.parentProductType!
+      )!
+      clearProductTypeHierarchy(currentParentProductType, productType)
+    }
+
+    // 2. Update parent productType
+    //    - if parentProductTypeId is 0, set parentProductType to null
+    const isParentProductTypeNull = parentProductTypeId == "0x0"
+    productType.parentProductType = isParentProductTypeNull
+      ? null
+      : parentProductTypeId
+
+    // 3. Add new hierarchies
+    //    - productType with parent (depth 1)
+    //    - productType with ancestors (depth 2+)
+    //    - descendants with ancestors (depth 2+)
+    let newParentProductType = ProductType.load(
+      isParentProductTypeNull ? "null" : parentProductTypeId
+    )
+    updateProductTypeHierarchy(newParentProductType, productType)
   }
-  let categoryDescendants = category.descendants
 
-  parentAncestors.forEach((pa) => {
-    // 3-3, 2-3, 1-3
-    let parentAncestorHierarchy = ProductCategoryHierarchy.load(pa)!
-
-    categoryDescendants.forEach((cd) => {
-      // 4-4, 4-5, 4-6
-      let categoryDescendantHierarchy = ProductCategoryHierarchy.load(cd)!
-
-      // 3-4, 3-5, 3-6 --> 2-4, 2-5, 2-6 --> 1-4, 1-5, 1-6
-      let newId = `${parentAncestorHierarchy.ancestor}-${categoryDescendantHierarchy.descendant}`
-
-      let hierarchy = new ProductCategoryHierarchy(newId)
-      hierarchy.ancestor = parentAncestorHierarchy.ancestor
-      hierarchy.descendant = categoryDescendantHierarchy.descendant
-      hierarchy.depth = parentAncestorHierarchy.depth.plus(
-        categoryDescendantHierarchy.depth.plus(BigInt.fromI32(1))
-      )
-      hierarchy.save()
-    })
-  })
+  productType.name = productTypeName
+  productType.slicer = slicerId
+  productType.save()
 }
-
-function clearCategoryHierarchy(
-  parent: ProductCategory | null, // eg 3
-  category: ProductCategory // eg 4
-): void {
-  let parentAncestors: string[] = []
-  if (parent) {
-    parentAncestors = parent.ancestors
-  }
-  let categoryDescendants = category.descendants
-
-  parentAncestors.forEach((pa) => {
-    // 3-3, 2-3, 1-3
-    let parentAncestorHierarchy = ProductCategoryHierarchy.load(pa)!
-
-    categoryDescendants.forEach((cd) => {
-      // 4-4, 4-5, 4-6
-      let categoryDescendantHierarchy = ProductCategoryHierarchy.load(cd)!
-
-      // 3-4, 3-5, 3-6 --> 2-4, 2-5, 2-6 --> 1-4, 1-5, 1-6
-      let idToRemove = `${parentAncestorHierarchy.ancestor}-${categoryDescendantHierarchy.descendant}`
-
-      store.remove("ProductCategoryHierarchy", idToRemove)
-    })
-  })
-}
-
-// 1 -> 2 [1], 1 -> 3 [2], 1 -> 4 [3], 1 -> 5 [4]
-// 2 -> 3 [1], 2 -> 4 [2], 2 -> 5 [3]
-// 3 -> 4 [1], 3 -> 5 [2]
-// 4 -> 5 [1]
-
-// CHANGE 4's parentId from 3 to 2
-
-// 1 -> 2 [1], 1 -> 3 [2], 1 -> 4 [3], 1 -> 5 [4], 1 => 6[1]
-// 2 -> 3 [1], 2 -> 4 [1], 2 -> 5 [2]
-// 3 -> NO SUBCATEGORIES
-// 4 -> 5 [1]
-
-// if instead we change 4's parentId to 6
-
-// 1 -> 2 [1], 1 -> 3 [2], 1 -> 6 [1]
-// 2 -> 3 [1]
-// 3 -> NO SUBCATEGORIES
-// 4 -> 5 [1]
-// 6 -> 4 [1], 6 -> 5 [2]
-
-// descendant: 4-5
-// category ancestors: 4-4[0], 6-4[1], 1-4[2]
-
-// new ids = 4-5, 6-5, 1-5
-// depts = 1, 2, 3

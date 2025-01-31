@@ -59,6 +59,7 @@ export function handleProductAddedV1(event: ProductAddedEventV1): void {
 
   product.slicer = slicerId
   product.category = categoryIndex
+  product.productType = "0x0"
   product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
@@ -131,6 +132,7 @@ export function handleProductAddedV2(event: ProductAddedEventV2): void {
 
   product.slicer = slicerId
   product.category = categoryIndex
+  product.productType = "0x0"
   product.isRemoved = false
   product.isFree = isFree
   product.isInfinite = isInfinite
@@ -285,6 +287,7 @@ export function handleProductRemoved(event: ProductRemovedEvent): void {
 
   product.isRemoved = true
   product.category = "0x0"
+  product.productType = "0x0"
   product.isFree = false
   product.isInfinite = false
   product.maxUnitsPerBuyer = BigInt.fromI32(0)
