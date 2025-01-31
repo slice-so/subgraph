@@ -207,7 +207,7 @@ type ProductCategoryHierarchy @entity {
 }
 
 type ProductType @entity {
-  id: ID!
+  id: ID! # Set as ${slicerId}-${productTypeId}
   name: String!
   parentProductType: ProductType
   slicer: Slicer!
@@ -220,7 +220,7 @@ type ProductType @entity {
 }
 
 type ProductTypeHierarchy @entity {
-  id: ID! # Set as ${ancestor.id}-${descendant.id}
+  id: ID! # Set as ${slicerId}-${ancestor.id}-${descendant.id}
   slicer: Slicer!
   ancestor: ProductType!
   descendant: ProductType!
