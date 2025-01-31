@@ -235,7 +235,7 @@ export function handleProductTypeSet(event: ProductTypeSetEvent): void {
     event.params.parentProductTypeId
   ).toHexString()
   let productTypeName = event.params.name
-  let selfId = `${productTypeId}-${productTypeId}`
+  let selfId = `${slicerId}-${productTypeId}-${productTypeId}`
 
   let productType = ProductType.load(productTypeId)
 
@@ -257,7 +257,7 @@ export function handleProductTypeSet(event: ProductTypeSetEvent): void {
 
       // 1. Add direct parent relationship (depth 1)
       // 2. Add new relationships for each ancestor (depth 2+)
-      updateProductTypeHierarchy(parentProductType, productType)
+      updateProductTypeHierarchy(slicerId, parentProductType, productType)
     }
   } else if (parentProductTypeId != productType.parentProductType) {
     // edit productType when parent productType changes
@@ -269,7 +269,7 @@ export function handleProductTypeSet(event: ProductTypeSetEvent): void {
       let currentParentProductType = ProductType.load(
         productType.parentProductType!
       )!
-      clearProductTypeHierarchy(currentParentProductType, productType)
+      clearProductTypeHierarchy(slicerId, currentParentProductType, productType)
     }
 
     // 2. Update parent productType
@@ -286,7 +286,7 @@ export function handleProductTypeSet(event: ProductTypeSetEvent): void {
     let newParentProductType = ProductType.load(
       isParentProductTypeNull ? "null" : parentProductTypeId
     )
-    updateProductTypeHierarchy(newParentProductType, productType)
+    updateProductTypeHierarchy(slicerId, newParentProductType, productType)
   }
 
   productType.name = productTypeName
