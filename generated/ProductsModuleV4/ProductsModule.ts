@@ -50,6 +50,32 @@ export class BeaconUpgraded__Params {
   }
 }
 
+export class CategorySet extends ethereum.Event {
+  get params(): CategorySet__Params {
+    return new CategorySet__Params(this);
+  }
+}
+
+export class CategorySet__Params {
+  _event: CategorySet;
+
+  constructor(event: CategorySet) {
+    this._event = event;
+  }
+
+  get categoryId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get parentCategoryId(): i32 {
+    return this._event.parameters[1].value.toI32();
+  }
+
+  get name(): string {
+    return this._event.parameters[2].value.toString();
+  }
+}
+
 export class ERC1155ListingChanged extends ethereum.Event {
   get params(): ERC1155ListingChanged__Params {
     return new ERC1155ListingChanged__Params(this);
@@ -219,23 +245,19 @@ export class ProductAdded__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get categoryIndex(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
   get creator(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 
   get params(): ProductAddedParamsStruct {
     return changetype<ProductAddedParamsStruct>(
-      this._event.parameters[4].value.toTuple(),
+      this._event.parameters[3].value.toTuple(),
     );
   }
 
   get externalCall(): ProductAddedExternalCallStruct {
     return changetype<ProductAddedExternalCallStruct>(
-      this._event.parameters[5].value.toTuple(),
+      this._event.parameters[4].value.toTuple(),
     );
   }
 }
@@ -261,28 +283,36 @@ export class ProductAddedParamsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get maxUnitsPerBuyer(): i32 {
+  get categoryId(): i32 {
     return this[5].toI32();
   }
 
+  get productTypeId(): i32 {
+    return this[6].toI32();
+  }
+
+  get maxUnitsPerBuyer(): i32 {
+    return this[7].toI32();
+  }
+
   get isFree(): boolean {
-    return this[6].toBoolean();
-  }
-
-  get isInfinite(): boolean {
-    return this[7].toBoolean();
-  }
-
-  get isExternalCallPaymentRelative(): boolean {
     return this[8].toBoolean();
   }
 
-  get isExternalCallPreferredToken(): boolean {
+  get isInfinite(): boolean {
     return this[9].toBoolean();
   }
 
+  get isExternalCallPaymentRelative(): boolean {
+    return this[10].toBoolean();
+  }
+
+  get isExternalCallPreferredToken(): boolean {
+    return this[11].toBoolean();
+  }
+
   get referralFeeProduct(): BigInt {
-    return this[10].toBigInt();
+    return this[12].toBigInt();
   }
 }
 
@@ -399,36 +429,56 @@ export class ProductInfoChanged__Params {
     this._event = event;
   }
 
-  get slicerId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get productId(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get maxUnitsPerBuyer(): i32 {
-    return this._event.parameters[2].value.toI32();
-  }
-
-  get isFree(): boolean {
-    return this._event.parameters[3].value.toBoolean();
-  }
-
-  get isInfinite(): boolean {
-    return this._event.parameters[4].value.toBoolean();
+  get params(): ProductInfoChangedParamsStruct {
+    return changetype<ProductInfoChangedParamsStruct>(
+      this._event.parameters[0].value.toTuple(),
+    );
   }
 
   get newUnits(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get currencyPrices(): Array<ProductInfoChangedCurrencyPricesStruct> {
-    return this._event.parameters[6].value.toTupleArray<ProductInfoChangedCurrencyPricesStruct>();
+    return this._event.parameters[2].value.toTupleArray<ProductInfoChangedCurrencyPricesStruct>();
+  }
+}
+
+export class ProductInfoChangedParamsStruct extends ethereum.Tuple {
+  get slicerId(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get productId(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get newMaxUnits(): i32 {
+    return this[2].toI32();
+  }
+
+  get isFree(): boolean {
+    return this[3].toBoolean();
+  }
+
+  get isInfinite(): boolean {
+    return this[4].toBoolean();
+  }
+
+  get newUnits(): BigInt {
+    return this[5].toBigInt();
   }
 
   get referralFeeProduct(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
+    return this[6].toBigInt();
+  }
+
+  get categoryId(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get productTypeId(): BigInt {
+    return this[8].toBigInt();
   }
 }
 
@@ -539,6 +589,36 @@ export class ProductRemoved__Params {
 
   get productId(): BigInt {
     return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class ProductTypeSet extends ethereum.Event {
+  get params(): ProductTypeSet__Params {
+    return new ProductTypeSet__Params(this);
+  }
+}
+
+export class ProductTypeSet__Params {
+  _event: ProductTypeSet;
+
+  constructor(event: ProductTypeSet) {
+    this._event = event;
+  }
+
+  get slicerId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get productTypeId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get parentProductTypeId(): i32 {
+    return this._event.parameters[2].value.toI32();
+  }
+
+  get name(): string {
+    return this._event.parameters[3].value.toString();
   }
 }
 
@@ -669,6 +749,34 @@ export class ProductsModule__availableUnitsResult {
   }
 }
 
+export class ProductsModule__categoriesResult {
+  value0: string;
+  value1: i32;
+
+  constructor(value0: string, value1: i32) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromString(this.value0));
+    map.set(
+      "value1",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1)),
+    );
+    return map;
+  }
+
+  getName(): string {
+    return this.value0;
+  }
+
+  getParentCategoryId(): i32 {
+    return this.value1;
+  }
+}
+
 export class ProductsModule__productPriceResultPriceStruct extends ethereum.Tuple {
   get eth(): BigInt {
     return this[0].toBigInt();
@@ -684,6 +792,34 @@ export class ProductsModule__productPriceResultPriceStruct extends ethereum.Tupl
 
   get currencyExternalCall(): BigInt {
     return this[3].toBigInt();
+  }
+}
+
+export class ProductsModule__productTypesResult {
+  value0: string;
+  value1: i32;
+
+  constructor(value0: string, value1: i32) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromString(this.value0));
+    map.set(
+      "value1",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1)),
+    );
+    return map;
+  }
+
+  getName(): string {
+    return this.value0;
+  }
+
+  getParentProductTypeId(): i32 {
+    return this.value1;
   }
 }
 
@@ -783,6 +919,39 @@ export class ProductsModule extends ethereum.SmartContract {
     );
   }
 
+  categories(param0: BigInt): ProductsModule__categoriesResult {
+    let result = super.call(
+      "categories",
+      "categories(uint256):(string,uint16)",
+      [ethereum.Value.fromUnsignedBigInt(param0)],
+    );
+
+    return new ProductsModule__categoriesResult(
+      result[0].toString(),
+      result[1].toI32(),
+    );
+  }
+
+  try_categories(
+    param0: BigInt,
+  ): ethereum.CallResult<ProductsModule__categoriesResult> {
+    let result = super.tryCall(
+      "categories",
+      "categories(uint256):(string,uint16)",
+      [ethereum.Value.fromUnsignedBigInt(param0)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ProductsModule__categoriesResult(
+        value[0].toString(),
+        value[1].toI32(),
+      ),
+    );
+  }
+
   fundsModule(): Address {
     let result = super.call("fundsModule", "fundsModule():(address)", []);
 
@@ -835,6 +1004,25 @@ export class ProductsModule extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  multicall(data: Array<Bytes>): Array<Bytes> {
+    let result = super.call("multicall", "multicall(bytes[]):(bytes[])", [
+      ethereum.Value.fromBytesArray(data),
+    ]);
+
+    return result[0].toBytesArray();
+  }
+
+  try_multicall(data: Array<Bytes>): ethereum.CallResult<Array<Bytes>> {
+    let result = super.tryCall("multicall", "multicall(bytes[]):(bytes[])", [
+      ethereum.Value.fromBytesArray(data),
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytesArray());
   }
 
   nextProductId(slicerId: BigInt): BigInt {
@@ -958,6 +1146,49 @@ export class ProductsModule extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       changetype<ProductsModule__productPriceResultPriceStruct>(
         value[0].toTuple(),
+      ),
+    );
+  }
+
+  productTypes(
+    param0: BigInt,
+    param1: BigInt,
+  ): ProductsModule__productTypesResult {
+    let result = super.call(
+      "productTypes",
+      "productTypes(uint256,uint256):(string,uint16)",
+      [
+        ethereum.Value.fromUnsignedBigInt(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
+    );
+
+    return new ProductsModule__productTypesResult(
+      result[0].toString(),
+      result[1].toI32(),
+    );
+  }
+
+  try_productTypes(
+    param0: BigInt,
+    param1: BigInt,
+  ): ethereum.CallResult<ProductsModule__productTypesResult> {
+    let result = super.tryCall(
+      "productTypes",
+      "productTypes(uint256,uint256):(string,uint16)",
+      [
+        ethereum.Value.fromUnsignedBigInt(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ProductsModule__productTypesResult(
+        value[0].toString(),
+        value[1].toI32(),
       ),
     );
   }
@@ -1105,6 +1336,44 @@ export class ConstructorCall__Outputs {
   }
 }
 
+export class _setCategoryCall extends ethereum.Call {
+  get inputs(): _setCategoryCall__Inputs {
+    return new _setCategoryCall__Inputs(this);
+  }
+
+  get outputs(): _setCategoryCall__Outputs {
+    return new _setCategoryCall__Outputs(this);
+  }
+}
+
+export class _setCategoryCall__Inputs {
+  _call: _setCategoryCall;
+
+  constructor(call: _setCategoryCall) {
+    this._call = call;
+  }
+
+  get categoryId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get parentCategoryId(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+
+  get name(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class _setCategoryCall__Outputs {
+  _call: _setCategoryCall;
+
+  constructor(call: _setCategoryCall) {
+    this._call = call;
+  }
+}
+
 export class _setStoreConfigCall extends ethereum.Call {
   get inputs(): _setStoreConfigCall__Inputs {
     return new _setStoreConfigCall__Inputs(this);
@@ -1206,28 +1475,36 @@ export class AddProductCallParamsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get maxUnitsPerBuyer(): i32 {
+  get categoryId(): i32 {
     return this[5].toI32();
   }
 
+  get productTypeId(): i32 {
+    return this[6].toI32();
+  }
+
+  get maxUnitsPerBuyer(): i32 {
+    return this[7].toI32();
+  }
+
   get isFree(): boolean {
-    return this[6].toBoolean();
-  }
-
-  get isInfinite(): boolean {
-    return this[7].toBoolean();
-  }
-
-  get isExternalCallPaymentRelative(): boolean {
     return this[8].toBoolean();
   }
 
-  get isExternalCallPreferredToken(): boolean {
+  get isInfinite(): boolean {
     return this[9].toBoolean();
   }
 
+  get isExternalCallPaymentRelative(): boolean {
+    return this[10].toBoolean();
+  }
+
+  get isExternalCallPreferredToken(): boolean {
+    return this[11].toBoolean();
+  }
+
   get referralFeeProduct(): BigInt {
-    return this[10].toBigInt();
+    return this[12].toBigInt();
   }
 }
 
@@ -1304,6 +1581,40 @@ export class InitializeCall__Outputs {
 
   constructor(call: InitializeCall) {
     this._call = call;
+  }
+}
+
+export class MulticallCall extends ethereum.Call {
+  get inputs(): MulticallCall__Inputs {
+    return new MulticallCall__Inputs(this);
+  }
+
+  get outputs(): MulticallCall__Outputs {
+    return new MulticallCall__Outputs(this);
+  }
+}
+
+export class MulticallCall__Inputs {
+  _call: MulticallCall;
+
+  constructor(call: MulticallCall) {
+    this._call = call;
+  }
+
+  get data(): Array<Bytes> {
+    return this._call.inputValues[0].value.toBytesArray();
+  }
+}
+
+export class MulticallCall__Outputs {
+  _call: MulticallCall;
+
+  constructor(call: MulticallCall) {
+    this._call = call;
+  }
+
+  get results(): Array<Bytes> {
+    return this._call.outputValues[0].value.toBytesArray();
   }
 }
 
@@ -1565,6 +1876,18 @@ export class PayWithAuthorizationCall__Inputs {
       this._call.inputValues[1].value.toTuple(),
     );
   }
+
+  get extraCosts(): Array<PayWithAuthorizationCallExtraCostsStruct> {
+    return this._call.inputValues[2].value.toTupleArray<PayWithAuthorizationCallExtraCostsStruct>();
+  }
+
+  get referrer(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get currency(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
 }
 
 export class PayWithAuthorizationCall__Outputs {
@@ -1632,6 +1955,28 @@ export class PayWithAuthorizationCallAuthorizationParamsStruct extends ethereum.
 
   get s(): Bytes {
     return this[7].toBytes();
+  }
+}
+
+export class PayWithAuthorizationCallExtraCostsStruct extends ethereum.Tuple {
+  get recipient(): Address {
+    return this[0].toAddress();
+  }
+
+  get slicerId(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get amount(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get currency(): Address {
+    return this[3].toAddress();
+  }
+
+  get description(): string {
+    return this[4].toString();
   }
 }
 
@@ -1838,41 +2183,19 @@ export class SetProductInfoCall__Inputs {
     this._call = call;
   }
 
-  get slicerId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get productId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get newMaxUnits(): i32 {
-    return this._call.inputValues[2].value.toI32();
-  }
-
-  get isFree(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
-  }
-
-  get isInfinite(): boolean {
-    return this._call.inputValues[4].value.toBoolean();
-  }
-
-  get newUnits(): BigInt {
-    return this._call.inputValues[5].value.toBigInt();
-  }
-
-  get referralFeeProduct(): BigInt {
-    return this._call.inputValues[6].value.toBigInt();
+  get params(): SetProductInfoCallParamsStruct {
+    return changetype<SetProductInfoCallParamsStruct>(
+      this._call.inputValues[0].value.toTuple(),
+    );
   }
 
   get currencyPrices(): Array<SetProductInfoCallCurrencyPricesStruct> {
-    return this._call.inputValues[7].value.toTupleArray<SetProductInfoCallCurrencyPricesStruct>();
+    return this._call.inputValues[1].value.toTupleArray<SetProductInfoCallCurrencyPricesStruct>();
   }
 
   get externalCall_(): SetProductInfoCallExternalCall_Struct {
     return changetype<SetProductInfoCallExternalCall_Struct>(
-      this._call.inputValues[8].value.toTuple(),
+      this._call.inputValues[2].value.toTuple(),
     );
   }
 }
@@ -1882,6 +2205,44 @@ export class SetProductInfoCall__Outputs {
 
   constructor(call: SetProductInfoCall) {
     this._call = call;
+  }
+}
+
+export class SetProductInfoCallParamsStruct extends ethereum.Tuple {
+  get slicerId(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get productId(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get newMaxUnits(): i32 {
+    return this[2].toI32();
+  }
+
+  get isFree(): boolean {
+    return this[3].toBoolean();
+  }
+
+  get isInfinite(): boolean {
+    return this[4].toBoolean();
+  }
+
+  get newUnits(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get referralFeeProduct(): BigInt {
+    return this[6].toBigInt();
+  }
+
+  get categoryId(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get productTypeId(): BigInt {
+    return this[8].toBigInt();
   }
 }
 
@@ -1922,6 +2283,48 @@ export class SetProductInfoCallExternalCall_Struct extends ethereum.Tuple {
 
   get execFunctionSignature(): Bytes {
     return this[4].toBytes();
+  }
+}
+
+export class SetProductTypeCall extends ethereum.Call {
+  get inputs(): SetProductTypeCall__Inputs {
+    return new SetProductTypeCall__Inputs(this);
+  }
+
+  get outputs(): SetProductTypeCall__Outputs {
+    return new SetProductTypeCall__Outputs(this);
+  }
+}
+
+export class SetProductTypeCall__Inputs {
+  _call: SetProductTypeCall;
+
+  constructor(call: SetProductTypeCall) {
+    this._call = call;
+  }
+
+  get slicerId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get productTypeId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get parentProductTypeId(): i32 {
+    return this._call.inputValues[2].value.toI32();
+  }
+
+  get name(): string {
+    return this._call.inputValues[3].value.toString();
+  }
+}
+
+export class SetProductTypeCall__Outputs {
+  _call: SetProductTypeCall;
+
+  constructor(call: SetProductTypeCall) {
+    this._call = call;
   }
 }
 

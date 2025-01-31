@@ -3,7 +3,7 @@
 import {
   Address,
   DataSourceTemplate,
-  DataSourceContext
+  DataSourceContext,
 } from "@graphprotocol/graph-ts";
 
 export class Slicer extends DataSourceTemplate {

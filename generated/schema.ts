@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class Slicer extends Entity {
@@ -23,10 +23,14 @@ export class Slicer extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Slicer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Slicer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Slicer", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Slicer | null {
+    return changetype<Slicer | null>(store.get_in_block("Slicer", id));
   }
 
   static load(id: string): Slicer | null {
@@ -35,7 +39,11 @@ export class Slicer extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -44,7 +52,11 @@ export class Slicer extends Entity {
 
   get slicerVersion(): BigInt {
     let value = this.get("slicerVersion");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set slicerVersion(value: BigInt) {
@@ -53,7 +65,11 @@ export class Slicer extends Entity {
 
   get address(): Bytes {
     let value = this.get("address");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set address(value: Bytes) {
@@ -62,7 +78,11 @@ export class Slicer extends Entity {
 
   get slices(): BigInt {
     let value = this.get("slices");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set slices(value: BigInt) {
@@ -71,7 +91,11 @@ export class Slicer extends Entity {
 
   get minimumSlices(): BigInt {
     let value = this.get("minimumSlices");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set minimumSlices(value: BigInt) {
@@ -80,7 +104,11 @@ export class Slicer extends Entity {
 
   get createdAtTimestamp(): BigInt {
     let value = this.get("createdAtTimestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set createdAtTimestamp(value: BigInt) {
@@ -89,7 +117,11 @@ export class Slicer extends Entity {
 
   get releaseTimelock(): BigInt {
     let value = this.get("releaseTimelock");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set releaseTimelock(value: BigInt) {
@@ -98,7 +130,11 @@ export class Slicer extends Entity {
 
   get transferableTimelock(): BigInt {
     let value = this.get("transferableTimelock");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set transferableTimelock(value: BigInt) {
@@ -107,7 +143,11 @@ export class Slicer extends Entity {
 
   get isImmutable(): boolean {
     let value = this.get("isImmutable");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set isImmutable(value: boolean) {
@@ -116,7 +156,11 @@ export class Slicer extends Entity {
 
   get currenciesControlled(): boolean {
     let value = this.get("currenciesControlled");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set currenciesControlled(value: boolean) {
@@ -125,7 +169,11 @@ export class Slicer extends Entity {
 
   get productsControlled(): boolean {
     let value = this.get("productsControlled");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set productsControlled(value: boolean) {
@@ -134,7 +182,11 @@ export class Slicer extends Entity {
 
   get resliceAllowed(): boolean {
     let value = this.get("resliceAllowed");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set resliceAllowed(value: boolean) {
@@ -143,7 +195,11 @@ export class Slicer extends Entity {
 
   get transferWhileControlledAllowed(): boolean {
     let value = this.get("transferWhileControlledAllowed");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set transferWhileControlledAllowed(value: boolean) {
@@ -152,7 +208,11 @@ export class Slicer extends Entity {
 
   get acceptsAllCurrencies(): boolean {
     let value = this.get("acceptsAllCurrencies");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set acceptsAllCurrencies(value: boolean) {
@@ -161,7 +221,11 @@ export class Slicer extends Entity {
 
   get storeClosed(): boolean {
     let value = this.get("storeClosed");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set storeClosed(value: boolean) {
@@ -170,7 +234,11 @@ export class Slicer extends Entity {
 
   get protocolFee(): BigInt {
     let value = this.get("protocolFee");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set protocolFee(value: BigInt) {
@@ -179,7 +247,11 @@ export class Slicer extends Entity {
 
   get royaltyPercentage(): BigInt {
     let value = this.get("royaltyPercentage");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set royaltyPercentage(value: BigInt) {
@@ -188,7 +260,11 @@ export class Slicer extends Entity {
 
   get royaltyReceiver(): string {
     let value = this.get("royaltyReceiver");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set royaltyReceiver(value: string) {
@@ -197,7 +273,11 @@ export class Slicer extends Entity {
 
   get creator(): string {
     let value = this.get("creator");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set creator(value: string) {
@@ -206,7 +286,11 @@ export class Slicer extends Entity {
 
   get controller(): string {
     let value = this.get("controller");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set controller(value: string) {
@@ -215,7 +299,11 @@ export class Slicer extends Entity {
 
   get productsModuleBalance(): BigInt {
     let value = this.get("productsModuleBalance");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set productsModuleBalance(value: BigInt) {
@@ -224,7 +312,11 @@ export class Slicer extends Entity {
 
   get productsModuleReleased(): BigInt {
     let value = this.get("productsModuleReleased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set productsModuleReleased(value: BigInt) {
@@ -233,7 +325,11 @@ export class Slicer extends Entity {
 
   get referralFeeStore(): BigInt {
     let value = this.get("referralFeeStore");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set referralFeeStore(value: BigInt) {
@@ -242,7 +338,11 @@ export class Slicer extends Entity {
 
   get totalOrders(): BigInt {
     let value = this.get("totalOrders");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalOrders(value: BigInt) {
@@ -251,7 +351,11 @@ export class Slicer extends Entity {
 
   get totalProductsPurchased(): BigInt {
     let value = this.get("totalProductsPurchased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalProductsPurchased(value: BigInt) {
@@ -260,7 +364,11 @@ export class Slicer extends Entity {
 
   get totalEarnedUsd(): BigInt {
     let value = this.get("totalEarnedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarnedUsd(value: BigInt) {
@@ -269,110 +377,120 @@ export class Slicer extends Entity {
 
   get releasedUsd(): BigInt {
     let value = this.get("releasedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set releasedUsd(value: BigInt) {
     this.set("releasedUsd", Value.fromBigInt(value));
   }
 
-  get statsByDay(): Array<string> {
-    let value = this.get("statsByDay");
-    return value!.toStringArray();
+  get statsByDay(): SlicerStatsByDayLoader {
+    return new SlicerStatsByDayLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "statsByDay",
+    );
   }
 
-  set statsByDay(value: Array<string>) {
-    this.set("statsByDay", Value.fromStringArray(value));
+  get statsByWeek(): SlicerStatsByWeekLoader {
+    return new SlicerStatsByWeekLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "statsByWeek",
+    );
   }
 
-  get statsByWeek(): Array<string> {
-    let value = this.get("statsByWeek");
-    return value!.toStringArray();
+  get statsByMonth(): SlicerStatsByMonthLoader {
+    return new SlicerStatsByMonthLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "statsByMonth",
+    );
   }
 
-  set statsByWeek(value: Array<string>) {
-    this.set("statsByWeek", Value.fromStringArray(value));
-  }
-
-  get statsByMonth(): Array<string> {
-    let value = this.get("statsByMonth");
-    return value!.toStringArray();
-  }
-
-  set statsByMonth(value: Array<string>) {
-    this.set("statsByMonth", Value.fromStringArray(value));
-  }
-
-  get statsByYear(): Array<string> {
-    let value = this.get("statsByYear");
-    return value!.toStringArray();
-  }
-
-  set statsByYear(value: Array<string>) {
-    this.set("statsByYear", Value.fromStringArray(value));
+  get statsByYear(): SlicerStatsByYearLoader {
+    return new SlicerStatsByYearLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "statsByYear",
+    );
   }
 
   get childrenSlicers(): Array<string> {
     let value = this.get("childrenSlicers");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
   }
 
   set childrenSlicers(value: Array<string>) {
     this.set("childrenSlicers", Value.fromStringArray(value));
   }
 
-  get currencies(): Array<string> {
-    let value = this.get("currencies");
-    return value!.toStringArray();
+  get currencies(): CurrencySlicerLoader {
+    return new CurrencySlicerLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "currencies",
+    );
   }
 
-  set currencies(value: Array<string>) {
-    this.set("currencies", Value.fromStringArray(value));
+  get payees(): PayeeSlicerLoader {
+    return new PayeeSlicerLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "payees",
+    );
   }
 
-  get payees(): Array<string> {
-    let value = this.get("payees");
-    return value!.toStringArray();
+  get products(): ProductLoader {
+    return new ProductLoader("Slicer", this.get("id")!.toString(), "products");
   }
 
-  set payees(value: Array<string>) {
-    this.set("payees", Value.fromStringArray(value));
+  get TokenListings(): TokenListingLoader {
+    return new TokenListingLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "TokenListings",
+    );
   }
 
-  get products(): Array<string> {
-    let value = this.get("products");
-    return value!.toStringArray();
+  get purchaseData(): PurchaseDataLoader {
+    return new PurchaseDataLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "purchaseData",
+    );
   }
 
-  set products(value: Array<string>) {
-    this.set("products", Value.fromStringArray(value));
+  get slicerOrders(): SlicerOrderLoader {
+    return new SlicerOrderLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "slicerOrders",
+    );
   }
 
-  get TokenListings(): Array<string> {
-    let value = this.get("TokenListings");
-    return value!.toStringArray();
+  get productTypes(): ProductTypeLoader {
+    return new ProductTypeLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "productTypes",
+    );
   }
 
-  set TokenListings(value: Array<string>) {
-    this.set("TokenListings", Value.fromStringArray(value));
-  }
-
-  get purchaseData(): Array<string> {
-    let value = this.get("purchaseData");
-    return value!.toStringArray();
-  }
-
-  set purchaseData(value: Array<string>) {
-    this.set("purchaseData", Value.fromStringArray(value));
-  }
-
-  get slicerOrders(): Array<string> {
-    let value = this.get("slicerOrders");
-    return value!.toStringArray();
-  }
-
-  set slicerOrders(value: Array<string>) {
-    this.set("slicerOrders", Value.fromStringArray(value));
+  get productTypeHierarchies(): ProductTypeHierarchyLoader {
+    return new ProductTypeHierarchyLoader(
+      "Slicer",
+      this.get("id")!.toString(),
+      "productTypeHierarchies",
+    );
   }
 }
 
@@ -388,10 +506,16 @@ export class SlicerAddress extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerAddress must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerAddress must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerAddress", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): SlicerAddress | null {
+    return changetype<SlicerAddress | null>(
+      store.get_in_block("SlicerAddress", id),
+    );
   }
 
   static load(id: string): SlicerAddress | null {
@@ -400,7 +524,11 @@ export class SlicerAddress extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -409,7 +537,11 @@ export class SlicerAddress extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -429,21 +561,31 @@ export class SlicerStatsByDay extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerStatsByDay must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerStatsByDay must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerStatsByDay", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): SlicerStatsByDay | null {
+    return changetype<SlicerStatsByDay | null>(
+      store.get_in_block("SlicerStatsByDay", id),
+    );
+  }
+
   static load(id: string): SlicerStatsByDay | null {
     return changetype<SlicerStatsByDay | null>(
-      store.get("SlicerStatsByDay", id)
+      store.get("SlicerStatsByDay", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -452,7 +594,11 @@ export class SlicerStatsByDay extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -461,7 +607,11 @@ export class SlicerStatsByDay extends Entity {
 
   get day(): BigInt {
     let value = this.get("day");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set day(value: BigInt) {
@@ -470,7 +620,11 @@ export class SlicerStatsByDay extends Entity {
 
   get week(): string {
     let value = this.get("week");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set week(value: string) {
@@ -479,7 +633,11 @@ export class SlicerStatsByDay extends Entity {
 
   get month(): string {
     let value = this.get("month");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set month(value: string) {
@@ -488,7 +646,11 @@ export class SlicerStatsByDay extends Entity {
 
   get year(): string {
     let value = this.get("year");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set year(value: string) {
@@ -497,7 +659,11 @@ export class SlicerStatsByDay extends Entity {
 
   get totalOrders(): BigInt {
     let value = this.get("totalOrders");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalOrders(value: BigInt) {
@@ -506,7 +672,11 @@ export class SlicerStatsByDay extends Entity {
 
   get totalProductsPurchased(): BigInt {
     let value = this.get("totalProductsPurchased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalProductsPurchased(value: BigInt) {
@@ -515,20 +685,23 @@ export class SlicerStatsByDay extends Entity {
 
   get totalEarnedUsd(): BigInt {
     let value = this.get("totalEarnedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarnedUsd(value: BigInt) {
     this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
-  get totalEarnedByCurrency(): Array<string> {
-    let value = this.get("totalEarnedByCurrency");
-    return value!.toStringArray();
-  }
-
-  set totalEarnedByCurrency(value: Array<string>) {
-    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  get totalEarnedByCurrency(): CurrencySlicerDayLoader {
+    return new CurrencySlicerDayLoader(
+      "SlicerStatsByDay",
+      this.get("id")!.toString(),
+      "totalEarnedByCurrency",
+    );
   }
 }
 
@@ -544,21 +717,31 @@ export class SlicerStatsByWeek extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerStatsByWeek must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerStatsByWeek must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerStatsByWeek", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): SlicerStatsByWeek | null {
+    return changetype<SlicerStatsByWeek | null>(
+      store.get_in_block("SlicerStatsByWeek", id),
+    );
+  }
+
   static load(id: string): SlicerStatsByWeek | null {
     return changetype<SlicerStatsByWeek | null>(
-      store.get("SlicerStatsByWeek", id)
+      store.get("SlicerStatsByWeek", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -567,25 +750,32 @@ export class SlicerStatsByWeek extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
     this.set("slicer", Value.fromString(value));
   }
 
-  get days(): Array<string> {
-    let value = this.get("days");
-    return value!.toStringArray();
-  }
-
-  set days(value: Array<string>) {
-    this.set("days", Value.fromStringArray(value));
+  get days(): SlicerStatsByDayLoader {
+    return new SlicerStatsByDayLoader(
+      "SlicerStatsByWeek",
+      this.get("id")!.toString(),
+      "days",
+    );
   }
 
   get week(): BigInt {
     let value = this.get("week");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set week(value: BigInt) {
@@ -594,7 +784,11 @@ export class SlicerStatsByWeek extends Entity {
 
   get month(): string {
     let value = this.get("month");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set month(value: string) {
@@ -603,7 +797,11 @@ export class SlicerStatsByWeek extends Entity {
 
   get year(): string {
     let value = this.get("year");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set year(value: string) {
@@ -612,7 +810,11 @@ export class SlicerStatsByWeek extends Entity {
 
   get totalOrders(): BigInt {
     let value = this.get("totalOrders");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalOrders(value: BigInt) {
@@ -621,7 +823,11 @@ export class SlicerStatsByWeek extends Entity {
 
   get totalProductsPurchased(): BigInt {
     let value = this.get("totalProductsPurchased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalProductsPurchased(value: BigInt) {
@@ -630,20 +836,23 @@ export class SlicerStatsByWeek extends Entity {
 
   get totalEarnedUsd(): BigInt {
     let value = this.get("totalEarnedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarnedUsd(value: BigInt) {
     this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
-  get totalEarnedByCurrency(): Array<string> {
-    let value = this.get("totalEarnedByCurrency");
-    return value!.toStringArray();
-  }
-
-  set totalEarnedByCurrency(value: Array<string>) {
-    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  get totalEarnedByCurrency(): CurrencySlicerWeekLoader {
+    return new CurrencySlicerWeekLoader(
+      "SlicerStatsByWeek",
+      this.get("id")!.toString(),
+      "totalEarnedByCurrency",
+    );
   }
 }
 
@@ -659,21 +868,31 @@ export class SlicerStatsByMonth extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerStatsByMonth must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerStatsByMonth must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerStatsByMonth", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): SlicerStatsByMonth | null {
+    return changetype<SlicerStatsByMonth | null>(
+      store.get_in_block("SlicerStatsByMonth", id),
+    );
+  }
+
   static load(id: string): SlicerStatsByMonth | null {
     return changetype<SlicerStatsByMonth | null>(
-      store.get("SlicerStatsByMonth", id)
+      store.get("SlicerStatsByMonth", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -682,34 +901,40 @@ export class SlicerStatsByMonth extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
     this.set("slicer", Value.fromString(value));
   }
 
-  get days(): Array<string> {
-    let value = this.get("days");
-    return value!.toStringArray();
+  get days(): SlicerStatsByDayLoader {
+    return new SlicerStatsByDayLoader(
+      "SlicerStatsByMonth",
+      this.get("id")!.toString(),
+      "days",
+    );
   }
 
-  set days(value: Array<string>) {
-    this.set("days", Value.fromStringArray(value));
-  }
-
-  get weeks(): Array<string> {
-    let value = this.get("weeks");
-    return value!.toStringArray();
-  }
-
-  set weeks(value: Array<string>) {
-    this.set("weeks", Value.fromStringArray(value));
+  get weeks(): SlicerStatsByWeekLoader {
+    return new SlicerStatsByWeekLoader(
+      "SlicerStatsByMonth",
+      this.get("id")!.toString(),
+      "weeks",
+    );
   }
 
   get month(): BigInt {
     let value = this.get("month");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set month(value: BigInt) {
@@ -718,7 +943,11 @@ export class SlicerStatsByMonth extends Entity {
 
   get year(): string {
     let value = this.get("year");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set year(value: string) {
@@ -727,7 +956,11 @@ export class SlicerStatsByMonth extends Entity {
 
   get totalOrders(): BigInt {
     let value = this.get("totalOrders");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalOrders(value: BigInt) {
@@ -736,7 +969,11 @@ export class SlicerStatsByMonth extends Entity {
 
   get totalProductsPurchased(): BigInt {
     let value = this.get("totalProductsPurchased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalProductsPurchased(value: BigInt) {
@@ -745,20 +982,23 @@ export class SlicerStatsByMonth extends Entity {
 
   get totalEarnedUsd(): BigInt {
     let value = this.get("totalEarnedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarnedUsd(value: BigInt) {
     this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
-  get totalEarnedByCurrency(): Array<string> {
-    let value = this.get("totalEarnedByCurrency");
-    return value!.toStringArray();
-  }
-
-  set totalEarnedByCurrency(value: Array<string>) {
-    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  get totalEarnedByCurrency(): CurrencySlicerMonthLoader {
+    return new CurrencySlicerMonthLoader(
+      "SlicerStatsByMonth",
+      this.get("id")!.toString(),
+      "totalEarnedByCurrency",
+    );
   }
 }
 
@@ -774,21 +1014,31 @@ export class SlicerStatsByYear extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerStatsByYear must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerStatsByYear must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerStatsByYear", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): SlicerStatsByYear | null {
+    return changetype<SlicerStatsByYear | null>(
+      store.get_in_block("SlicerStatsByYear", id),
+    );
+  }
+
   static load(id: string): SlicerStatsByYear | null {
     return changetype<SlicerStatsByYear | null>(
-      store.get("SlicerStatsByYear", id)
+      store.get("SlicerStatsByYear", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -797,43 +1047,48 @@ export class SlicerStatsByYear extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
     this.set("slicer", Value.fromString(value));
   }
 
-  get days(): Array<string> {
-    let value = this.get("days");
-    return value!.toStringArray();
+  get days(): SlicerStatsByDayLoader {
+    return new SlicerStatsByDayLoader(
+      "SlicerStatsByYear",
+      this.get("id")!.toString(),
+      "days",
+    );
   }
 
-  set days(value: Array<string>) {
-    this.set("days", Value.fromStringArray(value));
+  get weeks(): SlicerStatsByWeekLoader {
+    return new SlicerStatsByWeekLoader(
+      "SlicerStatsByYear",
+      this.get("id")!.toString(),
+      "weeks",
+    );
   }
 
-  get weeks(): Array<string> {
-    let value = this.get("weeks");
-    return value!.toStringArray();
-  }
-
-  set weeks(value: Array<string>) {
-    this.set("weeks", Value.fromStringArray(value));
-  }
-
-  get months(): Array<string> {
-    let value = this.get("months");
-    return value!.toStringArray();
-  }
-
-  set months(value: Array<string>) {
-    this.set("months", Value.fromStringArray(value));
+  get months(): SlicerStatsByMonthLoader {
+    return new SlicerStatsByMonthLoader(
+      "SlicerStatsByYear",
+      this.get("id")!.toString(),
+      "months",
+    );
   }
 
   get year(): BigInt {
     let value = this.get("year");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set year(value: BigInt) {
@@ -842,7 +1097,11 @@ export class SlicerStatsByYear extends Entity {
 
   get totalOrders(): BigInt {
     let value = this.get("totalOrders");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalOrders(value: BigInt) {
@@ -851,7 +1110,11 @@ export class SlicerStatsByYear extends Entity {
 
   get totalProductsPurchased(): BigInt {
     let value = this.get("totalProductsPurchased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalProductsPurchased(value: BigInt) {
@@ -860,20 +1123,23 @@ export class SlicerStatsByYear extends Entity {
 
   get totalEarnedUsd(): BigInt {
     let value = this.get("totalEarnedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarnedUsd(value: BigInt) {
     this.set("totalEarnedUsd", Value.fromBigInt(value));
   }
 
-  get totalEarnedByCurrency(): Array<string> {
-    let value = this.get("totalEarnedByCurrency");
-    return value!.toStringArray();
-  }
-
-  set totalEarnedByCurrency(value: Array<string>) {
-    this.set("totalEarnedByCurrency", Value.fromStringArray(value));
+  get totalEarnedByCurrency(): CurrencySlicerYearLoader {
+    return new CurrencySlicerYearLoader(
+      "SlicerStatsByYear",
+      this.get("id")!.toString(),
+      "totalEarnedByCurrency",
+    );
   }
 }
 
@@ -889,21 +1155,31 @@ export class CurrencySlicerDay extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type CurrencySlicerDay must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CurrencySlicerDay must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("CurrencySlicerDay", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): CurrencySlicerDay | null {
+    return changetype<CurrencySlicerDay | null>(
+      store.get_in_block("CurrencySlicerDay", id),
+    );
+  }
+
   static load(id: string): CurrencySlicerDay | null {
     return changetype<CurrencySlicerDay | null>(
-      store.get("CurrencySlicerDay", id)
+      store.get("CurrencySlicerDay", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -912,7 +1188,11 @@ export class CurrencySlicerDay extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -921,7 +1201,11 @@ export class CurrencySlicerDay extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -930,7 +1214,11 @@ export class CurrencySlicerDay extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -939,7 +1227,11 @@ export class CurrencySlicerDay extends Entity {
 
   get slicerDay(): string {
     let value = this.get("slicerDay");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicerDay(value: string) {
@@ -948,7 +1240,11 @@ export class CurrencySlicerDay extends Entity {
 
   get totalEarned(): BigInt {
     let value = this.get("totalEarned");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarned(value: BigInt) {
@@ -968,21 +1264,31 @@ export class CurrencySlicerWeek extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type CurrencySlicerWeek must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CurrencySlicerWeek must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("CurrencySlicerWeek", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): CurrencySlicerWeek | null {
+    return changetype<CurrencySlicerWeek | null>(
+      store.get_in_block("CurrencySlicerWeek", id),
+    );
+  }
+
   static load(id: string): CurrencySlicerWeek | null {
     return changetype<CurrencySlicerWeek | null>(
-      store.get("CurrencySlicerWeek", id)
+      store.get("CurrencySlicerWeek", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -991,7 +1297,11 @@ export class CurrencySlicerWeek extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -1000,7 +1310,11 @@ export class CurrencySlicerWeek extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -1009,7 +1323,11 @@ export class CurrencySlicerWeek extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -1018,7 +1336,11 @@ export class CurrencySlicerWeek extends Entity {
 
   get slicerWeek(): string {
     let value = this.get("slicerWeek");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicerWeek(value: string) {
@@ -1027,7 +1349,11 @@ export class CurrencySlicerWeek extends Entity {
 
   get totalEarned(): BigInt {
     let value = this.get("totalEarned");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarned(value: BigInt) {
@@ -1047,21 +1373,31 @@ export class CurrencySlicerMonth extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type CurrencySlicerMonth must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CurrencySlicerMonth must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("CurrencySlicerMonth", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): CurrencySlicerMonth | null {
+    return changetype<CurrencySlicerMonth | null>(
+      store.get_in_block("CurrencySlicerMonth", id),
+    );
+  }
+
   static load(id: string): CurrencySlicerMonth | null {
     return changetype<CurrencySlicerMonth | null>(
-      store.get("CurrencySlicerMonth", id)
+      store.get("CurrencySlicerMonth", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1070,7 +1406,11 @@ export class CurrencySlicerMonth extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -1079,7 +1419,11 @@ export class CurrencySlicerMonth extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -1088,7 +1432,11 @@ export class CurrencySlicerMonth extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -1097,7 +1445,11 @@ export class CurrencySlicerMonth extends Entity {
 
   get slicerMonth(): string {
     let value = this.get("slicerMonth");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicerMonth(value: string) {
@@ -1106,7 +1458,11 @@ export class CurrencySlicerMonth extends Entity {
 
   get totalEarned(): BigInt {
     let value = this.get("totalEarned");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarned(value: BigInt) {
@@ -1126,21 +1482,31 @@ export class CurrencySlicerYear extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type CurrencySlicerYear must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CurrencySlicerYear must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("CurrencySlicerYear", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): CurrencySlicerYear | null {
+    return changetype<CurrencySlicerYear | null>(
+      store.get_in_block("CurrencySlicerYear", id),
+    );
+  }
+
   static load(id: string): CurrencySlicerYear | null {
     return changetype<CurrencySlicerYear | null>(
-      store.get("CurrencySlicerYear", id)
+      store.get("CurrencySlicerYear", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1149,7 +1515,11 @@ export class CurrencySlicerYear extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -1158,7 +1528,11 @@ export class CurrencySlicerYear extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -1167,7 +1541,11 @@ export class CurrencySlicerYear extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -1176,7 +1554,11 @@ export class CurrencySlicerYear extends Entity {
 
   get slicerYear(): string {
     let value = this.get("slicerYear");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicerYear(value: string) {
@@ -1185,7 +1567,11 @@ export class CurrencySlicerYear extends Entity {
 
   get totalEarned(): BigInt {
     let value = this.get("totalEarned");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarned(value: BigInt) {
@@ -1205,10 +1591,14 @@ export class Payee extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Payee must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Payee must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Payee", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Payee | null {
+    return changetype<Payee | null>(store.get_in_block("Payee", id));
   }
 
   static load(id: string): Payee | null {
@@ -1217,83 +1607,63 @@ export class Payee extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
   }
 
-  get created(): Array<string> {
-    let value = this.get("created");
-    return value!.toStringArray();
+  get created(): SlicerLoader {
+    return new SlicerLoader("Payee", this.get("id")!.toString(), "created");
   }
 
-  set created(value: Array<string>) {
-    this.set("created", Value.fromStringArray(value));
+  get controlled(): SlicerLoader {
+    return new SlicerLoader("Payee", this.get("id")!.toString(), "controlled");
   }
 
-  get controlled(): Array<string> {
-    let value = this.get("controlled");
-    return value!.toStringArray();
+  get royaltyReceived(): SlicerLoader {
+    return new SlicerLoader(
+      "Payee",
+      this.get("id")!.toString(),
+      "royaltyReceived",
+    );
   }
 
-  set controlled(value: Array<string>) {
-    this.set("controlled", Value.fromStringArray(value));
+  get slicers(): PayeeSlicerLoader {
+    return new PayeeSlicerLoader(
+      "Payee",
+      this.get("id")!.toString(),
+      "slicers",
+    );
   }
 
-  get royaltyReceived(): Array<string> {
-    let value = this.get("royaltyReceived");
-    return value!.toStringArray();
+  get currencies(): PayeeCurrencyLoader {
+    return new PayeeCurrencyLoader(
+      "Payee",
+      this.get("id")!.toString(),
+      "currencies",
+    );
   }
 
-  set royaltyReceived(value: Array<string>) {
-    this.set("royaltyReceived", Value.fromStringArray(value));
+  get purchases(): ProductPurchaseLoader {
+    return new ProductPurchaseLoader(
+      "Payee",
+      this.get("id")!.toString(),
+      "purchases",
+    );
   }
 
-  get slicers(): Array<string> {
-    let value = this.get("slicers");
-    return value!.toStringArray();
+  get orders(): OrderLoader {
+    return new OrderLoader("Payee", this.get("id")!.toString(), "orders");
   }
 
-  set slicers(value: Array<string>) {
-    this.set("slicers", Value.fromStringArray(value));
-  }
-
-  get currencies(): Array<string> {
-    let value = this.get("currencies");
-    return value!.toStringArray();
-  }
-
-  set currencies(value: Array<string>) {
-    this.set("currencies", Value.fromStringArray(value));
-  }
-
-  get purchases(): Array<string> {
-    let value = this.get("purchases");
-    return value!.toStringArray();
-  }
-
-  set purchases(value: Array<string>) {
-    this.set("purchases", Value.fromStringArray(value));
-  }
-
-  get orders(): Array<string> {
-    let value = this.get("orders");
-    return value!.toStringArray();
-  }
-
-  set orders(value: Array<string>) {
-    this.set("orders", Value.fromStringArray(value));
-  }
-
-  get referrals(): Array<string> {
-    let value = this.get("referrals");
-    return value!.toStringArray();
-  }
-
-  set referrals(value: Array<string>) {
-    this.set("referrals", Value.fromStringArray(value));
+  get referrals(): OrderLoader {
+    return new OrderLoader("Payee", this.get("id")!.toString(), "referrals");
   }
 }
 
@@ -1309,10 +1679,14 @@ export class Currency extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Currency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Currency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Currency", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Currency | null {
+    return changetype<Currency | null>(store.get_in_block("Currency", id));
   }
 
   static load(id: string): Currency | null {
@@ -1321,38 +1695,39 @@ export class Currency extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
   }
 
-  get slicers(): Array<string> {
-    let value = this.get("slicers");
-    return value!.toStringArray();
+  get slicers(): CurrencySlicerLoader {
+    return new CurrencySlicerLoader(
+      "Currency",
+      this.get("id")!.toString(),
+      "slicers",
+    );
   }
 
-  set slicers(value: Array<string>) {
-    this.set("slicers", Value.fromStringArray(value));
+  get payees(): PayeeCurrencyLoader {
+    return new PayeeCurrencyLoader(
+      "Currency",
+      this.get("id")!.toString(),
+      "payees",
+    );
   }
 
-  get payees(): Array<string> {
-    let value = this.get("payees");
-    return value!.toStringArray();
-  }
-
-  set payees(value: Array<string>) {
-    this.set("payees", Value.fromStringArray(value));
-  }
-
-  get products(): Array<string> {
-    let value = this.get("products");
-    return value!.toStringArray();
-  }
-
-  set products(value: Array<string>) {
-    this.set("products", Value.fromStringArray(value));
+  get products(): ProductPricesLoader {
+    return new ProductPricesLoader(
+      "Currency",
+      this.get("id")!.toString(),
+      "products",
+    );
   }
 }
 
@@ -1368,10 +1743,14 @@ export class Product extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Product must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Product must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Product", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Product | null {
+    return changetype<Product | null>(store.get_in_block("Product", id));
   }
 
   static load(id: string): Product | null {
@@ -1380,7 +1759,11 @@ export class Product extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1389,25 +1772,24 @@ export class Product extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
     this.set("slicer", Value.fromString(value));
   }
 
-  get categoryIndex(): BigInt {
-    let value = this.get("categoryIndex");
-    return value!.toBigInt();
-  }
-
-  set categoryIndex(value: BigInt) {
-    this.set("categoryIndex", Value.fromBigInt(value));
-  }
-
   get isRemoved(): boolean {
     let value = this.get("isRemoved");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set isRemoved(value: boolean) {
@@ -1416,7 +1798,11 @@ export class Product extends Entity {
 
   get isFree(): boolean {
     let value = this.get("isFree");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set isFree(value: boolean) {
@@ -1425,7 +1811,11 @@ export class Product extends Entity {
 
   get isInfinite(): boolean {
     let value = this.get("isInfinite");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set isInfinite(value: boolean) {
@@ -1434,7 +1824,11 @@ export class Product extends Entity {
 
   get availableUnits(): BigInt {
     let value = this.get("availableUnits");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set availableUnits(value: BigInt) {
@@ -1443,7 +1837,11 @@ export class Product extends Entity {
 
   get maxUnitsPerBuyer(): BigInt {
     let value = this.get("maxUnitsPerBuyer");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set maxUnitsPerBuyer(value: BigInt) {
@@ -1452,7 +1850,11 @@ export class Product extends Entity {
 
   get creator(): Bytes {
     let value = this.get("creator");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set creator(value: Bytes) {
@@ -1461,7 +1863,11 @@ export class Product extends Entity {
 
   get data(): Bytes {
     let value = this.get("data");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set data(value: Bytes) {
@@ -1470,7 +1876,11 @@ export class Product extends Entity {
 
   get createdAtTimestamp(): BigInt {
     let value = this.get("createdAtTimestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set createdAtTimestamp(value: BigInt) {
@@ -1479,7 +1889,11 @@ export class Product extends Entity {
 
   get extAddress(): Bytes {
     let value = this.get("extAddress");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set extAddress(value: Bytes) {
@@ -1488,7 +1902,11 @@ export class Product extends Entity {
 
   get extValue(): BigInt {
     let value = this.get("extValue");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set extValue(value: BigInt) {
@@ -1497,7 +1915,11 @@ export class Product extends Entity {
 
   get extCheckSig(): Bytes {
     let value = this.get("extCheckSig");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set extCheckSig(value: Bytes) {
@@ -1506,7 +1928,11 @@ export class Product extends Entity {
 
   get extExecSig(): Bytes {
     let value = this.get("extExecSig");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set extExecSig(value: Bytes) {
@@ -1515,7 +1941,11 @@ export class Product extends Entity {
 
   get extData(): Bytes {
     let value = this.get("extData");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set extData(value: Bytes) {
@@ -1524,7 +1954,11 @@ export class Product extends Entity {
 
   get extRelativePrice(): boolean {
     let value = this.get("extRelativePrice");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set extRelativePrice(value: boolean) {
@@ -1533,7 +1967,11 @@ export class Product extends Entity {
 
   get extPreferredToken(): boolean {
     let value = this.get("extPreferredToken");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set extPreferredToken(value: boolean) {
@@ -1542,7 +1980,11 @@ export class Product extends Entity {
 
   get totalPurchases(): BigInt {
     let value = this.get("totalPurchases");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalPurchases(value: BigInt) {
@@ -1551,47 +1993,481 @@ export class Product extends Entity {
 
   get referralFeeProduct(): BigInt {
     let value = this.get("referralFeeProduct");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set referralFeeProduct(value: BigInt) {
     this.set("referralFeeProduct", Value.fromBigInt(value));
   }
 
+  get category(): string {
+    let value = this.get("category");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set category(value: string) {
+    this.set("category", Value.fromString(value));
+  }
+
+  get productType(): string {
+    let value = this.get("productType");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set productType(value: string) {
+    this.set("productType", Value.fromString(value));
+  }
+
   get subProducts(): Array<string> {
     let value = this.get("subProducts");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
   }
 
   set subProducts(value: Array<string>) {
     this.set("subProducts", Value.fromStringArray(value));
   }
 
-  get prices(): Array<string> {
-    let value = this.get("prices");
-    return value!.toStringArray();
+  get prices(): ProductPricesLoader {
+    return new ProductPricesLoader(
+      "Product",
+      this.get("id")!.toString(),
+      "prices",
+    );
   }
 
-  set prices(value: Array<string>) {
-    this.set("prices", Value.fromStringArray(value));
+  get purchases(): ProductPurchaseLoader {
+    return new ProductPurchaseLoader(
+      "Product",
+      this.get("id")!.toString(),
+      "purchases",
+    );
   }
 
-  get purchases(): Array<string> {
-    let value = this.get("purchases");
-    return value!.toStringArray();
+  get purchaseData(): PurchaseDataLoader {
+    return new PurchaseDataLoader(
+      "Product",
+      this.get("id")!.toString(),
+      "purchaseData",
+    );
+  }
+}
+
+export class ProductCategory extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
   }
 
-  set purchases(value: Array<string>) {
-    this.set("purchases", Value.fromStringArray(value));
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProductCategory entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ProductCategory must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("ProductCategory", id.toString(), this);
+    }
   }
 
-  get purchaseData(): Array<string> {
-    let value = this.get("purchaseData");
-    return value!.toStringArray();
+  static loadInBlock(id: string): ProductCategory | null {
+    return changetype<ProductCategory | null>(
+      store.get_in_block("ProductCategory", id),
+    );
   }
 
-  set purchaseData(value: Array<string>) {
-    this.set("purchaseData", Value.fromStringArray(value));
+  static load(id: string): ProductCategory | null {
+    return changetype<ProductCategory | null>(store.get("ProductCategory", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get parentCategory(): string | null {
+    let value = this.get("parentCategory");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set parentCategory(value: string | null) {
+    if (!value) {
+      this.unset("parentCategory");
+    } else {
+      this.set("parentCategory", Value.fromString(<string>value));
+    }
+  }
+
+  get subCategories(): ProductCategoryLoader {
+    return new ProductCategoryLoader(
+      "ProductCategory",
+      this.get("id")!.toString(),
+      "subCategories",
+    );
+  }
+
+  get products(): ProductLoader {
+    return new ProductLoader(
+      "ProductCategory",
+      this.get("id")!.toString(),
+      "products",
+    );
+  }
+
+  get ancestors(): ProductCategoryHierarchyLoader {
+    return new ProductCategoryHierarchyLoader(
+      "ProductCategory",
+      this.get("id")!.toString(),
+      "ancestors",
+    );
+  }
+
+  get descendants(): ProductCategoryHierarchyLoader {
+    return new ProductCategoryHierarchyLoader(
+      "ProductCategory",
+      this.get("id")!.toString(),
+      "descendants",
+    );
+  }
+}
+
+export class ProductCategoryHierarchy extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save ProductCategoryHierarchy entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ProductCategoryHierarchy must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("ProductCategoryHierarchy", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ProductCategoryHierarchy | null {
+    return changetype<ProductCategoryHierarchy | null>(
+      store.get_in_block("ProductCategoryHierarchy", id),
+    );
+  }
+
+  static load(id: string): ProductCategoryHierarchy | null {
+    return changetype<ProductCategoryHierarchy | null>(
+      store.get("ProductCategoryHierarchy", id),
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get ancestor(): string {
+    let value = this.get("ancestor");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ancestor(value: string) {
+    this.set("ancestor", Value.fromString(value));
+  }
+
+  get descendant(): string {
+    let value = this.get("descendant");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set descendant(value: string) {
+    this.set("descendant", Value.fromString(value));
+  }
+
+  get depth(): BigInt {
+    let value = this.get("depth");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depth(value: BigInt) {
+    this.set("depth", Value.fromBigInt(value));
+  }
+}
+
+export class ProductType extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProductType entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ProductType must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("ProductType", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ProductType | null {
+    return changetype<ProductType | null>(
+      store.get_in_block("ProductType", id),
+    );
+  }
+
+  static load(id: string): ProductType | null {
+    return changetype<ProductType | null>(store.get("ProductType", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get parentProductType(): string | null {
+    let value = this.get("parentProductType");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set parentProductType(value: string | null) {
+    if (!value) {
+      this.unset("parentProductType");
+    } else {
+      this.set("parentProductType", Value.fromString(<string>value));
+    }
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get subProductTypes(): ProductTypeLoader {
+    return new ProductTypeLoader(
+      "ProductType",
+      this.get("id")!.toString(),
+      "subProductTypes",
+    );
+  }
+
+  get products(): ProductLoader {
+    return new ProductLoader(
+      "ProductType",
+      this.get("id")!.toString(),
+      "products",
+    );
+  }
+
+  get ancestors(): ProductTypeHierarchyLoader {
+    return new ProductTypeHierarchyLoader(
+      "ProductType",
+      this.get("id")!.toString(),
+      "ancestors",
+    );
+  }
+
+  get descendants(): ProductTypeHierarchyLoader {
+    return new ProductTypeHierarchyLoader(
+      "ProductType",
+      this.get("id")!.toString(),
+      "descendants",
+    );
+  }
+}
+
+export class ProductTypeHierarchy extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProductTypeHierarchy entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ProductTypeHierarchy must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("ProductTypeHierarchy", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ProductTypeHierarchy | null {
+    return changetype<ProductTypeHierarchy | null>(
+      store.get_in_block("ProductTypeHierarchy", id),
+    );
+  }
+
+  static load(id: string): ProductTypeHierarchy | null {
+    return changetype<ProductTypeHierarchy | null>(
+      store.get("ProductTypeHierarchy", id),
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get slicer(): string {
+    let value = this.get("slicer");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set slicer(value: string) {
+    this.set("slicer", Value.fromString(value));
+  }
+
+  get ancestor(): string {
+    let value = this.get("ancestor");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ancestor(value: string) {
+    this.set("ancestor", Value.fromString(value));
+  }
+
+  get descendant(): string {
+    let value = this.get("descendant");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set descendant(value: string) {
+    this.set("descendant", Value.fromString(value));
+  }
+
+  get depth(): BigInt {
+    let value = this.get("depth");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depth(value: BigInt) {
+    this.set("depth", Value.fromBigInt(value));
   }
 }
 
@@ -1607,10 +2483,16 @@ export class PayeeSlicer extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type PayeeSlicer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PayeeSlicer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("PayeeSlicer", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): PayeeSlicer | null {
+    return changetype<PayeeSlicer | null>(
+      store.get_in_block("PayeeSlicer", id),
+    );
   }
 
   static load(id: string): PayeeSlicer | null {
@@ -1619,7 +2501,11 @@ export class PayeeSlicer extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1628,7 +2514,11 @@ export class PayeeSlicer extends Entity {
 
   get payee(): string {
     let value = this.get("payee");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set payee(value: string) {
@@ -1637,7 +2527,11 @@ export class PayeeSlicer extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -1646,7 +2540,11 @@ export class PayeeSlicer extends Entity {
 
   get slices(): BigInt {
     let value = this.get("slices");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set slices(value: BigInt) {
@@ -1655,29 +2553,31 @@ export class PayeeSlicer extends Entity {
 
   get transfersAllowedWhileLocked(): boolean {
     let value = this.get("transfersAllowedWhileLocked");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set transfersAllowedWhileLocked(value: boolean) {
     this.set("transfersAllowedWhileLocked", Value.fromBoolean(value));
   }
 
-  get currencyPayments(): Array<string> {
-    let value = this.get("currencyPayments");
-    return value!.toStringArray();
+  get currencyPayments(): PayeeSlicerCurrencyLoader {
+    return new PayeeSlicerCurrencyLoader(
+      "PayeeSlicer",
+      this.get("id")!.toString(),
+      "currencyPayments",
+    );
   }
 
-  set currencyPayments(value: Array<string>) {
-    this.set("currencyPayments", Value.fromStringArray(value));
-  }
-
-  get purchases(): Array<string> {
-    let value = this.get("purchases");
-    return value!.toStringArray();
-  }
-
-  set purchases(value: Array<string>) {
-    this.set("purchases", Value.fromStringArray(value));
+  get purchases(): ProductPurchaseLoader {
+    return new ProductPurchaseLoader(
+      "PayeeSlicer",
+      this.get("id")!.toString(),
+      "purchases",
+    );
   }
 }
 
@@ -1693,10 +2593,16 @@ export class PayeeCurrency extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type PayeeCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PayeeCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("PayeeCurrency", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): PayeeCurrency | null {
+    return changetype<PayeeCurrency | null>(
+      store.get_in_block("PayeeCurrency", id),
+    );
   }
 
   static load(id: string): PayeeCurrency | null {
@@ -1705,7 +2611,11 @@ export class PayeeCurrency extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1714,7 +2624,11 @@ export class PayeeCurrency extends Entity {
 
   get payee(): string {
     let value = this.get("payee");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set payee(value: string) {
@@ -1723,7 +2637,11 @@ export class PayeeCurrency extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -1732,7 +2650,11 @@ export class PayeeCurrency extends Entity {
 
   get toWithdraw(): BigInt {
     let value = this.get("toWithdraw");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set toWithdraw(value: BigInt) {
@@ -1741,7 +2663,11 @@ export class PayeeCurrency extends Entity {
 
   get toPayToProtocol(): BigInt {
     let value = this.get("toPayToProtocol");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set toPayToProtocol(value: BigInt) {
@@ -1750,7 +2676,11 @@ export class PayeeCurrency extends Entity {
 
   get withdrawn(): BigInt {
     let value = this.get("withdrawn");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set withdrawn(value: BigInt) {
@@ -1759,7 +2689,11 @@ export class PayeeCurrency extends Entity {
 
   get paidToProtocol(): BigInt {
     let value = this.get("paidToProtocol");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set paidToProtocol(value: BigInt) {
@@ -1768,7 +2702,11 @@ export class PayeeCurrency extends Entity {
 
   get totalCreatorFees(): BigInt {
     let value = this.get("totalCreatorFees");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalCreatorFees(value: BigInt) {
@@ -1777,20 +2715,23 @@ export class PayeeCurrency extends Entity {
 
   get totalReferralFees(): BigInt {
     let value = this.get("totalReferralFees");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalReferralFees(value: BigInt) {
     this.set("totalReferralFees", Value.fromBigInt(value));
   }
 
-  get slicerPayments(): Array<string> {
-    let value = this.get("slicerPayments");
-    return value!.toStringArray();
-  }
-
-  set slicerPayments(value: Array<string>) {
-    this.set("slicerPayments", Value.fromStringArray(value));
+  get slicerPayments(): PayeeSlicerCurrencyLoader {
+    return new PayeeSlicerCurrencyLoader(
+      "PayeeCurrency",
+      this.get("id")!.toString(),
+      "slicerPayments",
+    );
   }
 }
 
@@ -1806,10 +2747,16 @@ export class CurrencySlicer extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type CurrencySlicer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CurrencySlicer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("CurrencySlicer", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): CurrencySlicer | null {
+    return changetype<CurrencySlicer | null>(
+      store.get_in_block("CurrencySlicer", id),
+    );
   }
 
   static load(id: string): CurrencySlicer | null {
@@ -1818,7 +2765,11 @@ export class CurrencySlicer extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1827,7 +2778,11 @@ export class CurrencySlicer extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -1836,7 +2791,11 @@ export class CurrencySlicer extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -1845,7 +2804,11 @@ export class CurrencySlicer extends Entity {
 
   get released(): BigInt {
     let value = this.get("released");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set released(value: BigInt) {
@@ -1854,7 +2817,11 @@ export class CurrencySlicer extends Entity {
 
   get releasedUsd(): BigInt {
     let value = this.get("releasedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set releasedUsd(value: BigInt) {
@@ -1863,7 +2830,11 @@ export class CurrencySlicer extends Entity {
 
   get releasedToProtocol(): BigInt {
     let value = this.get("releasedToProtocol");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set releasedToProtocol(value: BigInt) {
@@ -1872,7 +2843,11 @@ export class CurrencySlicer extends Entity {
 
   get creatorFeePaid(): BigInt {
     let value = this.get("creatorFeePaid");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set creatorFeePaid(value: BigInt) {
@@ -1881,74 +2856,71 @@ export class CurrencySlicer extends Entity {
 
   get totalEarned(): BigInt {
     let value = this.get("totalEarned");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalEarned(value: BigInt) {
     this.set("totalEarned", Value.fromBigInt(value));
   }
 
-  get totalEarnedByDay(): Array<string> {
-    let value = this.get("totalEarnedByDay");
-    return value!.toStringArray();
+  get totalEarnedByDay(): CurrencySlicerDayLoader {
+    return new CurrencySlicerDayLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "totalEarnedByDay",
+    );
   }
 
-  set totalEarnedByDay(value: Array<string>) {
-    this.set("totalEarnedByDay", Value.fromStringArray(value));
+  get totalEarnedByWeek(): CurrencySlicerWeekLoader {
+    return new CurrencySlicerWeekLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "totalEarnedByWeek",
+    );
   }
 
-  get totalEarnedByWeek(): Array<string> {
-    let value = this.get("totalEarnedByWeek");
-    return value!.toStringArray();
+  get totalEarnedByMonth(): CurrencySlicerMonthLoader {
+    return new CurrencySlicerMonthLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "totalEarnedByMonth",
+    );
   }
 
-  set totalEarnedByWeek(value: Array<string>) {
-    this.set("totalEarnedByWeek", Value.fromStringArray(value));
+  get totalEarnedByYear(): CurrencySlicerYearLoader {
+    return new CurrencySlicerYearLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "totalEarnedByYear",
+    );
   }
 
-  get totalEarnedByMonth(): Array<string> {
-    let value = this.get("totalEarnedByMonth");
-    return value!.toStringArray();
+  get releaseEvents(): ReleaseEventLoader {
+    return new ReleaseEventLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "releaseEvents",
+    );
   }
 
-  set totalEarnedByMonth(value: Array<string>) {
-    this.set("totalEarnedByMonth", Value.fromStringArray(value));
+  get payeePayments(): PayeeSlicerCurrencyLoader {
+    return new PayeeSlicerCurrencyLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "payeePayments",
+    );
   }
 
-  get totalEarnedByYear(): Array<string> {
-    let value = this.get("totalEarnedByYear");
-    return value!.toStringArray();
-  }
-
-  set totalEarnedByYear(value: Array<string>) {
-    this.set("totalEarnedByYear", Value.fromStringArray(value));
-  }
-
-  get releaseEvents(): Array<string> {
-    let value = this.get("releaseEvents");
-    return value!.toStringArray();
-  }
-
-  set releaseEvents(value: Array<string>) {
-    this.set("releaseEvents", Value.fromStringArray(value));
-  }
-
-  get payeePayments(): Array<string> {
-    let value = this.get("payeePayments");
-    return value!.toStringArray();
-  }
-
-  set payeePayments(value: Array<string>) {
-    this.set("payeePayments", Value.fromStringArray(value));
-  }
-
-  get purchases(): Array<string> {
-    let value = this.get("purchases");
-    return value!.toStringArray();
-  }
-
-  set purchases(value: Array<string>) {
-    this.set("purchases", Value.fromStringArray(value));
+  get purchases(): ProductPurchaseLoader {
+    return new ProductPurchaseLoader(
+      "CurrencySlicer",
+      this.get("id")!.toString(),
+      "purchases",
+    );
   }
 }
 
@@ -1964,10 +2936,16 @@ export class ReleaseEvent extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ReleaseEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ReleaseEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("ReleaseEvent", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): ReleaseEvent | null {
+    return changetype<ReleaseEvent | null>(
+      store.get_in_block("ReleaseEvent", id),
+    );
   }
 
   static load(id: string): ReleaseEvent | null {
@@ -1976,7 +2954,11 @@ export class ReleaseEvent extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -1985,7 +2967,11 @@ export class ReleaseEvent extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -1994,7 +2980,11 @@ export class ReleaseEvent extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -2003,7 +2993,11 @@ export class ReleaseEvent extends Entity {
 
   get payee(): string {
     let value = this.get("payee");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set payee(value: string) {
@@ -2012,7 +3006,11 @@ export class ReleaseEvent extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -2021,7 +3019,11 @@ export class ReleaseEvent extends Entity {
 
   get amountReleased(): BigInt {
     let value = this.get("amountReleased");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set amountReleased(value: BigInt) {
@@ -2030,7 +3032,11 @@ export class ReleaseEvent extends Entity {
 
   get amountReleasedUsd(): BigInt {
     let value = this.get("amountReleasedUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set amountReleasedUsd(value: BigInt) {
@@ -2039,7 +3045,11 @@ export class ReleaseEvent extends Entity {
 
   get timestamp(): BigInt {
     let value = this.get("timestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set timestamp(value: BigInt) {
@@ -2059,21 +3069,31 @@ export class PayeeSlicerCurrency extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type PayeeSlicerCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PayeeSlicerCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("PayeeSlicerCurrency", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): PayeeSlicerCurrency | null {
+    return changetype<PayeeSlicerCurrency | null>(
+      store.get_in_block("PayeeSlicerCurrency", id),
+    );
+  }
+
   static load(id: string): PayeeSlicerCurrency | null {
     return changetype<PayeeSlicerCurrency | null>(
-      store.get("PayeeSlicerCurrency", id)
+      store.get("PayeeSlicerCurrency", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2082,7 +3102,11 @@ export class PayeeSlicerCurrency extends Entity {
 
   get payeeSlicer(): string {
     let value = this.get("payeeSlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set payeeSlicer(value: string) {
@@ -2091,7 +3115,11 @@ export class PayeeSlicerCurrency extends Entity {
 
   get payeeCurrency(): string {
     let value = this.get("payeeCurrency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set payeeCurrency(value: string) {
@@ -2100,7 +3128,11 @@ export class PayeeSlicerCurrency extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -2109,7 +3141,11 @@ export class PayeeSlicerCurrency extends Entity {
 
   get paidForProducts(): BigInt {
     let value = this.get("paidForProducts");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set paidForProducts(value: BigInt) {
@@ -2129,10 +3165,16 @@ export class ProductPrices extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ProductPrices must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProductPrices must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("ProductPrices", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): ProductPrices | null {
+    return changetype<ProductPrices | null>(
+      store.get_in_block("ProductPrices", id),
+    );
   }
 
   static load(id: string): ProductPrices | null {
@@ -2141,7 +3183,11 @@ export class ProductPrices extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2150,7 +3196,11 @@ export class ProductPrices extends Entity {
 
   get product(): string {
     let value = this.get("product");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set product(value: string) {
@@ -2159,7 +3209,11 @@ export class ProductPrices extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -2168,7 +3222,11 @@ export class ProductPrices extends Entity {
 
   get price(): BigInt {
     let value = this.get("price");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set price(value: BigInt) {
@@ -2177,7 +3235,11 @@ export class ProductPrices extends Entity {
 
   get dynamicPricing(): boolean {
     let value = this.get("dynamicPricing");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set dynamicPricing(value: boolean) {
@@ -2186,7 +3248,11 @@ export class ProductPrices extends Entity {
 
   get externalAddress(): Bytes {
     let value = this.get("externalAddress");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set externalAddress(value: Bytes) {
@@ -2206,10 +3272,16 @@ export class ProductPurchase extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ProductPurchase must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProductPurchase must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("ProductPurchase", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): ProductPurchase | null {
+    return changetype<ProductPurchase | null>(
+      store.get_in_block("ProductPurchase", id),
+    );
   }
 
   static load(id: string): ProductPurchase | null {
@@ -2218,7 +3290,11 @@ export class ProductPurchase extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2227,7 +3303,11 @@ export class ProductPurchase extends Entity {
 
   get product(): string {
     let value = this.get("product");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set product(value: string) {
@@ -2236,7 +3316,11 @@ export class ProductPurchase extends Entity {
 
   get buyerSlicer(): string {
     let value = this.get("buyerSlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set buyerSlicer(value: string) {
@@ -2245,7 +3329,11 @@ export class ProductPurchase extends Entity {
 
   get currencySlicer(): string {
     let value = this.get("currencySlicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currencySlicer(value: string) {
@@ -2254,7 +3342,11 @@ export class ProductPurchase extends Entity {
 
   get buyer(): string {
     let value = this.get("buyer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set buyer(value: string) {
@@ -2263,7 +3355,11 @@ export class ProductPurchase extends Entity {
 
   get totalPaymentEth(): BigInt {
     let value = this.get("totalPaymentEth");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalPaymentEth(value: BigInt) {
@@ -2272,7 +3368,11 @@ export class ProductPurchase extends Entity {
 
   get totalPaymentCurrency(): BigInt {
     let value = this.get("totalPaymentCurrency");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalPaymentCurrency(value: BigInt) {
@@ -2281,7 +3381,11 @@ export class ProductPurchase extends Entity {
 
   get totalPaymentUsd(): BigInt {
     let value = this.get("totalPaymentUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalPaymentUsd(value: BigInt) {
@@ -2290,7 +3394,11 @@ export class ProductPurchase extends Entity {
 
   get lastPurchasedAtTimestamp(): BigInt {
     let value = this.get("lastPurchasedAtTimestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set lastPurchasedAtTimestamp(value: BigInt) {
@@ -2299,7 +3407,11 @@ export class ProductPurchase extends Entity {
 
   get totalQuantity(): BigInt {
     let value = this.get("totalQuantity");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalQuantity(value: BigInt) {
@@ -2308,20 +3420,23 @@ export class ProductPurchase extends Entity {
 
   get totalPurchases(): BigInt {
     let value = this.get("totalPurchases");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalPurchases(value: BigInt) {
     this.set("totalPurchases", Value.fromBigInt(value));
   }
 
-  get purchaseData(): Array<string> {
-    let value = this.get("purchaseData");
-    return value!.toStringArray();
-  }
-
-  set purchaseData(value: Array<string>) {
-    this.set("purchaseData", Value.fromStringArray(value));
+  get purchaseData(): PurchaseDataLoader {
+    return new PurchaseDataLoader(
+      "ProductPurchase",
+      this.get("id")!.toString(),
+      "purchaseData",
+    );
   }
 }
 
@@ -2337,10 +3452,16 @@ export class PurchaseData extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type PurchaseData must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PurchaseData must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("PurchaseData", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): PurchaseData | null {
+    return changetype<PurchaseData | null>(
+      store.get_in_block("PurchaseData", id),
+    );
   }
 
   static load(id: string): PurchaseData | null {
@@ -2349,7 +3470,11 @@ export class PurchaseData extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2358,7 +3483,11 @@ export class PurchaseData extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -2367,7 +3496,11 @@ export class PurchaseData extends Entity {
 
   get product(): string {
     let value = this.get("product");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set product(value: string) {
@@ -2410,7 +3543,11 @@ export class PurchaseData extends Entity {
 
   get productPurchase(): string {
     let value = this.get("productPurchase");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set productPurchase(value: string) {
@@ -2419,7 +3556,11 @@ export class PurchaseData extends Entity {
 
   get slicerOrder(): string {
     let value = this.get("slicerOrder");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicerOrder(value: string) {
@@ -2428,7 +3569,11 @@ export class PurchaseData extends Entity {
 
   get order(): string {
     let value = this.get("order");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set order(value: string) {
@@ -2437,7 +3582,11 @@ export class PurchaseData extends Entity {
 
   get quantity(): BigInt {
     let value = this.get("quantity");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set quantity(value: BigInt) {
@@ -2446,7 +3595,11 @@ export class PurchaseData extends Entity {
 
   get paymentEth(): BigInt {
     let value = this.get("paymentEth");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set paymentEth(value: BigInt) {
@@ -2455,7 +3608,11 @@ export class PurchaseData extends Entity {
 
   get paymentCurrency(): BigInt {
     let value = this.get("paymentCurrency");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set paymentCurrency(value: BigInt) {
@@ -2464,7 +3621,11 @@ export class PurchaseData extends Entity {
 
   get paymentUsd(): BigInt {
     let value = this.get("paymentUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set paymentUsd(value: BigInt) {
@@ -2473,7 +3634,11 @@ export class PurchaseData extends Entity {
 
   get externalPaymentEth(): BigInt {
     let value = this.get("externalPaymentEth");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set externalPaymentEth(value: BigInt) {
@@ -2482,7 +3647,11 @@ export class PurchaseData extends Entity {
 
   get externalPaymentCurrency(): BigInt {
     let value = this.get("externalPaymentCurrency");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set externalPaymentCurrency(value: BigInt) {
@@ -2491,7 +3660,11 @@ export class PurchaseData extends Entity {
 
   get externalPaymentUsd(): BigInt {
     let value = this.get("externalPaymentUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set externalPaymentUsd(value: BigInt) {
@@ -2500,7 +3673,11 @@ export class PurchaseData extends Entity {
 
   get referralEth(): BigInt {
     let value = this.get("referralEth");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set referralEth(value: BigInt) {
@@ -2509,7 +3686,11 @@ export class PurchaseData extends Entity {
 
   get referralCurrency(): BigInt {
     let value = this.get("referralCurrency");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set referralCurrency(value: BigInt) {
@@ -2518,7 +3699,11 @@ export class PurchaseData extends Entity {
 
   get referralUsd(): BigInt {
     let value = this.get("referralUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set referralUsd(value: BigInt) {
@@ -2527,7 +3712,11 @@ export class PurchaseData extends Entity {
 
   get startPurchaseId(): BigInt {
     let value = this.get("startPurchaseId");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set startPurchaseId(value: BigInt) {
@@ -2536,7 +3725,11 @@ export class PurchaseData extends Entity {
 
   get timestamp(): BigInt {
     let value = this.get("timestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set timestamp(value: BigInt) {
@@ -2545,7 +3738,11 @@ export class PurchaseData extends Entity {
 
   get transactionHash(): Bytes {
     let value = this.get("transactionHash");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set transactionHash(value: Bytes) {
@@ -2565,10 +3762,14 @@ export class Order extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Order must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Order must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Order", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Order | null {
+    return changetype<Order | null>(store.get_in_block("Order", id));
   }
 
   static load(id: string): Order | null {
@@ -2577,7 +3778,11 @@ export class Order extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2586,7 +3791,11 @@ export class Order extends Entity {
 
   get timestamp(): BigInt {
     let value = this.get("timestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set timestamp(value: BigInt) {
@@ -2595,7 +3804,11 @@ export class Order extends Entity {
 
   get payer(): string {
     let value = this.get("payer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set payer(value: string) {
@@ -2604,7 +3817,11 @@ export class Order extends Entity {
 
   get buyer(): string {
     let value = this.get("buyer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set buyer(value: string) {
@@ -2613,38 +3830,39 @@ export class Order extends Entity {
 
   get referrer(): string {
     let value = this.get("referrer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set referrer(value: string) {
     this.set("referrer", Value.fromString(value));
   }
 
-  get slicerOrders(): Array<string> {
-    let value = this.get("slicerOrders");
-    return value!.toStringArray();
+  get slicerOrders(): SlicerOrderLoader {
+    return new SlicerOrderLoader(
+      "Order",
+      this.get("id")!.toString(),
+      "slicerOrders",
+    );
   }
 
-  set slicerOrders(value: Array<string>) {
-    this.set("slicerOrders", Value.fromStringArray(value));
+  get extraCosts(): ExtraCostLoader {
+    return new ExtraCostLoader(
+      "Order",
+      this.get("id")!.toString(),
+      "extraCosts",
+    );
   }
 
-  get extraCosts(): Array<string> {
-    let value = this.get("extraCosts");
-    return value!.toStringArray();
-  }
-
-  set extraCosts(value: Array<string>) {
-    this.set("extraCosts", Value.fromStringArray(value));
-  }
-
-  get purchaseData(): Array<string> {
-    let value = this.get("purchaseData");
-    return value!.toStringArray();
-  }
-
-  set purchaseData(value: Array<string>) {
-    this.set("purchaseData", Value.fromStringArray(value));
+  get purchaseData(): PurchaseDataLoader {
+    return new PurchaseDataLoader(
+      "Order",
+      this.get("id")!.toString(),
+      "purchaseData",
+    );
   }
 }
 
@@ -2660,10 +3878,16 @@ export class SlicerOrder extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerOrder must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerOrder must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerOrder", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): SlicerOrder | null {
+    return changetype<SlicerOrder | null>(
+      store.get_in_block("SlicerOrder", id),
+    );
   }
 
   static load(id: string): SlicerOrder | null {
@@ -2672,7 +3896,11 @@ export class SlicerOrder extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2681,25 +3909,32 @@ export class SlicerOrder extends Entity {
 
   get timestamp(): BigInt {
     let value = this.get("timestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get totalAmountCurrencies(): Array<string> {
-    let value = this.get("totalAmountCurrencies");
-    return value!.toStringArray();
-  }
-
-  set totalAmountCurrencies(value: Array<string>) {
-    this.set("totalAmountCurrencies", Value.fromStringArray(value));
+  get totalAmountCurrencies(): SlicerOrderTotalAmountCurrencyLoader {
+    return new SlicerOrderTotalAmountCurrencyLoader(
+      "SlicerOrder",
+      this.get("id")!.toString(),
+      "totalAmountCurrencies",
+    );
   }
 
   get totalAmountUsd(): BigInt {
     let value = this.get("totalAmountUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalAmountUsd(value: BigInt) {
@@ -2708,7 +3943,11 @@ export class SlicerOrder extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -2717,29 +3956,31 @@ export class SlicerOrder extends Entity {
 
   get order(): string {
     let value = this.get("order");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set order(value: string) {
     this.set("order", Value.fromString(value));
   }
 
-  get purchaseData(): Array<string> {
-    let value = this.get("purchaseData");
-    return value!.toStringArray();
+  get purchaseData(): PurchaseDataLoader {
+    return new PurchaseDataLoader(
+      "SlicerOrder",
+      this.get("id")!.toString(),
+      "purchaseData",
+    );
   }
 
-  set purchaseData(value: Array<string>) {
-    this.set("purchaseData", Value.fromStringArray(value));
-  }
-
-  get extraCosts(): Array<string> {
-    let value = this.get("extraCosts");
-    return value!.toStringArray();
-  }
-
-  set extraCosts(value: Array<string>) {
-    this.set("extraCosts", Value.fromStringArray(value));
+  get extraCosts(): ExtraCostLoader {
+    return new ExtraCostLoader(
+      "SlicerOrder",
+      this.get("id")!.toString(),
+      "extraCosts",
+    );
   }
 }
 
@@ -2753,26 +3994,36 @@ export class SlicerOrderTotalAmountCurrency extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save SlicerOrderTotalAmountCurrency entity without an ID"
+      "Cannot save SlicerOrderTotalAmountCurrency entity without an ID",
     );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SlicerOrderTotalAmountCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SlicerOrderTotalAmountCurrency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("SlicerOrderTotalAmountCurrency", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): SlicerOrderTotalAmountCurrency | null {
+    return changetype<SlicerOrderTotalAmountCurrency | null>(
+      store.get_in_block("SlicerOrderTotalAmountCurrency", id),
+    );
+  }
+
   static load(id: string): SlicerOrderTotalAmountCurrency | null {
     return changetype<SlicerOrderTotalAmountCurrency | null>(
-      store.get("SlicerOrderTotalAmountCurrency", id)
+      store.get("SlicerOrderTotalAmountCurrency", id),
     );
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2781,7 +4032,11 @@ export class SlicerOrderTotalAmountCurrency extends Entity {
 
   get slicerOrder(): string {
     let value = this.get("slicerOrder");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicerOrder(value: string) {
@@ -2790,7 +4045,11 @@ export class SlicerOrderTotalAmountCurrency extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -2799,7 +4058,11 @@ export class SlicerOrderTotalAmountCurrency extends Entity {
 
   get totalAmount(): BigInt {
     let value = this.get("totalAmount");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set totalAmount(value: BigInt) {
@@ -2819,10 +4082,14 @@ export class ExtraCost extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ExtraCost must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ExtraCost must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("ExtraCost", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): ExtraCost | null {
+    return changetype<ExtraCost | null>(store.get_in_block("ExtraCost", id));
   }
 
   static load(id: string): ExtraCost | null {
@@ -2831,7 +4098,11 @@ export class ExtraCost extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2857,7 +4128,11 @@ export class ExtraCost extends Entity {
 
   get order(): string {
     let value = this.get("order");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set order(value: string) {
@@ -2883,7 +4158,11 @@ export class ExtraCost extends Entity {
 
   get recipient(): Bytes {
     let value = this.get("recipient");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set recipient(value: Bytes) {
@@ -2892,7 +4171,11 @@ export class ExtraCost extends Entity {
 
   get currency(): string {
     let value = this.get("currency");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set currency(value: string) {
@@ -2901,7 +4184,11 @@ export class ExtraCost extends Entity {
 
   get amount(): BigInt {
     let value = this.get("amount");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set amount(value: BigInt) {
@@ -2910,7 +4197,11 @@ export class ExtraCost extends Entity {
 
   get amountUsd(): BigInt {
     let value = this.get("amountUsd");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set amountUsd(value: BigInt) {
@@ -2919,7 +4210,11 @@ export class ExtraCost extends Entity {
 
   get description(): string {
     let value = this.get("description");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set description(value: string) {
@@ -2939,10 +4234,16 @@ export class TokenListing extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type TokenListing must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type TokenListing must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("TokenListing", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): TokenListing | null {
+    return changetype<TokenListing | null>(
+      store.get_in_block("TokenListing", id),
+    );
   }
 
   static load(id: string): TokenListing | null {
@@ -2951,7 +4252,11 @@ export class TokenListing extends Entity {
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -2960,7 +4265,11 @@ export class TokenListing extends Entity {
 
   get slicer(): string {
     let value = this.get("slicer");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set slicer(value: string) {
@@ -2969,7 +4278,11 @@ export class TokenListing extends Entity {
 
   get contract(): Bytes {
     let value = this.get("contract");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
   set contract(value: Bytes) {
@@ -2978,7 +4291,11 @@ export class TokenListing extends Entity {
 
   get tokenId(): BigInt {
     let value = this.get("tokenId");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set tokenId(value: BigInt) {
@@ -2987,7 +4304,11 @@ export class TokenListing extends Entity {
 
   get isERC721(): boolean {
     let value = this.get("isERC721");
-    return value!.toBoolean();
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
   }
 
   set isERC721(value: boolean) {
@@ -2996,7 +4317,11 @@ export class TokenListing extends Entity {
 
   get quantity(): BigInt {
     let value = this.get("quantity");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set quantity(value: BigInt) {
@@ -3005,10 +4330,500 @@ export class TokenListing extends Entity {
 
   get lastEditedAtTimestamp(): BigInt {
     let value = this.get("lastEditedAtTimestamp");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set lastEditedAtTimestamp(value: BigInt) {
     this.set("lastEditedAtTimestamp", Value.fromBigInt(value));
+  }
+}
+
+export class SlicerStatsByDayLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SlicerStatsByDay[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SlicerStatsByDay[]>(value);
+  }
+}
+
+export class SlicerStatsByWeekLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SlicerStatsByWeek[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SlicerStatsByWeek[]>(value);
+  }
+}
+
+export class SlicerStatsByMonthLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SlicerStatsByMonth[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SlicerStatsByMonth[]>(value);
+  }
+}
+
+export class SlicerStatsByYearLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SlicerStatsByYear[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SlicerStatsByYear[]>(value);
+  }
+}
+
+export class CurrencySlicerLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CurrencySlicer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CurrencySlicer[]>(value);
+  }
+}
+
+export class PayeeSlicerLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): PayeeSlicer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<PayeeSlicer[]>(value);
+  }
+}
+
+export class ProductLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Product[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Product[]>(value);
+  }
+}
+
+export class TokenListingLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): TokenListing[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<TokenListing[]>(value);
+  }
+}
+
+export class PurchaseDataLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): PurchaseData[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<PurchaseData[]>(value);
+  }
+}
+
+export class SlicerOrderLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SlicerOrder[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SlicerOrder[]>(value);
+  }
+}
+
+export class ProductTypeLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ProductType[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ProductType[]>(value);
+  }
+}
+
+export class ProductTypeHierarchyLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ProductTypeHierarchy[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ProductTypeHierarchy[]>(value);
+  }
+}
+
+export class CurrencySlicerDayLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CurrencySlicerDay[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CurrencySlicerDay[]>(value);
+  }
+}
+
+export class CurrencySlicerWeekLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CurrencySlicerWeek[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CurrencySlicerWeek[]>(value);
+  }
+}
+
+export class CurrencySlicerMonthLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CurrencySlicerMonth[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CurrencySlicerMonth[]>(value);
+  }
+}
+
+export class CurrencySlicerYearLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CurrencySlicerYear[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CurrencySlicerYear[]>(value);
+  }
+}
+
+export class SlicerLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Slicer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Slicer[]>(value);
+  }
+}
+
+export class PayeeCurrencyLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): PayeeCurrency[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<PayeeCurrency[]>(value);
+  }
+}
+
+export class ProductPurchaseLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ProductPurchase[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ProductPurchase[]>(value);
+  }
+}
+
+export class OrderLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Order[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Order[]>(value);
+  }
+}
+
+export class ProductPricesLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ProductPrices[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ProductPrices[]>(value);
+  }
+}
+
+export class ProductCategoryLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ProductCategory[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ProductCategory[]>(value);
+  }
+}
+
+export class ProductCategoryHierarchyLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ProductCategoryHierarchy[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ProductCategoryHierarchy[]>(value);
+  }
+}
+
+export class PayeeSlicerCurrencyLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): PayeeSlicerCurrency[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<PayeeSlicerCurrency[]>(value);
+  }
+}
+
+export class ReleaseEventLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ReleaseEvent[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ReleaseEvent[]>(value);
+  }
+}
+
+export class ExtraCostLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ExtraCost[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ExtraCost[]>(value);
+  }
+}
+
+export class SlicerOrderTotalAmountCurrencyLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SlicerOrderTotalAmountCurrency[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SlicerOrderTotalAmountCurrency[]>(value);
   }
 }

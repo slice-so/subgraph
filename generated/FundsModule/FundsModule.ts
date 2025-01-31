@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AdminChanged extends ethereum.Event {
@@ -186,34 +186,34 @@ export class FundsModule extends ethereum.SmartContract {
       "balance(address,address):(uint256,uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(currency)
-      ]
+        ethereum.Value.fromAddress(currency),
+      ],
     );
 
     return new FundsModule__balanceResult(
       result[0].toBigInt(),
-      result[1].toBigInt()
+      result[1].toBigInt(),
     );
   }
 
   try_balance(
     account: Address,
-    currency: Address
+    currency: Address,
   ): ethereum.CallResult<FundsModule__balanceResult> {
     let result = super.tryCall(
       "balance",
       "balance(address,address):(uint256,uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(currency)
-      ]
+        ethereum.Value.fromAddress(currency),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new FundsModule__balanceResult(value[0].toBigInt(), value[1].toBigInt())
+      new FundsModule__balanceResult(value[0].toBigInt(), value[1].toBigInt()),
     );
   }
 
@@ -242,7 +242,7 @@ export class FundsModule extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

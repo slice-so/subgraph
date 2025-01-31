@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AdminChanged extends ethereum.Event {
@@ -217,7 +217,7 @@ export class TokenSliced__Params {
 
   get params(): TokenSlicedParamsStruct {
     return changetype<TokenSlicedParamsStruct>(
-      this._event.parameters[2].value.toTuple()
+      this._event.parameters[2].value.toTuple(),
     );
   }
 
@@ -436,8 +436,8 @@ export class SliceCore extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -449,8 +449,8 @@ export class SliceCore extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -465,8 +465,8 @@ export class SliceCore extends ethereum.SmartContract {
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
 
     return result[0].toBigIntArray();
@@ -474,15 +474,15 @@ export class SliceCore extends ethereum.SmartContract {
 
   try_balanceOfBatch(
     accounts: Array<Address>,
-    ids: Array<BigInt>
+    ids: Array<BigInt>,
   ): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall(
       "balanceOfBatch",
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -493,7 +493,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   controller(id: BigInt): Address {
     let result = super.call("controller", "controller(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
 
     return result[0].toAddress();
@@ -501,7 +501,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   try_controller(id: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall("controller", "controller(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -512,7 +512,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   exists(id: BigInt): boolean {
     let result = super.call("exists", "exists(uint256):(bool)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
 
     return result[0].toBoolean();
@@ -520,7 +520,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   try_exists(id: BigInt): ethereum.CallResult<boolean> {
     let result = super.tryCall("exists", "exists(uint256):(bool)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -535,8 +535,8 @@ export class SliceCore extends ethereum.SmartContract {
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
 
     return result[0].toBoolean();
@@ -544,15 +544,15 @@ export class SliceCore extends ethereum.SmartContract {
 
   try_isApprovedForAll(
     account: Address,
-    operator: Address
+    operator: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -601,7 +601,7 @@ export class SliceCore extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -612,34 +612,34 @@ export class SliceCore extends ethereum.SmartContract {
 
   royaltyInfo(
     tokenId: BigInt,
-    salePrice: BigInt
+    salePrice: BigInt,
   ): SliceCore__royaltyInfoResult {
     let result = super.call(
       "royaltyInfo",
       "royaltyInfo(uint256,uint256):(address,uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromUnsignedBigInt(salePrice)
-      ]
+        ethereum.Value.fromUnsignedBigInt(salePrice),
+      ],
     );
 
     return new SliceCore__royaltyInfoResult(
       result[0].toAddress(),
-      result[1].toBigInt()
+      result[1].toBigInt(),
     );
   }
 
   try_royaltyInfo(
     tokenId: BigInt,
-    salePrice: BigInt
+    salePrice: BigInt,
   ): ethereum.CallResult<SliceCore__royaltyInfoResult> {
     let result = super.tryCall(
       "royaltyInfo",
       "royaltyInfo(uint256,uint256):(address,uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromUnsignedBigInt(salePrice)
-      ]
+        ethereum.Value.fromUnsignedBigInt(salePrice),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -648,14 +648,14 @@ export class SliceCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new SliceCore__royaltyInfoResult(
         value[0].toAddress(),
-        value[1].toBigInt()
-      )
+        value[1].toBigInt(),
+      ),
     );
   }
 
   slicers(id: BigInt): Address {
     let result = super.call("slicers", "slicers(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
 
     return result[0].toAddress();
@@ -663,7 +663,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   try_slicers(id: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall("slicers", "slicers(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -691,7 +691,7 @@ export class SliceCore extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -701,7 +701,7 @@ export class SliceCore extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -712,7 +712,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   totalSupply(id: BigInt): BigInt {
     let result = super.call("totalSupply", "totalSupply(uint256):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(id)
+      ethereum.Value.fromUnsignedBigInt(id),
     ]);
 
     return result[0].toBigInt();
@@ -722,7 +722,7 @@ export class SliceCore extends ethereum.SmartContract {
     let result = super.tryCall(
       "totalSupply",
       "totalSupply(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -733,7 +733,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   uri(param0: BigInt): string {
     let result = super.call("uri", "uri(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
+      ethereum.Value.fromUnsignedBigInt(param0),
     ]);
 
     return result[0].toString();
@@ -741,7 +741,7 @@ export class SliceCore extends ethereum.SmartContract {
 
   try_uri(param0: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("uri", "uri(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
+      ethereum.Value.fromUnsignedBigInt(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1164,7 +1164,7 @@ export class SliceCall__Inputs {
 
   get params(): SliceCallParamsStruct {
     return changetype<SliceCallParamsStruct>(
-      this._call.inputValues[0].value.toTuple()
+      this._call.inputValues[0].value.toTuple(),
     );
   }
 }

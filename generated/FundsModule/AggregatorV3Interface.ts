@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AggregatorV3Interface__latestRoundDataResult {
@@ -22,7 +22,7 @@ export class AggregatorV3Interface__latestRoundDataResult {
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -101,7 +101,7 @@ export class AggregatorV3Interface extends ethereum.SmartContract {
     let result = super.call(
       "latestRoundData",
       "latestRoundData():(uint80,int256,uint256,uint256,uint80)",
-      []
+      [],
     );
 
     return new AggregatorV3Interface__latestRoundDataResult(
@@ -109,17 +109,15 @@ export class AggregatorV3Interface extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
     );
   }
 
-  try_latestRoundData(): ethereum.CallResult<
-    AggregatorV3Interface__latestRoundDataResult
-  > {
+  try_latestRoundData(): ethereum.CallResult<AggregatorV3Interface__latestRoundDataResult> {
     let result = super.tryCall(
       "latestRoundData",
       "latestRoundData():(uint80,int256,uint256,uint256,uint80)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -131,8 +129,8 @@ export class AggregatorV3Interface extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBigInt()
-      )
+        value[4].toBigInt(),
+      ),
     );
   }
 }
