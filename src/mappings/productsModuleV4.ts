@@ -38,9 +38,10 @@ export function handleProductAddedV4(event: ProductAddedEvent): void {
   let externalCall = event.params.externalCall
   let referralFeeProduct = params.referralFeeProduct
   let categoryId = BigInt.fromI32(event.params.params.categoryId).toHexString()
-  let productTypeId = BigInt.fromI32(
-    event.params.params.productTypeId
-  ).toHexString()
+  let productTypeId =
+    slicerId +
+    "-" +
+    BigInt.fromI32(event.params.params.productTypeId).toHexString()
   let address0 = new Bytes(20)
   let slicerProductId = slicerId + "-" + productId
   let subProducts: string[] = []
@@ -135,7 +136,7 @@ export function handleProductInfoChangedV4(
   product.availableUnits = availableUnits
   product.referralFeeProduct = referralFeeProduct
   product.category = categoryId
-  product.productType = productTypeId
+  product.productType = slicerId + "-" + productTypeId
 
   for (let i = 0; i < currencyPrices.length; i++) {
     let currency = currencyPrices[i].currency.toHexString()

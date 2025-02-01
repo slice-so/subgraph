@@ -2017,17 +2017,21 @@ export class Product extends Entity {
     this.set("category", Value.fromString(value));
   }
 
-  get productType(): string {
+  get productType(): string | null {
     let value = this.get("productType");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set productType(value: string) {
-    this.set("productType", Value.fromString(value));
+  set productType(value: string | null) {
+    if (!value) {
+      this.unset("productType");
+    } else {
+      this.set("productType", Value.fromString(<string>value));
+    }
   }
 
   get subProducts(): Array<string> {

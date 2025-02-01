@@ -180,7 +180,7 @@ type Product @entity {
   totalPurchases: BigInt!
   referralFeeProduct: BigInt!
   category: ProductCategory!
-  productType: ProductType!
+  productType: ProductType
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
