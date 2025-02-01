@@ -254,9 +254,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
-    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      totalPaymentCurrency
-    )
+    payeeSlicerCurrency.paidForProducts =
+      payeeSlicerCurrency.paidForProducts.plus(totalPaymentCurrency)
     payeeSlicerCurrency.save()
   }
 
@@ -297,9 +296,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       payeeSlicerCurrency.currencySlicer = address0String + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
-    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      totalPaymentEth
-    )
+    payeeSlicerCurrency.paidForProducts =
+      payeeSlicerCurrency.paidForProducts.plus(totalPaymentEth)
     payeeSlicerCurrency.save()
   }
 
@@ -388,9 +386,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
       referrerCurrency.totalReferralFees = referralAmount
       referrerCurrency.totalCreatorFees = BigInt.fromI32(0)
     } else {
-      referrerCurrency.totalReferralFees = referrerCurrency.totalReferralFees.plus(
-        referralAmount
-      )
+      referrerCurrency.totalReferralFees =
+        referrerCurrency.totalReferralFees.plus(referralAmount)
     }
     referrerCurrency.save()
   } else {
@@ -421,6 +418,7 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
   const externalPaymentUsd = externalPaymentUsdFromEth.plus(
     externalPaymentUsdFromCurrency
   )
+  purchaseData.productCategory = product.category
   purchaseData.externalPaymentUsd = externalPaymentUsd
   purchaseData.transactionHash = event.transaction.hash
   purchaseData.order = event.transaction.hash.toHexString()
@@ -475,9 +473,8 @@ export function handleProductPaidV3(event: ProductPaidEvent): void {
     slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
   } else {
-    slicerOrder.totalAmountUsd = slicerOrder.totalAmountUsd.plus(
-      totalPaymentUsd
-    )
+    slicerOrder.totalAmountUsd =
+      slicerOrder.totalAmountUsd.plus(totalPaymentUsd)
   }
 
   if (totalPaymentEth != BigInt.fromI32(0)) {
@@ -596,9 +593,8 @@ export function updateSlicerOrderTotalAmountCurrency(
     totalAmountCurrency.currency = currency
     totalAmountCurrency.totalAmount = amount
   } else {
-    totalAmountCurrency.totalAmount = totalAmountCurrency.totalAmount.plus(
-      amount
-    )
+    totalAmountCurrency.totalAmount =
+      totalAmountCurrency.totalAmount.plus(amount)
   }
 
   totalAmountCurrency.save()

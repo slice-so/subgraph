@@ -3507,6 +3507,23 @@ export class PurchaseData extends Entity {
     this.set("product", Value.fromString(value));
   }
 
+  get productCategory(): string | null {
+    let value = this.get("productCategory");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set productCategory(value: string | null) {
+    if (!value) {
+      this.unset("productCategory");
+    } else {
+      this.set("productCategory", Value.fromString(<string>value));
+    }
+  }
+
   get parentSlicer(): string | null {
     let value = this.get("parentSlicer");
     if (!value || value.kind == ValueKind.NULL) {

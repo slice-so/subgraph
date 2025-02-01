@@ -367,9 +367,8 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
-    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      paymentCurrency
-    )
+    payeeSlicerCurrency.paidForProducts =
+      payeeSlicerCurrency.paidForProducts.plus(paymentCurrency)
     payeeSlicerCurrency.save()
   }
 
@@ -393,9 +392,8 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
       payeeSlicerCurrency.currencySlicer = address0String + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
-    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      totalPaymentEth
-    )
+    payeeSlicerCurrency.paidForProducts =
+      payeeSlicerCurrency.paidForProducts.plus(totalPaymentEth)
     payeeSlicerCurrency.save()
   }
 
@@ -433,6 +431,7 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
   purchaseData.productPurchase = slicerProductId + "-" + buyerAddress
   purchaseData.quantity = quantity
   purchaseData.timestamp = event.block.timestamp
+  purchaseData.productCategory = product.category
   purchaseData.paymentEth = totalPaymentEth
   purchaseData.paymentCurrency = paymentCurrency
   purchaseData.paymentUsd = totalPaymentUsd
@@ -468,9 +467,8 @@ export function handleProductPaidV1(event: ProductPaidEventV1): void {
     slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
   } else {
-    slicerOrder.totalAmountUsd = slicerOrder.totalAmountUsd.plus(
-      totalPaymentUsd
-    )
+    slicerOrder.totalAmountUsd =
+      slicerOrder.totalAmountUsd.plus(totalPaymentUsd)
   }
 
   if (totalPaymentEth != BigInt.fromI32(0)) {
@@ -574,9 +572,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       payeeSlicerCurrency.currencySlicer = currency + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
-    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      totalPaymentCurrency
-    )
+    payeeSlicerCurrency.paidForProducts =
+      payeeSlicerCurrency.paidForProducts.plus(totalPaymentCurrency)
     payeeSlicerCurrency.save()
   }
 
@@ -617,9 +614,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
       payeeSlicerCurrency.currencySlicer = address0String + "-" + slicerId
       payeeSlicerCurrency.paidForProducts = BigInt.fromI32(0)
     }
-    payeeSlicerCurrency.paidForProducts = payeeSlicerCurrency.paidForProducts.plus(
-      totalPaymentEth
-    )
+    payeeSlicerCurrency.paidForProducts =
+      payeeSlicerCurrency.paidForProducts.plus(totalPaymentEth)
     payeeSlicerCurrency.save()
   }
 
@@ -679,6 +675,7 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
   const externalPaymentUsd = externalPaymentUsdFromEth.plus(
     externalPaymentUsdFromCurrency
   )
+  purchaseData.productCategory = product.category
   purchaseData.externalPaymentUsd = externalPaymentUsd
   purchaseData.referralEth = BigInt.fromI32(0)
   purchaseData.referralCurrency = BigInt.fromI32(0)
@@ -714,9 +711,8 @@ export function handleProductPaidV2(event: ProductPaidEventV2): void {
     slicerOrder.totalAmountUsd = totalPaymentUsd
     slicerOrder.order = event.transaction.hash.toHexString()
   } else {
-    slicerOrder.totalAmountUsd = slicerOrder.totalAmountUsd.plus(
-      totalPaymentUsd
-    )
+    slicerOrder.totalAmountUsd =
+      slicerOrder.totalAmountUsd.plus(totalPaymentUsd)
   }
 
   if (totalPaymentEth != BigInt.fromI32(0)) {
@@ -748,9 +744,8 @@ export function handleReleasedToSlicer(event: ReleasedToSlicerEvent): void {
   let slicer = SlicerEntity.load(slicerId)!
 
   slicer.productsModuleBalance = BigInt.fromI32(1)
-  slicer.productsModuleReleased = slicer.productsModuleReleased.plus(
-    ethToRelease
-  )
+  slicer.productsModuleReleased =
+    slicer.productsModuleReleased.plus(ethToRelease)
   slicer.save()
 }
 
