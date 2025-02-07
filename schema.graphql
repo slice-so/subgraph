@@ -211,6 +211,7 @@ type ProductType @entity {
   name: String!
   parentProductType: ProductType
   slicer: Slicer!
+  productTypeId: BigInt!
   subProductTypes: [ProductType!]! @derivedFrom(field: "parentProductType")
   products: [Product!]! @derivedFrom(field: "productType")
 

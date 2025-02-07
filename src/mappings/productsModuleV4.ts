@@ -245,6 +245,7 @@ export function handleProductTypeSet(event: ProductTypeSetEvent): void {
   if (!productType) {
     // Create new productType
     productType = new ProductType(slicerProductTypeId)
+    productType.productTypeId = event.params.productTypeId
 
     // Create self-reference (depth 0)
     let selfHierarchy = new ProductTypeHierarchy(selfId)

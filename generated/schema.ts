@@ -2346,6 +2346,19 @@ export class ProductType extends Entity {
     this.set("slicer", Value.fromString(value));
   }
 
+  get productTypeId(): BigInt {
+    let value = this.get("productTypeId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set productTypeId(value: BigInt) {
+    this.set("productTypeId", Value.fromBigInt(value));
+  }
+
   get subProductTypes(): ProductTypeLoader {
     return new ProductTypeLoader(
       "ProductType",
