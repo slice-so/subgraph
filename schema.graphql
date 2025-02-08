@@ -180,7 +180,7 @@ type Product @entity {
   totalPurchases: BigInt!
   referralFeeProduct: BigInt!
   category: ProductCategory!
-  productType: ProductType!
+  productType: ProductType
   subProducts: [Product!]!
   prices: [ProductPrices!]! @derivedFrom(field: "product")
   purchases: [ProductPurchase!]! @derivedFrom(field: "product")
@@ -211,6 +211,7 @@ type ProductType @entity {
   name: String!
   parentProductType: ProductType
   slicer: Slicer!
+  productTypeId: BigInt!
   subProductTypes: [ProductType!]! @derivedFrom(field: "parentProductType")
   products: [Product!]! @derivedFrom(field: "productType")
 
@@ -326,6 +327,7 @@ type PurchaseData @entity {
   id: ID!
   slicer: Slicer!
   product: Product!
+  productCategory: ProductCategory
   parentSlicer: Slicer
   parentProduct: Product
   productPurchase: ProductPurchase!

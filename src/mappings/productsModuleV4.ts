@@ -38,9 +38,10 @@ export function handleProductAddedV4(event: ProductAddedEvent): void {
   let externalCall = event.params.externalCall
   let referralFeeProduct = params.referralFeeProduct
   let categoryId = BigInt.fromI32(event.params.params.categoryId).toHexString()
-  let productTypeId = BigInt.fromI32(
-    event.params.params.productTypeId
-  ).toHexString()
+  let productTypeId =
+    slicerId +
+    "-" +
+    BigInt.fromI32(event.params.params.productTypeId).toHexString()
   let address0 = new Bytes(20)
   let slicerProductId = slicerId + "-" + productId
   let subProducts: string[] = []
@@ -135,7 +136,7 @@ export function handleProductInfoChangedV4(
   product.availableUnits = availableUnits
   product.referralFeeProduct = referralFeeProduct
   product.category = categoryId
-  product.productType = productTypeId
+  product.productType = slicerId + "-" + productTypeId
 
   for (let i = 0; i < currencyPrices.length; i++) {
     let currency = currencyPrices[i].currency.toHexString()
@@ -229,37 +230,40 @@ export function handleCategorySet(event: CategorySetEvent): void {
 }
 
 export function handleProductTypeSet(event: ProductTypeSetEvent): void {
-  let productTypeId = event.params.productTypeId.toHexString()
   let slicerId = event.params.slicerId.toHexString()
+  let productTypeId = event.params.productTypeId.toHexString()
+  const slicerProductTypeId = slicerId + "-" + productTypeId
   let parentProductTypeId = BigInt.fromI32(
     event.params.parentProductTypeId
   ).toHexString()
-  let productTypeName = event.params.name
+  const slicerParentProductTypeId = slicerId + "-" + parentProductTypeId
   let selfId = `${slicerId}-${productTypeId}-${productTypeId}`
+  let productTypeName = event.params.name
 
-  let productType = ProductType.load(productTypeId)
+  let productType = ProductType.load(slicerProductTypeId)
 
   if (!productType) {
     // Create new productType
-    productType = new ProductType(productTypeId)
+    productType = new ProductType(slicerProductTypeId)
+    productType.productTypeId = event.params.productTypeId
 
     // Create self-reference (depth 0)
     let selfHierarchy = new ProductTypeHierarchy(selfId)
-    selfHierarchy.ancestor = productTypeId
-    selfHierarchy.descendant = productTypeId
+    selfHierarchy.ancestor = slicerProductTypeId
+    selfHierarchy.descendant = slicerProductTypeId
     selfHierarchy.depth = BigInt.fromI32(0)
     selfHierarchy.slicer = slicerId
     selfHierarchy.save()
 
     if (parentProductTypeId != "0x0") {
-      let parentProductType = ProductType.load(parentProductTypeId)!
-      productType.parentProductType = parentProductTypeId
+      let parentProductType = ProductType.load(slicerParentProductTypeId)!
+      productType.parentProductType = slicerParentProductTypeId
 
       // 1. Add direct parent relationship (depth 1)
       // 2. Add new relationships for each ancestor (depth 2+)
       updateProductTypeHierarchy(slicerId, parentProductType, productType)
     }
-  } else if (parentProductTypeId != productType.parentProductType) {
+  } else if (slicerParentProductTypeId != productType.parentProductType) {
     // edit productType when parent productType changes
 
     // 1. Clear hierarchies (skip if without parent)
@@ -277,14 +281,14 @@ export function handleProductTypeSet(event: ProductTypeSetEvent): void {
     const isParentProductTypeNull = parentProductTypeId == "0x0"
     productType.parentProductType = isParentProductTypeNull
       ? null
-      : parentProductTypeId
+      : slicerParentProductTypeId
 
     // 3. Add new hierarchies
     //    - productType with parent (depth 1)
     //    - productType with ancestors (depth 2+)
     //    - descendants with ancestors (depth 2+)
     let newParentProductType = ProductType.load(
-      isParentProductTypeNull ? "null" : parentProductTypeId
+      isParentProductTypeNull ? "null" : slicerParentProductTypeId
     )
     updateProductTypeHierarchy(slicerId, newParentProductType, productType)
   }

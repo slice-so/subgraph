@@ -2017,17 +2017,21 @@ export class Product extends Entity {
     this.set("category", Value.fromString(value));
   }
 
-  get productType(): string {
+  get productType(): string | null {
     let value = this.get("productType");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set productType(value: string) {
-    this.set("productType", Value.fromString(value));
+  set productType(value: string | null) {
+    if (!value) {
+      this.unset("productType");
+    } else {
+      this.set("productType", Value.fromString(<string>value));
+    }
   }
 
   get subProducts(): Array<string> {
@@ -2340,6 +2344,19 @@ export class ProductType extends Entity {
 
   set slicer(value: string) {
     this.set("slicer", Value.fromString(value));
+  }
+
+  get productTypeId(): BigInt {
+    let value = this.get("productTypeId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set productTypeId(value: BigInt) {
+    this.set("productTypeId", Value.fromBigInt(value));
   }
 
   get subProductTypes(): ProductTypeLoader {
@@ -3505,6 +3522,23 @@ export class PurchaseData extends Entity {
 
   set product(value: string) {
     this.set("product", Value.fromString(value));
+  }
+
+  get productCategory(): string | null {
+    let value = this.get("productCategory");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set productCategory(value: string | null) {
+    if (!value) {
+      this.unset("productCategory");
+    } else {
+      this.set("productCategory", Value.fromString(<string>value));
+    }
   }
 
   get parentSlicer(): string | null {
