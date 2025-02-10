@@ -128,44 +128,46 @@ export function handleProductInfoChangedV4(
   let categoryId = params.categoryId.toHexString()
   let productTypeId = params.productTypeId.toHexString()
 
-  let product = Product.load(slicerProductId)!
+  let product = Product.load(slicerProductId)
 
-  product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
-  product.isFree = isFree
-  product.isInfinite = isInfinite
-  product.availableUnits = availableUnits
-  product.referralFeeProduct = referralFeeProduct
-  product.category = categoryId
-  product.productType = slicerId + "-" + productTypeId
+  if (product) {
+    product.maxUnitsPerBuyer = BigInt.fromI32(maxUnitsPerBuyer)
+    product.isFree = isFree
+    product.isInfinite = isInfinite
+    product.availableUnits = availableUnits
+    product.referralFeeProduct = referralFeeProduct
+    product.category = categoryId
+    product.productType = slicerId + "-" + productTypeId
 
-  for (let i = 0; i < currencyPrices.length; i++) {
-    let currency = currencyPrices[i].currency.toHexString()
-    let productPrice = ProductPrices.load(slicerProductId + "-" + currency)
-    if (!productPrice) {
-      productPrice = new ProductPrices(slicerProductId + "-" + currency)
-      productPrice.product = slicerProductId
-      productPrice.currency = currency
+    for (let i = 0; i < currencyPrices.length; i++) {
+      let currency = currencyPrices[i].currency.toHexString()
+      let productPrice = ProductPrices.load(slicerProductId + "-" + currency)
+      if (!productPrice) {
+        productPrice = new ProductPrices(slicerProductId + "-" + currency)
+        productPrice.product = slicerProductId
+        productPrice.currency = currency
+      }
+      productPrice.price = currencyPrices[i].value
+      productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
+      productPrice.externalAddress = currencyPrices[i].externalAddress
+      productPrice.save()
+
+      let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
+      if (!currencySlicer) {
+        currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
+        currencySlicer.currency = currency
+        currencySlicer.slicer = slicerId
+        currencySlicer.released = BigInt.fromI32(0)
+        currencySlicer.releasedUsd = BigInt.fromI32(0)
+        currencySlicer.releasedToProtocol = BigInt.fromI32(0)
+        currencySlicer.creatorFeePaid = BigInt.fromI32(0)
+        currencySlicer.totalEarned = BigInt.fromI32(0)
+        currencySlicer.save()
+      }
     }
-    productPrice.price = currencyPrices[i].value
-    productPrice.dynamicPricing = currencyPrices[i].dynamicPricing
-    productPrice.externalAddress = currencyPrices[i].externalAddress
-    productPrice.save()
 
-    let currencySlicer = CurrencySlicer.load(currency + "-" + slicerId)
-    if (!currencySlicer) {
-      currencySlicer = new CurrencySlicer(currency + "-" + slicerId)
-      currencySlicer.currency = currency
-      currencySlicer.slicer = slicerId
-      currencySlicer.released = BigInt.fromI32(0)
-      currencySlicer.releasedUsd = BigInt.fromI32(0)
-      currencySlicer.releasedToProtocol = BigInt.fromI32(0)
-      currencySlicer.creatorFeePaid = BigInt.fromI32(0)
-      currencySlicer.totalEarned = BigInt.fromI32(0)
-      currencySlicer.save()
-    }
+    product.save()
   }
-
-  product.save()
 }
 
 export function handleCategorySet(event: CategorySetEvent): void {
